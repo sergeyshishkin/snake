@@ -12,43 +12,31 @@ export function createUI() {
   let timerInterval = null;
 
 
+  // ==========================================================
+  // [BLOCK: render]
+  // Единственное место, где обновляется UI.
+  // Всё, что можно — переключается через data-* на body.
+  // В JS остаются только числа score / bestScore.
+  // ==========================================================
   function render() {
 
+    // Числа
     $.score.textContent     = ' ' + state.score;
     $.bestScore.textContent = ' ' + state.bestScore;
 
-    if (state.panelMode === 'reset') {
-      $.timerBox.classList.add('hidden');
-      $.resetButton.classList.remove('hidden');
-    } else {
-      $.timerBox.classList.remove('hidden');
-      $.resetButton.classList.add('hidden');
-    }
+    // Правая панель: timer или restart
+    document.body.dataset.panel = state.panelMode;
 
-    if (!state.hintVisible) {
-      $.startHint.style.display = 'none';
-      $.startHint.classList.remove('limit-hint');
-    } else {
-      $.startHint.style.display = 'block';
-
-      if (state.hintKind === 'limit') {
-        $.startHint.classList.add('limit-hint');
-        $.startHint.innerHTML = `
-          <span class="big">⛔ 時間切れ</span>
-          <span class="big" style="font-size:1em;">TIME LIMIT REACHED</span>
-          <small>今日のプレイ時間は終了しました</small>
-          <small style="font-size:0.5em;opacity:0.8;">Come back tomorrow!</small>
-        `;
-      } else {
-        $.startHint.classList.remove('limit-hint');
-        $.startHint.innerHTML =
-          '▶ タップでスタート<br>' +
-          '<small>TAP TO START</small>';
-      }
-    }
+    // Подсказка: start / limit / none
+    document.body.dataset.hint =
+      state.hintVisible ? state.hintKind : 'none';
   }
 
 
+  // ==========================================================
+  // [BLOCK: timer]
+  // Таймер обновляется отдельно — не часть основного state.
+  // ==========================================================
   function updateTimer() {
     const ms = getRemainingMs();
     const totalSec = Math.ceil(ms / 1000);

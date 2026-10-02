@@ -58,9 +58,26 @@
 
 
 /* ============================================================
-   [BLOCK: touch-hint--limit]
+   [BLOCK: hint-children]
+   Оба блока всегда в DOM. Видимость переключается
+   через body[data-hint].
    ============================================================ */
-.touch-hint.limit-hint {
+.hint-start,
+.hint-limit {
+  display: none;
+}
+
+
+/* ============================================================
+   [BLOCK: hint-state-switch]
+   ============================================================ */
+body[data-hint="none"]  .touch-hint { display: none; }
+
+body[data-hint="start"] .hint-start { display: block; }
+body[data-hint="limit"] .hint-limit { display: block; }
+
+/* Лимитный режим: красная палитра */
+body[data-hint="limit"] .touch-hint {
   border-color: var(--color-red);
   color: #ffb0b0;
   box-shadow:
@@ -69,7 +86,7 @@
   animation: pulse-glow-danger 1.8s ease-in-out infinite;
 }
 
-.touch-hint .big {
+body[data-hint="limit"] .touch-hint .big {
   display: block;
   margin-bottom: 8px;
   font-size: 1.2em;
