@@ -1,65 +1,174 @@
+// ============================================================
+// [FILE: renderers/snake.js]
+// Назначение: отрисовка змейки на canvas — голова и тело
+// Правится: при изменении внешнего вида змейки
+// Зависит: ни от чего (только ctx)
+// Экспортирует: drawSnake
+// ============================================================
+
+
+// ============================================================
+// [BLOCK: draw-snake]
+// Точка входа. Проходит по массиву сегментов и рисует каждый.
+// Первый сегмент — голова, остальные — тело.
+//
+// @param {CanvasRenderingContext2D} ctx — контекст канваса
+// @param {Array<{x:number,y:number}>} snake — массив сегментов
+// @param {number} cellSize — размер одной клетки в пикселях
+// ============================================================
 export function drawSnake(ctx, snake, cellSize) {
   for (let i = 0; i < snake.length; i++) {
     const seg = snake[i];
     const sx = seg.x * cellSize;
     const sy = seg.y * cellSize;
 
-    if (i === 0) drawSnakeHead(ctx, sx, sy, cellSize);
-    else drawSnakeBody(ctx, sx, sy, cellSize);
+    if (i === 0) {
+      drawHead(ctx, sx, sy, cellSize);
+    } else {
+      drawBody(ctx, sx, sy, cellSize);
+    }
   }
 }
 
-function drawSnakeHead(ctx, sx, sy, cs) {
+
+// ============================================================
+// [BLOCK: draw-head]
+// Голова змейки — рисовый шарик с нори и икрой.
+// Отличается от тела более крупным размером и свечением.
+// ============================================================
+function drawHead(ctx, sx, sy, cs) {
   ctx.save();
+
+  // Золотистое свечение вокруг головы — визуальный акцент
   ctx.shadowColor = '#f0c000';
   ctx.shadowBlur = 10;
 
+  // ----------------------------------------------------------
+  // Внешний слой: рисовая подушка
+  // ----------------------------------------------------------
   ctx.beginPath();
-  ctx.ellipse(sx + cs/2, sy + cs/2, cs*0.42, cs*0.38, 0, 0, Math.PI*2);
-  ctx.fillStyle = '#faf0dc'; ctx.fill();
-  ctx.strokeStyle = '#b38b4c'; ctx.lineWidth = 2; ctx.stroke();
+  ctx.ellipse(
+    sx + cs / 2,
+    sy + cs / 2,
+    cs * 0.42,
+    cs * 0.38,
+    0, 0, Math.PI * 2
+  );
+  ctx.fillStyle = '#faf0dc';
+  ctx.fill();
+  ctx.strokeStyle = '#b38b4c';
+  ctx.lineWidth = 2;
+  ctx.stroke();
 
+  // ----------------------------------------------------------
+  // Нори — тёмная сердцевина
+  // ----------------------------------------------------------
   ctx.beginPath();
-  ctx.ellipse(sx + cs/2, sy + cs/2, cs*0.3, cs*0.25, 0, 0, Math.PI*2);
-  ctx.fillStyle = '#1e2e1e'; ctx.fill();
+  ctx.ellipse(
+    sx + cs / 2,
+    sy + cs / 2,
+    cs * 0.3,
+    cs * 0.25,
+    0, 0, Math.PI * 2
+  );
+  ctx.fillStyle = '#1e2e1e';
+  ctx.fill();
 
+  // ----------------------------------------------------------
+  // Икра — оранжевый центр (аналог «глаза»)
+  // ----------------------------------------------------------
   ctx.beginPath();
-  ctx.arc(sx + cs/2, sy + cs/2, cs*0.15, 0, Math.PI*2);
-  ctx.fillStyle = '#e65c2e'; ctx.fill();
+  ctx.arc(
+    sx + cs / 2,
+    sy + cs / 2,
+    cs * 0.15,
+    0, Math.PI * 2
+  );
+  ctx.fillStyle = '#e65c2e';
+  ctx.fill();
+
+  // Отключаем свечение, чтобы блики были чёткими
   ctx.shadowBlur = 0;
 
+  // ----------------------------------------------------------
+  // Два блика — как глаза
+  // ----------------------------------------------------------
   ctx.fillStyle = '#ffb347';
+
   ctx.beginPath();
-  ctx.arc(sx + cs/2 - 4, sy + cs/2 - 3, 2, 0, Math.PI*2); ctx.fill();
+  ctx.arc(sx + cs / 2 - 4, sy + cs / 2 - 3, 2, 0, Math.PI * 2);
+  ctx.fill();
+
   ctx.beginPath();
-  ctx.arc(sx + cs/2 + 3, sy + cs/2 + 2, 2, 0, Math.PI*2); ctx.fill();
+  ctx.arc(sx + cs / 2 + 3, sy + cs / 2 + 2, 2, 0, Math.PI * 2);
+  ctx.fill();
+
   ctx.restore();
 }
 
-function drawSnakeBody(ctx, sx, sy, cs) {
+
+// ============================================================
+// [BLOCK: draw-body]
+// Тело змейки — маки-ролл: нори, рис, начинка.
+// Рисуется для всех сегментов, кроме первого.
+// ============================================================
+function drawBody(ctx, sx, sy, cs) {
   ctx.save();
+
+  // Мягкое свечение вокруг тела
   ctx.shadowColor = '#c0a060';
   ctx.shadowBlur = 6;
 
+  // ----------------------------------------------------------
+  // Внешний слой: нори (тёмно-зелёный)
+  // ----------------------------------------------------------
   ctx.beginPath();
-  ctx.ellipse(sx + cs/2, sy + cs/2, cs*0.4, cs*0.4, 0, 0, Math.PI*2);
-  ctx.fillStyle = '#1a2a1a'; ctx.fill();
+  ctx.ellipse(
+    sx + cs / 2,
+    sy + cs / 2,
+    cs * 0.4,
+    cs * 0.4,
+    0, 0, Math.PI * 2
+  );
+  ctx.fillStyle = '#1a2a1a';
+  ctx.fill();
 
+  // ----------------------------------------------------------
+  // Слой риса — светлый круг внутри нори
+  // ----------------------------------------------------------
   ctx.beginPath();
-  ctx.ellipse(sx + cs/2, sy + cs/2, cs*0.3, cs*0.3, 0, 0, Math.PI*2);
-  ctx.fillStyle = '#f5ead0'; ctx.fill();
+  ctx.ellipse(
+    sx + cs / 2,
+    sy + cs / 2,
+    cs * 0.3,
+    cs * 0.3,
+    0, 0, Math.PI * 2
+  );
+  ctx.fillStyle = '#f5ead0';
+  ctx.fill();
 
-  ctx.beginPath();
-  ctx.arc(sx + cs/2 - 3, sy + cs/2 - 3, 4, 0, Math.PI*2);
-  ctx.fillStyle = '#d44c1e'; ctx.fill();
+  // ----------------------------------------------------------
+  // Начинка: три маленькие точки разных цветов
+  // (красная, зелёная, жёлтая — как в настоящем маки)
+  // ----------------------------------------------------------
 
+  // Красная (тунец / лосось)
   ctx.beginPath();
-  ctx.arc(sx + cs/2 + 4, sy + cs/2 + 2, 3.5, 0, Math.PI*2);
-  ctx.fillStyle = '#7aa84a'; ctx.fill();
+  ctx.arc(sx + cs / 2 - 3, sy + cs / 2 - 3, 4, 0, Math.PI * 2);
+  ctx.fillStyle = '#d44c1e';
+  ctx.fill();
 
+  // Зелёная (огурец)
   ctx.beginPath();
-  ctx.arc(sx + cs/2 - 2, sy + cs/2 + 5, 2.5, 0, Math.PI*2);
-  ctx.fillStyle = '#f0c040'; ctx.fill();
+  ctx.arc(sx + cs / 2 + 4, sy + cs / 2 + 2, 3.5, 0, Math.PI * 2);
+  ctx.fillStyle = '#7aa84a';
+  ctx.fill();
+
+  // Жёлтая (тамаго / яйцо)
+  ctx.beginPath();
+  ctx.arc(sx + cs / 2 - 2, sy + cs / 2 + 5, 2.5, 0, Math.PI * 2);
+  ctx.fillStyle = '#f0c040';
+  ctx.fill();
 
   ctx.restore();
 }

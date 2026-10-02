@@ -1,0 +1,209 @@
+/* ============================================================
+   [FILE: overlays.css]
+   Назначение: оверлеи поверх канваса и поверх всего экрана
+   Правится: при смене текстов подсказок, анимаций, положения
+   Зависит от: base.css (переменные --color-*, --radius-*, --t-*)
+   ============================================================ */
+
+
+/* ============================================================
+   [BLOCK: touch-hint]
+   Универсальная подсказка поверх канваса:
+   — стартовая («Тап чтобы начать»)
+   — лимит («Время вышло»)
+   Позиционируется относительно .canvas-container
+   ============================================================ */
+.touch-hint {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: max-content;
+  max-width: 90%;
+
+  padding: clamp(14px, 3vw, 28px) clamp(18px, 5vw, 42px);
+
+  background-color: rgba(10, 10, 20, 0.85);
+  color: rgba(255, 235, 180, 0.95);
+
+  border: 3px solid var(--color-orange);
+  border-radius: clamp(14px, 3vw, 24px);
+
+  font-size: clamp(16px, 4vw, 26px);
+  font-weight: 900;
+  line-height: 1.4;
+  letter-spacing: 2px;
+  text-align: center;
+
+  text-shadow:
+    0 0 20px var(--color-orange-glow),
+    0 0 40px #ff4500,
+    3px 3px 0 #000;
+
+  box-shadow:
+    0 0 40px var(--color-orange-glow),
+    inset 0 0 30px rgba(255, 140, 0, 0.31);
+
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+
+  pointer-events: none;
+  z-index: 10;
+
+  animation: pulse-glow 1.8s ease-in-out infinite;
+}
+
+
+/* ---------- Вторая строка подсказки ---------- */
+.touch-hint small {
+  display: block;
+  margin-top: 10px;
+  font-size: 0.55em;
+  letter-spacing: 3px;
+  color: var(--color-text-warm);
+  opacity: 0.9;
+}
+
+
+/* ============================================================
+   [BLOCK: touch-hint--limit]
+   Модификатор для экрана «Время вышло».
+   Красная палитра, другая анимация.
+   ============================================================ */
+.touch-hint.limit-hint {
+  border-color: var(--color-red);
+  color: #ffb0b0;
+  box-shadow:
+    0 0 40px var(--color-red),
+    inset 0 0 30px rgba(212, 36, 44, 0.31);
+  animation: pulse-glow-danger 1.8s ease-in-out infinite;
+}
+
+/* Крупная строка внутри лимита («⛔ 時間切れ») */
+.touch-hint .big {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 1.2em;
+  color: #ff4d4d;
+  text-shadow:
+    0 0 20px #ff0000,
+    0 0 40px #ff4500,
+    3px 3px 0 #000;
+}
+
+
+/* ============================================================
+   [BLOCK: animations]
+   Пульсация для подсказок — обычная и «опасная»
+   ============================================================ */
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.95;
+    transform: translate(-50%, -50%) scale(1);
+    box-shadow:
+      0 0 40px var(--color-orange-glow),
+      inset 0 0 30px rgba(255, 140, 0, 0.31);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.05);
+    box-shadow:
+      0 0 60px #ffa500,
+      inset 0 0 40px rgba(255, 140, 0, 0.5);
+  }
+}
+
+@keyframes pulse-glow-danger {
+  0%, 100% {
+    opacity: 0.95;
+    transform: translate(-50%, -50%) scale(1);
+    box-shadow:
+      0 0 40px var(--color-red),
+      inset 0 0 30px rgba(212, 36, 44, 0.31);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.05);
+    box-shadow:
+      0 0 60px #ff2a2a,
+      inset 0 0 40px rgba(212, 36, 44, 0.5);
+  }
+}
+
+
+/* ============================================================
+   [BLOCK: rotate-overlay]
+   Заглушка «поверните телефон». Показывается только на мобильных
+   в ландшафтной ориентации. По умолчанию скрыта.
+   ============================================================ */
+.rotate-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  padding: 24px;
+
+  background-color: var(--color-bg-deep);
+  color: var(--color-text-warm);
+  text-align: center;
+}
+
+
+/* ---------- Иконка с анимацией поворота ---------- */
+.rotate-icon {
+  margin-bottom: 20px;
+  font-size: 72px;
+  line-height: 1;
+  animation: rotate-hint 2s ease-in-out infinite;
+}
+
+@keyframes rotate-hint {
+  0%, 100% { transform: rotate(0deg); }
+  50%      { transform: rotate(90deg); }
+}
+
+
+/* ---------- Текст заглушки ---------- */
+.rotate-text {
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  line-height: 1.5;
+  text-shadow:
+    0 0 20px var(--color-orange-glow),
+    3px 3px 0 #000;
+}
+
+.rotate-text small {
+  display: block;
+  margin-top: 10px;
+  font-size: 12px;
+  letter-spacing: 4px;
+  opacity: 0.8;
+}
+
+
+/* ============================================================
+   [BLOCK: rotate-overlay--show]
+   Показ заглушки только на мобильных в ландшафте.
+   Игра и cookie-баннер в этом режиме скрыты.
+   ============================================================ */
+@media (max-width: 900px) and (orientation: landscape) {
+  .rotate-overlay {
+    display: flex;
+  }
+
+  .game-wrapper {
+    display: none;
+  }
+
+  .cookie-banner {
+    display: none !important;
+  }
+}

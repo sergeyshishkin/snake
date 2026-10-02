@@ -1,0 +1,185 @@
+/* ============================================================
+   [FILE: base.css]
+   Назначение: reset, переменные, фон, глобальные правила
+   Правится: при смене темы, шрифтов, цветов, отступов по умолчанию
+   ============================================================ */
+
+
+/* ============================================================
+   [BLOCK: reset]
+   Обнуление стилей браузера по умолчанию
+   ============================================================ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+
+/* ============================================================
+   [BLOCK: design-tokens]
+   CSS-переменные — единый источник правды для цветов и размеров.
+   Меняя значения здесь, вы меняете их во всём проекте.
+   ============================================================ */
+:root {
+
+  /* ---------- Цвета фона и каркаса ---------- */
+  --color-bg-deep:        #0b0c1e;
+  --color-bg-wrapper-1:   #16213e;
+  --color-bg-wrapper-2:   #0f0f1f;
+  --color-bg-panel:       #0f0f1f;
+  --color-bg-field:       #0e1a1b;
+
+  /* ---------- Акценты (золото, красный, зелёный) ---------- */
+  --color-gold:           #c0a86a;
+  --color-gold-bright:    #ffd58c;
+  --color-gold-deep:      #3a2e1b;
+  --color-orange:         #ffb347;
+  --color-orange-glow:    #ff8c00;
+  --color-red:            #d4242c;
+  --color-red-deep:       #5e1e1e;
+  --color-green:          #7aa84a;
+  --color-green-bright:   #b8e986;
+  --color-green-deep:     #3a5a1e;
+
+  /* ---------- Текст ---------- */
+  --color-text-main:      #f5e6c6;
+  --color-text-dim:       #c9b382;
+  --color-text-warm:      #ffe9b0;
+  --color-text-accent:    #ffe484;
+
+  /* ---------- Единые отступы ---------- */
+  --gap-xs:   clamp(4px, 1vw, 6px);
+  --gap-sm:   clamp(6px, 1.5vw, 10px);
+  --gap-md:   clamp(8px, 2vw, 14px);
+  --gap-lg:   clamp(12px, 3vw, 20px);
+
+  --pad-panel-y: clamp(5px, 1.4vw, 9px);   /* вертикальный padding у score/timer */
+  --pad-panel-x: clamp(8px, 2vw, 14px);    /* горизонтальный padding у score/timer */
+
+  /* ---------- Скругления ---------- */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-pill: 40px;
+
+  /* ---------- Радиусы/размеры общие ---------- */
+  --wrapper-max-width: 720px;
+  --btn-dir-size:      clamp(52px, 14vw, 72px);
+
+  /* ---------- Шрифт ---------- */
+  --font-mono: 'Courier New', Courier, monospace;
+
+  /* ---------- Тайминги анимаций ---------- */
+  --t-fast:   0.07s;
+  --t-base:   0.3s;
+  --t-pop:    0.4s;
+}
+
+
+/* ============================================================
+   [BLOCK: html-body]
+   Запрет скролла, привязка к viewport, отключение pull-to-refresh
+   ============================================================ */
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+  position: fixed;
+}
+
+body {
+  background-color: var(--color-bg-deep);
+  background-image:
+    radial-gradient(circle at 20% 30%, #2a1b3d 0%, transparent 25%),
+    radial-gradient(circle at 80% 70%, #1e3a2e 0%, transparent 30%),
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 215, 0, 0.03) 0px,
+      rgba(255, 215, 0, 0.03) 2px,
+      transparent 2px,
+      transparent 12px
+    );
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: var(--font-mono);
+  padding: 8px;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  color: var(--color-text-main);
+}
+
+
+/* ============================================================
+   [BLOCK: ambient-glow]
+   Тёплое свечение «восходящего солнца» на фоне
+   ============================================================ */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(
+    circle at 50% 40%,
+    rgba(220, 20, 60, 0.15) 0%,
+    transparent 60%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+
+/* ============================================================
+   [BLOCK: helpers]
+   Глобальные утилитарные классы
+   ============================================================ */
+
+/* Скрытие элемента без влияния на layout */
+.hidden {
+  display: none !important;
+}
+
+/* Визуально скрыт, но доступен скринридерам */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+
+/* ============================================================
+   [BLOCK: focus]
+   Единый стиль фокуса для клавиатурной навигации
+   ============================================================ */
+:focus-visible {
+  outline: 2px solid var(--color-orange);
+  outline-offset: 3px;
+}
+
+
+/* ============================================================
+   [BLOCK: reduced-motion]
+   Уважаем системную настройку «уменьшить движение»
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

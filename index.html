@@ -6,79 +6,104 @@
   <meta name="theme-color" content="#0b0c1e">
   <title>🍣 寿司スネーク • SUSHI SNAKE '89</title>
 
-  <!-- Yandex.Metrika counter -->
-  <script type="text/javascript">
-      (function(m,e,t,r,i,k,a){
-          m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-          m[i].l=1*new Date();
-          for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-          k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-      })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=113332587', 'ym');
-
-      ym(113332587, 'init', {
-        clickmap: true,
-        trackLinks: true,
-        accurateTrackBounce: true,
-        webvisor: true
-      });
-  </script>
-  <noscript><div><img src="https://mc.yandex.ru/watch/113332587" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-  <!-- /Yandex.Metrika counter -->
-
-  <link rel="stylesheet" href="css/style.css">
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/controls.css">
+  <link rel="stylesheet" href="css/overlays.css">
+  <link rel="stylesheet" href="css/cookie.css">
 </head>
 <body>
-  <div class="rotate-overlay" id="rotateOverlay">
+
+  <!-- ============================================================
+       OVERLAY: ROTATE DEVICE
+       Показывается только на мобильных в ландшафте.
+       ============================================================ -->
+  <div class="rotate-overlay" id="rotateOverlay" aria-hidden="true">
     <div class="rotate-icon">📱</div>
-    <div class="rotate-text">縦画面でプレイ<br><small>Please rotate your device</small></div>
+    <div class="rotate-text">
+      縦画面でプレイ
+      <small>Please rotate your device</small>
+    </div>
   </div>
 
-  <div class="game-wrapper">
-    <div class="header">
-      <div class="title-jp">🍣 寿司スネーク</div>
-      <div class="stats-row">
-        <div class="score-box">SCORE <span id="scoreDisplay">0</span></div>
-        <div class="timer-box" id="timerBox">⏱ <span id="timeLeft">--:--</span></div>
-      </div>
-    </div>
 
+  <!-- ============================================================
+       GAME WRAPPER
+       ============================================================ -->
+  <div class="game-wrapper" id="gameWrapper">
+
+    <!-- --------------------------------------------------------
+         HEADER: title + score + timer
+         -------------------------------------------------------- -->
+    <header class="header" id="header">
+      <div class="title-jp">🍣 寿司スネーク</div>
+
+      <div class="stats-row">
+        <div class="score-box" id="scoreBox">
+          SCORE <span id="scoreDisplay">0</span>
+        </div>
+        <div class="timer-box" id="timerBox">
+          ⏱ <span id="timeLeft">--:--</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- --------------------------------------------------------
+         CANVAS: игровое поле + оверлеи поверх
+         -------------------------------------------------------- -->
     <div class="canvas-container" id="canvasContainer">
       <canvas id="gameCanvas" width="600" height="600"></canvas>
-      <div id="startHint" class="touch-hint">
-        ▶ タップでスタート<br>
+
+      <div id="startHint" class="touch-hint" role="status" aria-live="polite">
+        ▶ タップでスタート
         <small>TAP TO START</small>
       </div>
     </div>
 
-    <!-- Нижняя панель: UP/DOWN слева — RESTART по центру — LEFT/RIGHT справа -->
-    <div class="bottom-row">
+    <!-- --------------------------------------------------------
+         CONTROLS: ↑↓ слева — RESTART центр — ←→ справа
+         -------------------------------------------------------- -->
+    <div class="bottom-row" id="bottomRow">
+
       <div class="dir-group dir-vertical" id="dirVertical">
-        <button class="dpad-btn" data-dir="UP"   aria-label="Up">▲</button>
-        <button class="dpad-btn" data-dir="DOWN" aria-label="Down">▼</button>
+        <button class="dpad-btn" data-dir="UP"   type="button" aria-label="Up">▲</button>
+        <button class="dpad-btn" data-dir="DOWN" type="button" aria-label="Down">▼</button>
       </div>
 
-      <div class="restart-slot">
-        <button id="resetButton" class="btn-reset hidden">
+      <div class="restart-slot" id="restartSlot">
+        <button id="resetButton" class="btn-reset hidden" type="button">
           リセット
           <small>RESTART</small>
         </button>
       </div>
 
       <div class="dir-group dir-horizontal" id="dirHorizontal">
-        <button class="dpad-btn" data-dir="LEFT"  aria-label="Left">◀</button>
-        <button class="dpad-btn" data-dir="RIGHT" aria-label="Right">▶</button>
+        <button class="dpad-btn" data-dir="LEFT"  type="button" aria-label="Left">◀</button>
+        <button class="dpad-btn" data-dir="RIGHT" type="button" aria-label="Right">▶</button>
       </div>
+
     </div>
+
   </div>
 
-  <div class="cookie-banner" id="cookieBanner" role="dialog" aria-live="polite">
+
+  <!-- ============================================================
+       COOKIE BANNER
+       ============================================================ -->
+  <div class="cookie-banner" id="cookieBanner" role="dialog" aria-live="polite" aria-label="Cookie notice">
     <div class="cookie-text">
       当サイトは Яндекс.Метрика を使用してアクセス解析を行います。<br>
       <small>This site uses Yandex.Metrika for analytics. By continuing, you agree to cookies.</small>
     </div>
-    <button class="cookie-accept" id="cookieAccept">同意 / ACCEPT</button>
+    <button class="cookie-accept" id="cookieAccept" type="button">同意 / ACCEPT</button>
   </div>
 
+
+  <!-- ============================================================
+       ENTRY POINT
+       ============================================================ -->
   <script type="module" src="js/main.js"></script>
+
 </body>
 </html>
