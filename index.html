@@ -1,3 +1,6 @@
+// ============================================================
+// [FILE: index.html]
+// ============================================================
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +9,7 @@
   <meta name="theme-color" content="#0b0c1e">
   <title>🍣 寿司スネーク • SUSHI SNAKE '89</title>
 
-  <!-- Styles -->
+
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/controls.css">
@@ -15,10 +18,6 @@
 </head>
 <body>
 
-  <!-- ============================================================
-       OVERLAY: ROTATE DEVICE
-       Показывается только на мобильных в ландшафте.
-       ============================================================ -->
   <div class="rotate-overlay" id="rotateOverlay" aria-hidden="true">
     <div class="rotate-icon">📱</div>
     <div class="rotate-text">
@@ -27,31 +26,17 @@
     </div>
   </div>
 
-
-  <!-- ============================================================
-       GAME WRAPPER
-       ============================================================ -->
   <div class="game-wrapper" id="gameWrapper">
 
-    <!-- --------------------------------------------------------
-         HEADER: title + score + timer
-         -------------------------------------------------------- -->
     <header class="header" id="header">
-      <div class="title-jp">🍣 寿司スネーク</div>
-
-      <div class="stats-row">
-        <div class="score-box" id="scoreBox">
-          SCORE <span id="scoreDisplay">0</span>
-        </div>
-        <div class="timer-box" id="timerBox">
-          ⏱ <span id="timeLeft">--:--</span>
-        </div>
+      <div class="stat-box stat-best">
+        BEST <span id="bestScore">0</span>
+      </div>
+      <div class="stat-box stat-score">
+        SCORE <span id="scoreDisplay">0</span>
       </div>
     </header>
 
-    <!-- --------------------------------------------------------
-         CANVAS: игровое поле + оверлеи поверх
-         -------------------------------------------------------- -->
     <div class="canvas-container" id="canvasContainer">
       <canvas id="gameCanvas" width="600" height="600"></canvas>
 
@@ -61,36 +46,32 @@
       </div>
     </div>
 
-    <!-- --------------------------------------------------------
-         CONTROLS: ↑↓ слева — RESTART центр — ←→ справа
-         -------------------------------------------------------- -->
     <div class="bottom-row" id="bottomRow">
 
-      <div class="dir-group dir-vertical" id="dirVertical">
-        <button class="dpad-btn" data-dir="UP"   type="button" aria-label="Up">▲</button>
-        <button class="dpad-btn" data-dir="DOWN" type="button" aria-label="Down">▼</button>
+      <div class="dpad" id="dpad">
+        <button class="dpad-btn dpad-up"    data-dir="UP"    type="button" aria-label="Up">▲</button>
+        <button class="dpad-btn dpad-left"  data-dir="LEFT"  type="button" aria-label="Left">◀</button>
+        <button class="dpad-btn dpad-right" data-dir="RIGHT" type="button" aria-label="Right">▶</button>
+        <button class="dpad-btn dpad-down"  data-dir="DOWN"  type="button" aria-label="Down">▼</button>
       </div>
 
-      <div class="restart-slot" id="restartSlot">
+      <div class="bottom-right" id="bottomRight">
+
+        <div class="timer-box" id="timerBox">
+          ⏱ <span id="timeLeft">--:--</span>
+        </div>
+
         <button id="resetButton" class="btn-reset hidden" type="button">
           リセット
           <small>RESTART</small>
         </button>
-      </div>
 
-      <div class="dir-group dir-horizontal" id="dirHorizontal">
-        <button class="dpad-btn" data-dir="LEFT"  type="button" aria-label="Left">◀</button>
-        <button class="dpad-btn" data-dir="RIGHT" type="button" aria-label="Right">▶</button>
       </div>
 
     </div>
 
   </div>
 
-
-  <!-- ============================================================
-       COOKIE BANNER
-       ============================================================ -->
   <div class="cookie-banner" id="cookieBanner" role="dialog" aria-live="polite" aria-label="Cookie notice">
     <div class="cookie-text">
       当サイトは Яндекс.Метрика を使用してアクセス解析を行います。<br>
@@ -99,10 +80,6 @@
     <button class="cookie-accept" id="cookieAccept" type="button">同意 / ACCEPT</button>
   </div>
 
-
-  <!-- ============================================================
-       ENTRY POINT
-       ============================================================ -->
   <script type="module" src="js/main.js"></script>
 
 </body>

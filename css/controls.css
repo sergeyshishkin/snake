@@ -1,83 +1,71 @@
 /* ============================================================
    [FILE: controls.css]
-   Назначение: нижняя панель управления — кнопки направления и рестарт
+   Назначение: нижняя панель — крестовина слева, timer/restart справа
    Правится: при смене размеров кнопок, отступов, выравнивания
-   Зависит от: base.css (переменные --color-*, --gap-*, --btn-dir-size, --t-fast)
+   Зависит от: base.css (переменные --color-*, --gap-*, --bottom-h, --t-fast)
    ============================================================ */
 
 
 /* ============================================================
    [BLOCK: bottom-row]
-   Три блока в одну линию: [↑↓]  [RESTART]  [←→]
-   space-between распределяет их по ширине
    ============================================================ */
 .bottom-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  flex-wrap: nowrap;
+  flex: 0 0 auto;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: var(--bottom-h);
 
   width: 100%;
-  margin-top: var(--gap-md);
-  gap: var(--gap-xs);
+  height: var(--bottom-h);
+  margin-top: var(--gap-sm);
 
-  min-height: clamp(110px, 28vw, 150px);
+  gap: var(--gap-sm);
 }
 
 
 /* ============================================================
-   [BLOCK: dir-group]
-   Общая база для обеих групп кнопок направления.
-   Группы прижаты к низу панели.
+   [BLOCK: dpad]
    ============================================================ */
-.dir-group {
-  display: flex;
-  flex: 0 0 auto;
-  gap: var(--gap-xs);
+.dpad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows:    repeat(3, 1fr);
+  gap: 4px;
 
-  align-self: flex-end;
+  width: 100%;
+  height: 100%;
 
   touch-action: none;
   user-select: none;
-
-  filter:
-    drop-shadow(0 6px 0 #1a1a1a)
-    drop-shadow(0 8px 12px rgba(0, 0, 0, 0.8));
 }
 
-/* Вертикальная группа (▲ над ▼) — прижата к левому краю */
-.dir-vertical {
-  flex-direction: column;
-}
-
-/* Горизонтальная группа (◀ ▶) — прижата к правому краю */
-.dir-horizontal {
-  flex-direction: row;
-}
+.dpad-up    { grid-column: 2; grid-row: 1; }
+.dpad-left  { grid-column: 1; grid-row: 2; }
+.dpad-right { grid-column: 3; grid-row: 2; }
+.dpad-down  { grid-column: 2; grid-row: 3; }
 
 
 /* ============================================================
    [BLOCK: dpad-btn]
-   Кнопки направления. Размер берётся из --btn-dir-size,
-   единый стиль — аркадный джойстик 80-х
    ============================================================ */
 .dpad-btn {
   display: flex;
   align-items: center;
   justify-content: center;
 
-  width: var(--btn-dir-size);
-  height: var(--btn-dir-size);
+  width: 100%;
+  height: 100%;
 
   padding: 0;
   border: 2px solid var(--color-gold);
-  border-radius: 12px;
+  border-radius: 10px;
 
   background: linear-gradient(180deg, #4a3a2a 0%, #2a1f15 100%);
   color: var(--color-gold-bright);
 
   font-family: var(--font-mono);
-  font-size: clamp(16px, 4vw, 26px);
+  font-size: clamp(14px, 4.5vw, 22px);
   font-weight: 900;
   line-height: 1;
 
@@ -98,7 +86,6 @@
     color var(--t-fast);
 }
 
-/* Нажатое состояние (мышь / палец / клавиатура) */
 .dpad-btn:active,
 .dpad-btn.pressed {
   background: linear-gradient(180deg, #2a1f15 0%, #1a120b 100%);
@@ -111,42 +98,106 @@
 
 
 /* ============================================================
-   [BLOCK: restart-slot]
-   Слот по центру. Растягивается и центрирует кнопку рестарта.
+   [BLOCK: bottom-right]
    ============================================================ */
-.restart-slot {
+.bottom-right {
+  position: relative;
+
   display: flex;
-  flex: 1 1 auto;
-  align-items: flex-end;
+  align-items: stretch;
+  justify-content: stretch;
+
+  width: 100%;
+  height: 100%;
+
+  overflow: hidden;
+}
+
+.bottom-right > * {
+  width: 100%;
+  height: 100%;
+}
+
+
+/* ============================================================
+   [BLOCK: timer-box]
+   ============================================================ */
+.timer-box {
+  display: flex;
+  align-items: center;
   justify-content: center;
 
-  min-width: 0;
+  padding: var(--pad-panel-y) var(--pad-panel-x);
+  border: 3px solid var(--color-green);
+  border-radius: 16px;
+
+  background-color: var(--color-bg-panel);
+  color: var(--color-green-bright);
+
+  font-family: var(--font-mono);
+  font-size: clamp(22px, 7vw, 44px);
+  font-weight: 900;
+  letter-spacing: 2px;
+  white-space: nowrap;
+
+  text-shadow: 0 0 12px var(--color-green);
+
+  box-shadow:
+    inset 0 0 20px #000,
+    0 4px 0 #2a3e1e;
+
+  transition:
+    border-color var(--t-base),
+    color var(--t-base),
+    box-shadow var(--t-base);
+}
+
+.timer-box.warning {
+  border-color: #e6a23c;
+  color: #ffc766;
+  text-shadow: 0 0 12px #e6a23c;
+  box-shadow:
+    inset 0 0 20px #000,
+    0 4px 0 #5e3e1e;
+}
+
+.timer-box.danger {
+  border-color: var(--color-red);
+  color: #ff7a7a;
+  text-shadow: 0 0 16px #ff2a2a;
+  box-shadow:
+    inset 0 0 20px #5e0e0e,
+    0 4px 0 #5e0e0e;
+  animation: timer-pulse 1s ease-in-out infinite;
+}
+
+@keyframes timer-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.6; }
 }
 
 
 /* ============================================================
    [BLOCK: btn-reset]
-   Кнопка рестарта. Крупная, по центру нижней панели.
-   Появляется только при проигрыше (управляется классом .hidden).
    ============================================================ */
 .btn-reset {
-  display: inline-flex;
+  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 
-  padding: clamp(14px, 3vw, 22px) clamp(20px, 5vw, 36px);
-  border: 2px solid #ff9f7a;
-  border-radius: 36px;
+  padding: 0;
+  border: 3px solid #ff9f7a;
+  border-radius: 16px;
 
   background-color: #a33f3f;
   color: #ffe3b0;
 
   font-family: var(--font-mono);
-  font-size: clamp(14px, 3.6vw, 22px);
+  font-size: clamp(18px, 5vw, 28px);
   font-weight: 900;
   line-height: 1.15;
-  letter-spacing: 1.5px;
+  letter-spacing: 2px;
   text-transform: uppercase;
   text-align: center;
   white-space: nowrap;
@@ -155,69 +206,31 @@
   touch-action: manipulation;
 
   box-shadow:
-    0 8px 0 var(--color-red-deep),
-    0 10px 20px black;
-
-  transform: translateY(-3px);
+    inset 0 -6px 12px rgba(0, 0, 0, 0.4),
+    0 4px 0 var(--color-red-deep);
 
   transition:
     background var(--t-fast),
     box-shadow var(--t-fast),
     transform var(--t-fast);
-
-  animation: reset-pop var(--t-pop) ease-out;
 }
 
-/* Подпись «RESTART» под японской надписью */
 .btn-reset small {
   display: block;
-  margin-top: 3px;
-  font-size: 0.65em;
+  margin-top: 4px;
+  font-size: 0.55em;
   letter-spacing: 3px;
   opacity: 0.9;
 }
 
-/* Нажатое состояние */
 .btn-reset:active {
   background-color: #d14d4d;
-  transform: translateY(5px);
+  transform: translateY(3px);
   box-shadow:
-    0 3px 0 var(--color-red-deep);
+    inset 0 -3px 8px rgba(0, 0, 0, 0.5),
+    0 1px 0 var(--color-red-deep);
 }
 
-/* Скрытое состояние — управляется классом .hidden из base.css */
 .btn-reset.hidden {
   display: none;
-}
-
-
-/* ---------- Анимация появления кнопки рестарта ---------- */
-@keyframes reset-pop {
-  0%   { transform: translateY(-3px) scale(0.6); opacity: 0; }
-  60%  { transform: translateY(-3px) scale(1.08); opacity: 1; }
-  100% { transform: translateY(-3px) scale(1); }
-}
-
-
-/* ============================================================
-   [BLOCK: mobile-tweaks]
-   Уменьшаем кнопки на узких экранах
-   ============================================================ */
-@media (max-width: 480px) and (orientation: portrait) {
-  .bottom-row {
-    margin-top: var(--gap-sm);
-    min-height: clamp(100px, 28vw, 130px);
-    gap: var(--gap-xs);
-  }
-
-  .dpad-btn {
-    width: clamp(48px, 13vw, 64px);
-    height: clamp(48px, 13vw, 64px);
-    font-size: clamp(14px, 3.6vw, 22px);
-  }
-
-  .btn-reset {
-    padding: clamp(12px, 2.5vw, 16px) clamp(14px, 4vw, 22px);
-    font-size: clamp(12px, 3.2vw, 16px);
-  }
 }

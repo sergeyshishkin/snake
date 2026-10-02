@@ -1,46 +1,78 @@
 // ============================================================
 // [FILE: ui.js]
-// Назначение: связь игровой логики с DOM-элементами
-// Правится: при изменении текстов подсказок, элементов UI
-// Зависит: player-limits.js (getRemainingMs)
+// Назначение: реактивный UI — одна функция render() читает
+//             state и обновляет DOM. Никаких императивных
+//             showX/hideX снаружи.
+// Правится: при изменении элементов UI
+// Зависит: state.js, dom.js, player-limits.js
 // Экспортирует: createUI
 // ============================================================
 
+import { state } from './state.js';
+import { $ } from './dom.js';
 import { getRemainingMs } from './player-limits.js';
 
 
-// ============================================================
-// [BLOCK: create-ui]
-// Фабрика UI-контроллера. Кэширует DOM-элементы,
-// предоставляет методы для обновления интерфейса.
-// ============================================================
 export function createUI() {
-
-  // ----------------------------------------------------------
-  // Кэш DOM-элементов. Ищем один раз при создании.
-  // ----------------------------------------------------------
-  const scoreSpan    = document.getElementById('scoreDisplay');
-  const timerBox     = document.getElementById('timerBox');
-  const timeLeftSpan = document.getElementById('timeLeft');
-  const startHint    = document.getElementById('startHint');
-  const resetButton  = document.getElementById('resetButton');
 
   let timerInterval = null;
 
 
   // ==========================================================
-  // [BLOCK: score]
-  // Обновление счёта
+  // [BLOCK: render]
+  // Единая функция обновления UI. Читает state и приводит DOM
+  // в соответствие. Вызывается после каждого updateState().
   // ==========================================================
-  function setScore(n) {
-    scoreSpan.textContent = n;
+  function render() {
+
+    // ------------------------------------------------------
+    // Score и Best
+    // ------------------------------------------------------
+    $.score.textContent     = state.score;
+    $.bestScore.textContent = state.bestScore;
+
+    // ------------------------------------------------------
+    // Timer / Restart swap в правой ячейке
+    // ------------------------------------------------------
+    if (state.panelMode === 'reset') {
+      $.timerBox.classList.add('hidden');
+      $.resetButton.classList.remove('hidden');
+    } else {
+      $.timerBox.classList.remove('hidden');
+      $.resetButton.classList.add('hidden');
+    }
+
+    // ------------------------------------------------------
+    // Start hint (или limit hint)
+    // ------------------------------------------------------
+    if (!state.hintVisible) {
+      $.startHint.style.display = 'none';
+      $.startHint.classList.remove('limit-hint');
+    } else {
+      $.startHint.style.display = 'block';
+
+      if (state.hintKind === 'limit') {
+        $.startHint.classList.add('limit-hint');
+        $.startHint.innerHTML = `
+          <span class="big">⛔ 時間切れ</span>
+          <span class="big" style="font-size:1em;">TIME LIMIT REACHED</span>
+          <small>今日のプレイ時間は終了しました</small>
+          <small style="font-size:0.5em;opacity:0.8;">Come back tomorrow!</small>
+        `;
+      } else {
+        $.startHint.classList.remove('limit-hint');
+        $.startHint.innerHTML =
+          '▶ タップでスタート<br>' +
+          '<small>TAP TO START</small>';
+      }
+    }
   }
 
 
   // ==========================================================
   // [BLOCK: timer]
-  // Отображение остатка времени + смена цвета плашки
-  // Пороги: warning ≤ 60 сек, danger ≤ 30 сек
+  // Таймер обновляется отдельно — он не часть основного state
+  // (значение приходит из player-limits при каждом вызове).
   // ==========================================================
   function updateTimer() {
     const ms = getRemainingMs();
@@ -48,96 +80,30 @@ export function createUI() {
     const min = Math.floor(totalSec / 60);
     const sec = totalSec % 60;
 
-    timeLeftSpan.textContent = `${min}:${String(sec).padStart(2, '0')}`;
+    $.timeLeft.textContent = `${min}:${String(sec).padStart(2, '0')}`;
 
-    timerBox.classList.remove('warning', 'danger');
+    $.timerBox.classList.remove('warning', 'danger');
     if (ms <= 30000) {
-      timerBox.classList.add('danger');
+      $.timerBox.classList.add('danger');
     } else if (ms <= 60000) {
-      timerBox.classList.add('warning');
+      $.timerBox.classList.add('warning');
     }
   }
 
 
-  // ==========================================================
-  // [BLOCK: timer-loop]
-  // Запуск периодического обновления таймера.
-  // Раз в секунду:
-  //   1. вызывает onTick — для накопления сессии в player-limits
-  //   2. пересчитывает остаток и обновляет DOM
-  // ==========================================================
   function startTimer(onTick) {
     if (timerInterval) clearInterval(timerInterval);
-
     timerInterval = setInterval(() => {
       onTick();
       updateTimer();
     }, 1000);
-
-    updateTimer(); // сразу отрисовать актуальное значение
+    updateTimer();
   }
 
 
-  // ==========================================================
-  // [BLOCK: start-hint]
-  // Стартовая подсказка поверх канваса.
-  // Показывается до первого старта партии.
-  // ==========================================================
-  function showStart() {
-    startHint.style.display = 'block';
-    startHint.classList.remove('limit-hint');
-    startHint.innerHTML =
-      '▶ タップでスタート<br>' +
-      '<small>TAP TO START</small>';
-  }
-
-  function hideHint() {
-    startHint.style.display = 'none';
-  }
-
-
-  // ==========================================================
-  // [BLOCK: limit-hint]
-  // Экран «время вышло».
-  // Показывается, когда дневной лимит достигнут.
-  // ==========================================================
-  function showLimit() {
-    startHint.style.display = 'block';
-    startHint.classList.add('limit-hint');
-    startHint.innerHTML = `
-      <span class="big">⛔ 時間切れ</span>
-      <span class="big" style="font-size:1em;">TIME LIMIT REACHED</span>
-      <small>今日のプレイ時間は終了しました</small>
-      <small style="font-size:0.5em;opacity:0.8;">Come back tomorrow!</small>
-    `;
-  }
-
-
-  // ==========================================================
-  // [BLOCK: reset-button]
-  // Кнопка рестарта появляется только при проигрыше/победе.
-  // Управляется классом .hidden (объявлен в base.css).
-  // ==========================================================
-  function showReset() {
-    resetButton.classList.remove('hidden');
-  }
-
-  function hideReset() {
-    resetButton.classList.add('hidden');
-  }
-
-
-  // ==========================================================
-  // [BLOCK: public-api]
-  // ==========================================================
   return {
-    setScore,
+    render,
     updateTimer,
     startTimer,
-    showStart,
-    showLimit,
-    hideHint,
-    showReset,
-    hideReset,
   };
 }

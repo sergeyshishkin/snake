@@ -1,117 +1,144 @@
 // ============================================================
 // [FILE: main.js]
 // Назначение: точка входа, склейка всех модулей
-// Правится: редко — при добавлении новых модулей или
-//           изменении жизненного цикла приложения
-// Зависит: config.js, player-limits.js, game.js, ui.js,
-//          cookie.js, controls/dpad.js, controls/keyboard.js,
-//          controls/swipe.js
+// Зависит: state.js, dom.js, config.js, player-limits.js,
+//          game.js, ui.js, cookie.js, controls/*
 // ============================================================
 
-import { initPlayer, isLimitReached, flushSession } from './player-limits.js';
-import { createGame }     from './game.js';
-import { createUI }       from './ui.js';
+import {
+  initPlayer,
+  isLimitReached,
+  flushSession,
+  getBestScore,
+  updateBestScore,
+} from './player-limits.js';
+import { state, updateState, resetGameState } from './state.js';
+import { $ } from './dom.js';
+import { createGame }       from './game.js';
+import { createUI }         from './ui.js';
 import { createCookieGate } from './cookie.js';
-import { createDpad }     from './controls/dpad.js';
-import { createKeyboard } from './controls/keyboard.js';
-import { createSwipe }    from './controls/swipe.js';
+import { createDpad }       from './controls/dpad.js';
+import { createKeyboard }   from './controls/keyboard.js';
+import { createSwipe }      from './controls/swipe.js';
 
 
 // ============================================================
-// [BLOCK: dom-refs]
-// Ссылки на DOM-элементы, которые нужны в main.js
-// ============================================================
-const canvas = document.getElementById('gameCanvas');
-const dpadRoot = document.body;   // ищем .dpad-btn по всему документу
-
-
-// ============================================================
-// [BLOCK: init-player]
-// Загрузка/создание анонимного игрока.
-// Вызывается до всего остального — от него зависит лимит.
+// [BLOCK: init]
 // ============================================================
 initPlayer();
 
+// Загружаем best score в state сразу
+state.bestScore = getBestScore();
 
-// ============================================================
-// [BLOCK: ui]
-// UI-контроллер (score, timer, hint, reset button)
-// ============================================================
 const ui = createUI();
+const game = createGame($.canvas, {
+  onScore: score => updateState({ score }, ui),
 
+  onStart: () => updateState({
+    hintVisible: false,
+    panelMode: 'timer',
+  }, ui),
 
-// ============================================================
-// [BLOCK: game]
-// Создание игры. Колбэки связывают её с UI.
-// ============================================================
-const game = createGame(canvas, {
-  onScore: n => ui.setScore(n),
-
-  onStart: () => {
-    ui.hideHint();
-    ui.hideReset();
+  onGameOver: ({ win, score }) => {
+    const isNewRecord = updateBestScore(score);
+    updateState({
+      gameActive: false,
+      gameOver: true,
+      win,
+      panelMode: 'reset',
+      ...(isNewRecord ? { bestScore: score } : {}),
+    }, ui);
   },
 
-  onGameOver: () => {
-    // Кнопка рестарта появляется только при проигрыше/победе
-    ui.showReset();
-  },
-
-  onLimit: () => {
-    // При достижении лимита играть нельзя — кнопку не показываем
-    ui.hideReset();
-    ui.showLimit();
-  },
+  onLimit: () => updateState({
+    limitReached: true,
+    hintVisible: true,
+    hintKind: 'limit',
+    panelMode: 'timer',
+  }, ui),
 });
 
 
 // ============================================================
-// [BLOCK: input-handlers]
-// Универсальные обработчики для всех контроллеров.
-// Вызываются из dpad/keyboard/swipe — вся игровая логика здесь.
+// [BLOCK: canvas-resize]
 // ============================================================
+let resizeRaf = null;
 
-// ----------------------------------------------------------
-// Смена направления или старт игры (если ещё не начата)
-// ----------------------------------------------------------
+function syncCanvasSize() {
+  const container = $.canvas.parentElement;
+  if (!container) return;
+
+  const rect = container.getBoundingClientRect();
+  const w = Math.round(rect.width);
+  const h = Math.round(rect.height);
+
+  if (w <= 0 || h <= 0) return;
+
+  if ($.canvas.width !== w || $.canvas.height !== h) {
+    $.canvas.width  = w;
+    $.canvas.height = h;
+    game.resize(w, h);
+    game.render();
+  }
+}
+
+function scheduleResize() {
+  if (resizeRaf) return;
+  resizeRaf = requestAnimationFrame(() => {
+    resizeRaf = null;
+    syncCanvasSize();
+  });
+}
+
+const resizeObserver = new ResizeObserver(scheduleResize);
+resizeObserver.observe($.canvas.parentElement);
+
+syncCanvasSize();
+requestAnimationFrame(syncCanvasSize);
+setTimeout(syncCanvasSize, 100);
+
+
+// ============================================================
+// [BLOCK: input-handlers]
+// ============================================================
 function handleDirection(dir) {
-  if (!gameUnlocked) return;
-  if (game.isLimitHit()) return;
+  if (!state.gameUnlocked) return;
+  if (state.limitReached) return;
 
-  // Если игра не начата или закончилась — стартуем
-  if (!game.isStarted() || game.isOver()) {
-    if (game.isActive()) flushSession();
-    ui.hideReset();
+  if (!state.gameStarted || state.gameOver) {
+    if (state.gameActive) flushSession();
+    resetGameState();
+    ui.render();
     game.init();
     return;
   }
-
-  // Иначе — просто меняем направление
   game.setDirection(dir);
 }
 
-// ----------------------------------------------------------
-// Действие (Space / Enter / R) — старт или рестарт
-// ----------------------------------------------------------
 function handleAction() {
-  if (!gameUnlocked) return;
-  if (game.isLimitHit()) { ui.showLimit(); return; }
-  if (!game.isStarted() || game.isOver()) {
-    if (game.isActive()) flushSession();
-    ui.hideReset();
+  if (!state.gameUnlocked) return;
+  if (state.limitReached) {
+    updateState({ hintVisible: true, hintKind: 'limit' }, ui);
+    return;
+  }
+  if (!state.gameStarted || state.gameOver) {
+    if (state.gameActive) flushSession();
+    resetGameState();
+    ui.render();
     game.init();
   }
 }
 
-// ----------------------------------------------------------
-// Тап по канвасу — старт или рестарт
-// ----------------------------------------------------------
 function handleTap() {
-  if (!gameUnlocked) return;
-  if (game.isLimitHit()) { ui.showLimit(); return; }
-  if (!game.isStarted() || game.isOver()) {
-    if (game.isActive()) flushSession();
-    ui.hideReset();
+  if (!state.gameUnlocked) return;
+  if (state.limitReached) {
+    updateState({ hintVisible: true, hintKind: 'limit' }, ui);
+    return;
+  }
+  if (!state.gameStarted || state.gameOver) {
+    if (state.gameActive) flushSession();
+    resetGameState();
+    ui.render();
     game.init();
   }
 }
@@ -119,11 +146,8 @@ function handleTap() {
 
 // ============================================================
 // [BLOCK: controls]
-// Создание трёх контроллеров. Все они получают одни и те же
-// обработчики — dpad, keyboard, swipe не отличаются по логике.
 // ============================================================
-
-const dpad = createDpad(dpadRoot, {
+const dpad = createDpad(document.body, {
   onDirection: handleDirection,
 });
 
@@ -132,12 +156,11 @@ const keyboard = createKeyboard({
   onAction:    handleAction,
 });
 
-const swipe = createSwipe(canvas, {
+const swipe = createSwipe($.canvas, {
   onDirection: dir => {
-    // Свайп не стартует игру — только меняет направление
-    if (!gameUnlocked) return;
-    if (game.isLimitHit()) return;
-    if (!game.isStarted() || game.isOver()) return;
+    if (!state.gameUnlocked) return;
+    if (state.limitReached) return;
+    if (!state.gameStarted || state.gameOver) return;
     game.setDirection(dir);
   },
   onTap: handleTap,
@@ -146,28 +169,25 @@ const swipe = createSwipe(canvas, {
 
 // ============================================================
 // [BLOCK: reset-button]
-// Кнопка «リセット» — появляется только при проигрыше.
-// По клику завершает сессию и запускает новую партию.
 // ============================================================
-const resetButton = document.getElementById('resetButton');
-resetButton.addEventListener('click', e => {
+$.resetButton.addEventListener('click', e => {
   e.stopPropagation();
-
-  if (!gameUnlocked) return;
-  if (game.isLimitHit()) { ui.showLimit(); return; }
-
-  if (game.isActive()) flushSession();
-  ui.hideReset();
+  if (!state.gameUnlocked) return;
+  if (state.limitReached) {
+    updateState({ hintVisible: true, hintKind: 'limit' }, ui);
+    return;
+  }
+  if (state.gameActive) flushSession();
+  resetGameState();
+  ui.render();
   game.init();
 });
 
 
 // ============================================================
 // [BLOCK: tap-on-canvas]
-// Клик мышью по канвасу — старт/рестарт.
-// На тач-устройствах сработает тот же обработчик после touchend.
 // ============================================================
-canvas.addEventListener('click', e => {
+$.canvas.addEventListener('click', e => {
   e.preventDefault();
   handleTap();
 });
@@ -175,30 +195,37 @@ canvas.addEventListener('click', e => {
 
 // ============================================================
 // [BLOCK: unlock-game]
-// Разблокировка игры после принятия cookies.
-// Вызывается из cookie-гейта.
 // ============================================================
-let gameUnlocked = false;
-
 function unlockGame() {
-  if (gameUnlocked) return;
-  gameUnlocked = true;
+  if (state.gameUnlocked) return;
 
-  // Включаем все контроллеры
+  updateState({
+    gameUnlocked: true,
+    cookiesAccepted: true,
+  }, ui);
+
   dpad.enable();
   keyboard.enable();
   swipe.enable();
 
-  // Показываем стартовый экран (или лимит, если он уже достигнут)
   if (isLimitReached()) {
-    ui.showLimit();
+    updateState({
+      limitReached: true,
+      hintVisible: true,
+      hintKind: 'limit',
+    }, ui);
   } else {
     game.showPreview();
-    ui.showStart();
+    updateState({
+      hintVisible: true,
+      hintKind: 'start',
+      gameStarted: false,
+      gameActive: false,
+      gameOver: false,
+      panelMode: 'timer',
+    }, ui);
   }
 
-  // Запускаем UI-таймер. Раз в секунду он дёргает
-  // game.tickSessionTick() — для накопления времени игры.
   ui.startTimer(() => game.tickSessionTick());
   ui.updateTimer();
 }
@@ -206,8 +233,6 @@ function unlockGame() {
 
 // ============================================================
 // [BLOCK: cookie-gate]
-// Создаём cookie-гейт. Если пользователь уже соглашался —
-// unlockGame() вызовется сразу при init().
 // ============================================================
 const cookieGate = createCookieGate({
   onAccept: unlockGame,
@@ -218,22 +243,17 @@ cookieGate.init();
 
 // ============================================================
 // [BLOCK: lifecycle]
-// Обработчики жизненного цикла — сохранение времени при
-// закрытии вкладки или её скрытии.
 // ============================================================
-
 window.addEventListener('beforeunload', () => {
-  if (game.isActive()) flushSession();
+  if (state.gameActive) flushSession();
 });
 
 window.addEventListener('pagehide', () => {
-  if (game.isActive()) flushSession();
+  if (state.gameActive) flushSession();
 });
 
 document.addEventListener('visibilitychange', () => {
-  if (document.hidden && game.isActive()) {
-    // Скрытие вкладки — принудительно завершаем текущую сессию
-    // и перерисовываем канвас, чтобы остановить пульсацию
+  if (document.hidden && state.gameActive) {
     game.flushSessionNow();
     game.render();
   }
@@ -242,16 +262,16 @@ document.addEventListener('visibilitychange', () => {
 
 // ============================================================
 // [BLOCK: periodic-day-check]
-// Раз в 30 секунд проверяем:
-//   — не сменился ли день (тогда лимит сбросится сам)
-//   — не пора ли показать экран лимита
-//   — обновляем UI-таймер
 // ============================================================
 setInterval(() => {
-  if (!gameUnlocked) return;
+  if (!state.gameUnlocked) return;
 
-  if (!game.isActive() && !game.isStarted() && isLimitReached()) {
-    ui.showLimit();
+  if (!state.gameActive && !state.gameStarted && isLimitReached()) {
+    updateState({
+      limitReached: true,
+      hintVisible: true,
+      hintKind: 'limit',
+    }, ui);
   }
   ui.updateTimer();
 }, 30000);
@@ -259,17 +279,12 @@ setInterval(() => {
 
 // ============================================================
 // [BLOCK: context-menu-block]
-// Блокируем контекстное меню по долгому тапу на канвасе.
-// На d-pad это уже сделано внутри dpad.js.
 // ============================================================
-canvas.addEventListener('contextmenu', e => e.preventDefault());
+$.canvas.addEventListener('contextmenu', e => e.preventDefault());
 
 
 // ============================================================
 // [BLOCK: debug-reset]
-// Отладочный сброс лимита через URL ?resetLimit=1.
-// Работает только на localhost / 127.0.0.1 / file://.
-// На GitHub Pages параметр молча игнорируется.
 // ============================================================
 (function debugResetLimit() {
   const isDev =
@@ -281,21 +296,15 @@ canvas.addEventListener('contextmenu', e => e.preventDefault());
 
   const params = new URLSearchParams(location.search);
   if (params.get('resetLimit') === '1') {
-    try {
-      localStorage.removeItem('sushi_snake_player_v1');
-    } catch (e) {}
+    try { localStorage.removeItem('sushi_snake_player_v1'); } catch (e) {}
 
-    // Убираем параметр из URL, чтобы F5 не сбрасывал снова
     params.delete('resetLimit');
     const newUrl = location.pathname + (params.toString() ? '?' + params : '');
     history.replaceState({}, '', newUrl);
 
-    console.log(
-      '%c🍣 Лимит сброшен (dev)',
-      'color:#ff6b1a;font-weight:bold;font-size:14px'
-    );
+    console.log('%c🍣 Лимит сброшен (dev)',
+      'color:#ff6b1a;font-weight:bold;font-size:14px');
 
-    // Перезагружаем, чтобы игрок создался заново
     location.reload();
   }
 })();

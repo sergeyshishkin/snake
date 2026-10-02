@@ -1,15 +1,18 @@
 // ============================================================
 // [FILE: player-limits.js]
 // Назначение: анонимная идентификация игрока + дневной лимит
-// Правится: при изменении логики лимитов (редко)
+//             + хранение лучшего результата
+// Правится: при изменении логики лимитов или рекорда (редко)
 // Зависит: config.js (CONFIG, DEBUG_DISABLE_LIMIT)
 // Экспортирует: initPlayer, getRemainingMs, isLimitReached,
-//               startSession, endSession, tickSession, flushSession
+//               startSession, endSession, tickSession, flushSession,
+//               getBestScore, updateBestScore, getPlayerStats
 // ============================================================
 
 import { CONFIG, DEBUG_DISABLE_LIMIT } from './config.js';
 
 const DAILY_LIMIT_MS = CONFIG.DAILY_PLAY_LIMIT_MINUTES * 60 * 1000;
+
 
 // ----------------------------------------------------------
 // Внутреннее состояние модуля.
@@ -105,7 +108,13 @@ export function initPlayer() {
       lastDate: todayKey(),
       totalGames: 0,
       totalPlayMs: 0,
+      bestScore: 0,
     };
+  }
+
+  // Миграция: у игроков из старых версий поля bestScore нет
+  if (typeof p.bestScore !== 'number') {
+    p.bestScore = 0;
   }
 
   // Сброс лимита при смене дня
@@ -146,6 +155,35 @@ export function getRemainingMs() {
 export function isLimitReached() {
   if (DEBUG_DISABLE_LIMIT) return false;
   return getRemainingMs() <= 0;
+}
+
+
+// ============================================================
+// [BLOCK: best-score]
+// Рекорд игрока. Обновляется только если новый счёт больше.
+// ============================================================
+
+/**
+ * Возвращает текущий рекорд.
+ */
+export function getBestScore() {
+  if (!player) return 0;
+  return player.bestScore || 0;
+}
+
+/**
+ * Обновляет рекорд, если score больше текущего.
+ * @param   {number} score — новый результат
+ * @returns {boolean} true, если рекорд побит
+ */
+export function updateBestScore(score) {
+  if (!player) return false;
+  if (typeof score !== 'number' || score <= 0) return false;
+  if (score <= (player.bestScore || 0)) return false;
+
+  player.bestScore = score;
+  save();
+  return true;
 }
 
 
@@ -248,5 +286,6 @@ export function getPlayerStats() {
     limitMs: DAILY_LIMIT_MS,
     totalGames: player.totalGames,
     totalPlayMs: player.totalPlayMs,
+    bestScore: player.bestScore,
   };
 }

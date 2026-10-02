@@ -32,7 +32,14 @@ export function createGame(canvas, callbacks) {
 
   const ctx = canvas.getContext('2d');
   const GRID = CONFIG.GRID_SIZE;
-  const CELL = canvas.width / GRID;
+
+  // ----------------------------------------------------------
+  // Размер клетки теперь динамический — canvas может быть
+  // прямоугольным. cellW — ширина клетки, cellH — высота.
+  // При resize() оба пересчитываются.
+  // ----------------------------------------------------------
+  let cellW = canvas.width  / GRID;
+  let cellH = canvas.height / GRID;
 
   // ----------------------------------------------------------
   // Состояние игры (живёт внутри замыкания)
@@ -50,6 +57,23 @@ export function createGame(canvas, callbacks) {
   let limitHit = false;     // упёрлись в дневной лимит
 
   let interval = null;      // setInterval для тиков
+
+
+  // ==========================================================
+  // [BLOCK: resize]
+  // Вызывается из main.js при изменении размера контейнера.
+  // Пересчитывает размеры клетки под новые габариты canvas.
+  //
+  // Сам canvas.width / canvas.height устанавливаются в main.js
+  // ДО вызова этого метода — здесь мы только подхватываем
+  // актуальные значения.
+  // ==========================================================
+  function resize(w, h) {
+    canvas.width  = w;
+    canvas.height = h;
+    cellW = w / GRID;
+    cellH = h / GRID;
+  }
 
 
   // ==========================================================
@@ -225,39 +249,40 @@ export function createGame(canvas, callbacks) {
     ctx.fillStyle = '#0e1a1b';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Сетка
+    // Сетка — учитываем cellW и cellH отдельно,
+    // чтобы линии совпадали с границами клеток на прямоугольнике
     for (let i = 0; i <= GRID; i++) {
       ctx.beginPath();
-      ctx.moveTo(i * CELL, 0);
-      ctx.lineTo(i * CELL, canvas.height);
+      ctx.moveTo(i * cellW, 0);
+      ctx.lineTo(i * cellW, canvas.height);
       ctx.strokeStyle = '#2a3a2a';
       ctx.stroke();
 
       ctx.beginPath();
-      ctx.moveTo(0, i * CELL);
-      ctx.lineTo(canvas.width, i * CELL);
+      ctx.moveTo(0, i * cellH);
+      ctx.lineTo(canvas.width, i * cellH);
       ctx.strokeStyle = '#2a3a2a';
       ctx.stroke();
     }
 
-    // Еда — суши с пульсацией
+    // Еда — суши с пульсацией.
+    // Размер берём минимальный из двух сторон клетки —
+    // чтобы фигура осталась пропорциональной на прямоугольнике.
     if (food && snake.length > 0) {
-      drawSushi(
-        ctx,
-        food.x * CELL + CELL / 2,
-        food.y * CELL + CELL / 2,
-        CELL,
-        {
-          includeGrass: true,
-          includeHighlights: true,
-          glow: 14,
-          time: performance.now(),
-        }
-      );
+      const foodSize = Math.min(cellW, cellH);
+      const cx = food.x * cellW + cellW / 2;
+      const cy = food.y * cellH + cellH / 2;
+
+      drawSushi(ctx, cx, cy, foodSize, {
+        includeGrass: true,
+        includeHighlights: true,
+        glow: 14,
+        time: performance.now(),
+      });
     }
 
-    // Змейка
-    drawSnake(ctx, snake, CELL);
+    // Змейка — передаём оба размера клетки
+    drawSnake(ctx, snake, cellW, cellH);
 
     // Оверлей game over (только если партия закончилась, но не лимит)
     if (!active && over && !limitHit && snake.length > 0) {
@@ -332,6 +357,7 @@ export function createGame(canvas, callbacks) {
   return {
     init,
     render,
+    resize,          // ← новое: вызывается из main.js при ресайзе
     showPreview,
 
     setDirection: dir => { nextDir = dir; },

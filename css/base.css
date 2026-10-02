@@ -7,7 +7,6 @@
 
 /* ============================================================
    [BLOCK: reset]
-   Обнуление стилей браузера по умолчанию
    ============================================================ */
 *,
 *::before,
@@ -21,8 +20,6 @@
 
 /* ============================================================
    [BLOCK: design-tokens]
-   CSS-переменные — единый источник правды для цветов и размеров.
-   Меняя значения здесь, вы меняете их во всём проекте.
    ============================================================ */
 :root {
 
@@ -33,7 +30,7 @@
   --color-bg-panel:       #0f0f1f;
   --color-bg-field:       #0e1a1b;
 
-  /* ---------- Акценты (золото, красный, зелёный) ---------- */
+  /* ---------- Акценты ---------- */
   --color-gold:           #c0a86a;
   --color-gold-bright:    #ffd58c;
   --color-gold-deep:      #3a2e1b;
@@ -52,13 +49,13 @@
   --color-text-accent:    #ffe484;
 
   /* ---------- Единые отступы ---------- */
-  --gap-xs:   clamp(4px, 1vw, 6px);
-  --gap-sm:   clamp(6px, 1.5vw, 10px);
-  --gap-md:   clamp(8px, 2vw, 14px);
-  --gap-lg:   clamp(12px, 3vw, 20px);
+  --gap-xs:   clamp(3px, 0.8vw, 5px);
+  --gap-sm:   clamp(4px, 1.2vw, 8px);
+  --gap-md:   clamp(6px, 1.8vw, 12px);
+  --gap-lg:   clamp(10px, 2.5vw, 18px);
 
-  --pad-panel-y: clamp(5px, 1.4vw, 9px);   /* вертикальный padding у score/timer */
-  --pad-panel-x: clamp(8px, 2vw, 14px);    /* горизонтальный padding у score/timer */
+  --pad-panel-y: clamp(5px, 1.4vw, 9px);
+  --pad-panel-x: clamp(8px, 2vw, 14px);
 
   /* ---------- Скругления ---------- */
   --radius-sm: 8px;
@@ -66,9 +63,10 @@
   --radius-lg: 22px;
   --radius-pill: 40px;
 
-  /* ---------- Радиусы/размеры общие ---------- */
-  --wrapper-max-width: 720px;
-  --btn-dir-size:      clamp(52px, 14vw, 72px);
+  /* ---------- Размеры компонентов ---------- */
+  --wrapper-pad:  clamp(6px, 1.5vw, 12px);
+  --header-h:     clamp(36px, 9vw, 52px);
+  --bottom-h:     clamp(140px, 36vw, 200px);
 
   /* ---------- Шрифт ---------- */
   --font-mono: 'Courier New', Courier, monospace;
@@ -82,7 +80,6 @@
 
 /* ============================================================
    [BLOCK: html-body]
-   Запрет скролла, привязка к viewport, отключение pull-to-refresh
    ============================================================ */
 html,
 body {
@@ -95,57 +92,23 @@ body {
 
 body {
   background-color: var(--color-bg-deep);
-  background-image:
-    radial-gradient(circle at 20% 30%, #2a1b3d 0%, transparent 25%),
-    radial-gradient(circle at 80% 70%, #1e3a2e 0%, transparent 30%),
-    repeating-linear-gradient(
-      45deg,
-      rgba(255, 215, 0, 0.03) 0px,
-      rgba(255, 215, 0, 0.03) 2px,
-      transparent 2px,
-      transparent 12px
-    );
-  display: flex;
-  justify-content: center;
-  align-items: center;
   font-family: var(--font-mono);
-  padding: 8px;
+  color: var(--color-text-main);
+  margin: 0;
+  padding: 0;
   touch-action: none;
   user-select: none;
   -webkit-user-select: none;
-  color: var(--color-text-main);
-}
-
-
-/* ============================================================
-   [BLOCK: ambient-glow]
-   Тёплое свечение «восходящего солнца» на фоне
-   ============================================================ */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background: radial-gradient(
-    circle at 50% 40%,
-    rgba(220, 20, 60, 0.15) 0%,
-    transparent 60%
-  );
-  pointer-events: none;
-  z-index: 0;
 }
 
 
 /* ============================================================
    [BLOCK: helpers]
-   Глобальные утилитарные классы
    ============================================================ */
-
-/* Скрытие элемента без влияния на layout */
 .hidden {
   display: none !important;
 }
 
-/* Визуально скрыт, но доступен скринридерам */
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -161,7 +124,6 @@ body::before {
 
 /* ============================================================
    [BLOCK: focus]
-   Единый стиль фокуса для клавиатурной навигации
    ============================================================ */
 :focus-visible {
   outline: 2px solid var(--color-orange);
@@ -171,7 +133,6 @@ body::before {
 
 /* ============================================================
    [BLOCK: reduced-motion]
-   Уважаем системную настройку «уменьшить движение»
    ============================================================ */
 @media (prefers-reduced-motion: reduce) {
   *,

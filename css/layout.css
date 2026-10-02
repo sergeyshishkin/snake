@@ -1,6 +1,6 @@
 /* ============================================================
    [FILE: layout.css]
-   Назначение: каркас игры — обёртка, header, score, timer, canvas
+   Назначение: каркас игры — обёртка, header, canvas
    Правится: при смене компоновки, пропорций, размеров полей
    Зависит от: base.css (переменные --color-*, --gap-*, --pad-*)
    ============================================================ */
@@ -8,96 +8,51 @@
 
 /* ============================================================
    [BLOCK: game-wrapper]
-   Внешняя «коробка» игры: рамка, фон, отступы, ограничение ширины
    ============================================================ */
 .game-wrapper {
-  position: relative;
+  position: fixed;
+  inset: 0;
   z-index: 2;
-  width: 100%;
-  max-width: var(--wrapper-max-width);
-  max-height: calc(100vh - 16px);
 
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  overflow: hidden;
 
-  padding: clamp(8px, 2vw, 16px);
+  padding: var(--wrapper-pad);
 
-  background-color: #1a1a2e;
   background-image: linear-gradient(
     135deg,
     var(--color-bg-wrapper-1) 0%,
     var(--color-bg-wrapper-2) 100%
   );
 
-  border: 2px solid var(--color-orange);
-  border-radius: var(--radius-lg);
-
-  box-shadow:
-    0 0 0 clamp(2px, 0.8vw, 4px) var(--color-gold),
-    0 0 0 clamp(4px, 1.6vw, 8px) var(--color-gold-deep),
-    0 15px 40px rgba(0, 0, 0, 0.9),
-    inset 0 0 30px rgba(255, 200, 100, 0.2);
+  overflow: hidden;
+  touch-action: none;
 }
 
 
 /* ============================================================
    [BLOCK: header]
-   Шапка игры: заголовок слева, статистика справа
-   Верхний и нижний отступы одинаковые — заданы одним margin
    ============================================================ */
 .header {
+  flex: 0 0 auto;
+
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
-  gap: var(--gap-sm);
 
   width: 100%;
-  margin: 0 0 clamp(6px, 1.5vw, 10px) 0;
+  min-height: var(--header-h);
+  margin-bottom: var(--gap-sm);
 
   color: var(--color-text-main);
 }
 
 
-/* ---------- Заголовок «寿司スネーク» ---------- */
-.title-jp {
-  font-size: clamp(14px, 3.5vw, 22px);
-  font-weight: 900;
-  line-height: 1.2;
-  white-space: nowrap;
-
-  background: linear-gradient(180deg, #ffd966, #ff9f4b);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-
-  text-shadow:
-    0 0 5px #ff4500,
-    2px 2px 0 #6b1a1a;
-}
-
-
 /* ============================================================
-   [BLOCK: stats-row]
-   Контейнер для score + timer. Обе плашки одной высоты.
+   [BLOCK: stat-box]
    ============================================================ */
-.stats-row {
-  display: flex;
-  align-items: stretch;
-  flex-wrap: wrap;
-  gap: var(--gap-xs);
-}
-
-
-/* ============================================================
-   [BLOCK: score-box / timer-box]
-   Общая база: одинаковая высота и вертикальный padding —
-   верхний и нижний отступы идентичны по определению (--pad-panel-y)
-   ============================================================ */
-.score-box,
-.timer-box {
+.stat-box {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -106,19 +61,25 @@
   border-radius: var(--radius-pill);
 
   font-family: var(--font-mono);
-  font-size: clamp(11px, 3vw, 17px);
+  font-size: clamp(12px, 3.4vw, 18px);
   font-weight: bold;
   line-height: 1.2;
   letter-spacing: 1px;
   white-space: nowrap;
 
   background-color: var(--color-bg-panel);
-  transition: border-color var(--t-base), color var(--t-base), box-shadow var(--t-base);
 }
 
+.stat-best {
+  border: 2px solid #6b5a3a;
+  color: #d4af7a;
+  text-shadow: 0 0 6px rgba(212, 175, 122, 0.4);
+  box-shadow:
+    inset 0 0 10px #000,
+    0 3px 0 #2a2015;
+}
 
-/* ---------- Счёт ---------- */
-.score-box {
+.stat-score {
   border: 2px solid var(--color-gold);
   color: var(--color-text-accent);
   text-shadow: 0 0 8px #ffaa00;
@@ -128,67 +89,28 @@
 }
 
 
-/* ---------- Таймер ---------- */
-.timer-box {
-  border: 2px solid var(--color-green);
-  color: var(--color-green-bright);
-  text-shadow: 0 0 8px var(--color-green);
-  box-shadow:
-    inset 0 0 10px #000,
-    0 3px 0 #2a3e1e;
-}
-
-
-/* ---------- Таймер: предупреждение (≤ 60 c) ---------- */
-.timer-box.warning {
-  border-color: #e6a23c;
-  color: #ffc766;
-  text-shadow: 0 0 8px #e6a23c;
-  box-shadow:
-    inset 0 0 10px #000,
-    0 3px 0 #5e3e1e;
-}
-
-
-/* ---------- Таймер: опасно (≤ 30 c) ---------- */
-.timer-box.danger {
-  border-color: var(--color-red);
-  color: #ff7a7a;
-  text-shadow: 0 0 12px #ff2a2a;
-  box-shadow:
-    inset 0 0 15px #5e0e0e,
-    0 3px 0 #5e0e0e;
-  animation: timer-pulse 1s ease-in-out infinite;
-}
-
-@keyframes timer-pulse {
-  0%, 100% { opacity: 1; }
-  50%      { opacity: 0.6; }
-}
-
-
 /* ============================================================
    [BLOCK: canvas-container]
-   Обёртка вокруг canvas. Держит пропорцию 1:1 и позиционирует оверлеи.
    ============================================================ */
 .canvas-container {
+  flex: 1 1 auto;
+
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1;
+  min-height: 0;
+  margin: 0;
+
   touch-action: none;
 }
 
 
 /* ============================================================
    [BLOCK: canvas]
-   Игровое поле. Стиль сохранён: сетка, тень, рамка.
    ============================================================ */
 canvas {
   display: block;
   width: 100%;
   height: 100%;
-
-  border-radius: clamp(8px, 2vw, 16px);
 
   background-color: var(--color-bg-field);
   background-image:
@@ -199,26 +121,4 @@ canvas {
   image-rendering: pixelated;
   touch-action: none;
   cursor: pointer;
-
-  box-shadow:
-    inset 0 0 30px #000,
-    0 0 0 clamp(2px, 0.8vw, 5px) #2b2b2b,
-    0 0 0 clamp(4px, 1.4vw, 8px) #6b4f2a,
-    0 12px 24px black;
-}
-
-
-/* ============================================================
-   [BLOCK: mobile-tweaks]
-   Немного компактнее на узких экранах
-   ============================================================ */
-@media (max-width: 480px) and (orientation: portrait) {
-  .game-wrapper {
-    padding: 6px;
-    border-radius: 12px;
-  }
-
-  .header {
-    margin-bottom: 4px;
-  }
 }
