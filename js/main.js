@@ -1,8 +1,5 @@
 // ============================================================
 // [FILE: main.js]
-// Назначение: точка входа, склейка всех модулей
-// Зависит: state.js, dom.js, config.js, player-limits.js,
-//          game.js, ui.js, cookie.js, controls/*
 // ============================================================
 
 import {
@@ -22,12 +19,8 @@ import { createKeyboard }   from './controls/keyboard.js';
 import { createSwipe }      from './controls/swipe.js';
 
 
-// ============================================================
-// [BLOCK: init]
-// ============================================================
 initPlayer();
 
-// Загружаем best score в state сразу
 state.bestScore = getBestScore();
 
 const ui = createUI();
@@ -59,9 +52,6 @@ const game = createGame($.canvas, {
 });
 
 
-// ============================================================
-// [BLOCK: canvas-resize]
-// ============================================================
 let resizeRaf = null;
 
 function syncCanvasSize() {
@@ -98,9 +88,6 @@ requestAnimationFrame(syncCanvasSize);
 setTimeout(syncCanvasSize, 100);
 
 
-// ============================================================
-// [BLOCK: input-handlers]
-// ============================================================
 function handleDirection(dir) {
   if (!state.gameUnlocked) return;
   if (state.limitReached) return;
@@ -144,9 +131,6 @@ function handleTap() {
 }
 
 
-// ============================================================
-// [BLOCK: controls]
-// ============================================================
 const dpad = createDpad(document.body, {
   onDirection: handleDirection,
 });
@@ -167,9 +151,6 @@ const swipe = createSwipe($.canvas, {
 });
 
 
-// ============================================================
-// [BLOCK: reset-button]
-// ============================================================
 $.resetButton.addEventListener('click', e => {
   e.stopPropagation();
   if (!state.gameUnlocked) return;
@@ -184,18 +165,12 @@ $.resetButton.addEventListener('click', e => {
 });
 
 
-// ============================================================
-// [BLOCK: tap-on-canvas]
-// ============================================================
 $.canvas.addEventListener('click', e => {
   e.preventDefault();
   handleTap();
 });
 
 
-// ============================================================
-// [BLOCK: unlock-game]
-// ============================================================
 function unlockGame() {
   if (state.gameUnlocked) return;
 
@@ -231,9 +206,6 @@ function unlockGame() {
 }
 
 
-// ============================================================
-// [BLOCK: cookie-gate]
-// ============================================================
 const cookieGate = createCookieGate({
   onAccept: unlockGame,
 });
@@ -241,9 +213,6 @@ const cookieGate = createCookieGate({
 cookieGate.init();
 
 
-// ============================================================
-// [BLOCK: lifecycle]
-// ============================================================
 window.addEventListener('beforeunload', () => {
   if (state.gameActive) flushSession();
 });
@@ -260,9 +229,6 @@ document.addEventListener('visibilitychange', () => {
 });
 
 
-// ============================================================
-// [BLOCK: periodic-day-check]
-// ============================================================
 setInterval(() => {
   if (!state.gameUnlocked) return;
 
@@ -277,15 +243,9 @@ setInterval(() => {
 }, 30000);
 
 
-// ============================================================
-// [BLOCK: context-menu-block]
-// ============================================================
 $.canvas.addEventListener('contextmenu', e => e.preventDefault());
 
 
-// ============================================================
-// [BLOCK: debug-reset]
-// ============================================================
 (function debugResetLimit() {
   const isDev =
     location.hostname === 'localhost' ||

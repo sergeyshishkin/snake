@@ -1,11 +1,5 @@
 // ============================================================
 // [FILE: ui.js]
-// Назначение: реактивный UI — одна функция render() читает
-//             state и обновляет DOM. Никаких императивных
-//             showX/hideX снаружи.
-// Правится: при изменении элементов UI
-// Зависит: state.js, dom.js, player-limits.js
-// Экспортирует: createUI
 // ============================================================
 
 import { state } from './state.js';
@@ -18,22 +12,11 @@ export function createUI() {
   let timerInterval = null;
 
 
-  // ==========================================================
-  // [BLOCK: render]
-  // Единая функция обновления UI. Читает state и приводит DOM
-  // в соответствие. Вызывается после каждого updateState().
-  // ==========================================================
   function render() {
 
-    // ------------------------------------------------------
-    // Score и Best
-    // ------------------------------------------------------
-    $.score.textContent     = state.score;
-    $.bestScore.textContent = state.bestScore;
+    $.score.textContent     = ' ' + state.score;
+    $.bestScore.textContent = ' ' + state.bestScore;
 
-    // ------------------------------------------------------
-    // Timer / Restart swap в правой ячейке
-    // ------------------------------------------------------
     if (state.panelMode === 'reset') {
       $.timerBox.classList.add('hidden');
       $.resetButton.classList.remove('hidden');
@@ -42,9 +25,6 @@ export function createUI() {
       $.resetButton.classList.add('hidden');
     }
 
-    // ------------------------------------------------------
-    // Start hint (или limit hint)
-    // ------------------------------------------------------
     if (!state.hintVisible) {
       $.startHint.style.display = 'none';
       $.startHint.classList.remove('limit-hint');
@@ -69,11 +49,6 @@ export function createUI() {
   }
 
 
-  // ==========================================================
-  // [BLOCK: timer]
-  // Таймер обновляется отдельно — он не часть основного state
-  // (значение приходит из player-limits при каждом вызове).
-  // ==========================================================
   function updateTimer() {
     const ms = getRemainingMs();
     const totalSec = Math.ceil(ms / 1000);

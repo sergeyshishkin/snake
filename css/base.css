@@ -1,7 +1,5 @@
 /* ============================================================
    [FILE: base.css]
-   Назначение: reset, переменные, фон, глобальные правила
-   Правится: при смене темы, шрифтов, цветов, отступов по умолчанию
    ============================================================ */
 
 
@@ -23,14 +21,12 @@
    ============================================================ */
 :root {
 
-  /* ---------- Цвета фона и каркаса ---------- */
   --color-bg-deep:        #0b0c1e;
   --color-bg-wrapper-1:   #16213e;
   --color-bg-wrapper-2:   #0f0f1f;
   --color-bg-panel:       #0f0f1f;
   --color-bg-field:       #0e1a1b;
 
-  /* ---------- Акценты ---------- */
   --color-gold:           #c0a86a;
   --color-gold-bright:    #ffd58c;
   --color-gold-deep:      #3a2e1b;
@@ -42,13 +38,11 @@
   --color-green-bright:   #b8e986;
   --color-green-deep:     #3a5a1e;
 
-  /* ---------- Текст ---------- */
   --color-text-main:      #f5e6c6;
   --color-text-dim:       #c9b382;
   --color-text-warm:      #ffe9b0;
   --color-text-accent:    #ffe484;
 
-  /* ---------- Единые отступы ---------- */
   --gap-xs:   clamp(3px, 0.8vw, 5px);
   --gap-sm:   clamp(4px, 1.2vw, 8px);
   --gap-md:   clamp(6px, 1.8vw, 12px);
@@ -57,21 +51,17 @@
   --pad-panel-y: clamp(5px, 1.4vw, 9px);
   --pad-panel-x: clamp(8px, 2vw, 14px);
 
-  /* ---------- Скругления ---------- */
   --radius-sm: 8px;
   --radius-md: 14px;
   --radius-lg: 22px;
   --radius-pill: 40px;
 
-  /* ---------- Размеры компонентов ---------- */
   --wrapper-pad:  clamp(6px, 1.5vw, 12px);
   --header-h:     clamp(36px, 9vw, 52px);
-  --bottom-h:     clamp(140px, 36vw, 200px);
+  --bottom-h:     clamp(130px, 34vw, 180px);
 
-  /* ---------- Шрифт ---------- */
   --font-mono: 'Courier New', Courier, monospace;
 
-  /* ---------- Тайминги анимаций ---------- */
   --t-fast:   0.07s;
   --t-base:   0.3s;
   --t-pop:    0.4s;

@@ -1,9 +1,5 @@
 // ============================================================
 // [FILE: game.js]
-// Назначение: игровая логика — змейка, еда, тики, коллизии
-// Правится: при изменении правил игры
-// Зависит: config.js, player-limits.js, renderers/food.js, renderers/snake.js
-// Экспортирует: createGame
 // ============================================================
 
 import { CONFIG, DIRS } from './config.js';
@@ -17,57 +13,29 @@ import {
 } from './player-limits.js';
 
 
-// ============================================================
-// [BLOCK: create-game]
-// Фабрика игры. Возвращает объект с методами управления.
-//
-// @param {HTMLCanvasElement} canvas — игровое поле
-// @param {Object} callbacks — колбэки для UI
-// @param {Function} callbacks.onScore(score)   — обновление счёта
-// @param {Function} callbacks.onStart()         — партия началась
-// @param {Function} callbacks.onGameOver(info)  — партия закончилась
-// @param {Function} callbacks.onLimit()         — дневной лимит достигнут
-// ============================================================
 export function createGame(canvas, callbacks) {
 
   const ctx = canvas.getContext('2d');
   const GRID = CONFIG.GRID_SIZE;
 
-  // ----------------------------------------------------------
-  // Размер клетки теперь динамический — canvas может быть
-  // прямоугольным. cellW — ширина клетки, cellH — высота.
-  // При resize() оба пересчитываются.
-  // ----------------------------------------------------------
   let cellW = canvas.width  / GRID;
   let cellH = canvas.height / GRID;
 
-  // ----------------------------------------------------------
-  // Состояние игры (живёт внутри замыкания)
-  // ----------------------------------------------------------
-  let snake = [];           // массив сегментов [{x, y}, ...]
-  let food = null;          // текущая еда {x, y}
-  let currentDir = 'RIGHT'; // фактическое направление движения
-  let nextDir = 'RIGHT';    // желаемое (применяется на следующем тике)
+  let snake = [];
+  let food = null;
+  let currentDir = 'RIGHT';
+  let nextDir = 'RIGHT';
   let score = 0;
 
-  let active = false;       // партия идёт прямо сейчас
-  let over = false;         // партия закончилась (проигрыш/победа)
-  let started = false;      // игра была запущена хотя бы раз
-  let win = false;          // победа (заполнили всё поле)
-  let limitHit = false;     // упёрлись в дневной лимит
+  let active = false;
+  let over = false;
+  let started = false;
+  let win = false;
+  let limitHit = false;
 
-  let interval = null;      // setInterval для тиков
+  let interval = null;
 
 
-  // ==========================================================
-  // [BLOCK: resize]
-  // Вызывается из main.js при изменении размера контейнера.
-  // Пересчитывает размеры клетки под новые габариты canvas.
-  //
-  // Сам canvas.width / canvas.height устанавливаются в main.js
-  // ДО вызова этого метода — здесь мы только подхватываем
-  // актуальные значения.
-  // ==========================================================
   function resize(w, h) {
     canvas.width  = w;
     canvas.height = h;
@@ -76,27 +44,21 @@ export function createGame(canvas, callbacks) {
   }
 
 
-  // ==========================================================
-  // [BLOCK: init]
-  // Запуск новой партии
-  // ==========================================================
   function init() {
     if (interval) {
       clearInterval(interval);
       interval = null;
     }
 
-    // Проверка дневного лимита перед стартом
     if (isLimitReached()) {
       callbacks.onLimit();
       return;
     }
 
-    // Начальное состояние змейки: длина 3, горизонтально
     snake = [
-      { x: 10, y: 10 },
-      { x: 9,  y: 10 },
-      { x: 8,  y: 10 },
+      { x: 7, y: 7 },
+      { x: 6, y: 7 },
+      { x: 5, y: 7 },
     ];
     currentDir = 'RIGHT';
     nextDir = 'RIGHT';
@@ -119,20 +81,14 @@ export function createGame(canvas, callbacks) {
   }
 
 
-  // ==========================================================
-  // [BLOCK: tick]
-  // Один шаг игры. Вызывается каждые TICK_INTERVAL_MS.
-  // ==========================================================
   function tick() {
     if (!active) return;
 
-    // Проверка лимита на каждом тике — дешёвая операция
     if (isLimitReached()) {
       end('limit');
       return;
     }
 
-    // Применяем отложенное направление (если не разворот на 180°)
     const cannotReverse =
       (currentDir === 'UP'    && nextDir === 'DOWN')  ||
       (currentDir === 'DOWN'  && nextDir === 'UP')    ||
@@ -140,7 +96,6 @@ export function createGame(canvas, callbacks) {
       (currentDir === 'RIGHT' && nextDir === 'LEFT');
     if (!cannotReverse) currentDir = nextDir;
 
-    // Вычисляем новую позицию головы
     const move = DIRS[currentDir];
     const head = snake[0];
     const newHead = {
@@ -148,18 +103,14 @@ export function createGame(canvas, callbacks) {
       y: head.y + move.y,
     };
 
-    // Проверка столкновения со стеной
     if (newHead.x < 0 || newHead.x >= GRID ||
         newHead.y < 0 || newHead.y >= GRID) {
       end('wall');
       return;
     }
 
-    // Проверка, съели ли еду
     const willEat = (newHead.x === food.x && newHead.y === food.y);
 
-    // Проверка столкновения с собой.
-    // Если не едим — хвост уйдёт, его можно не проверять.
     const bodyToCheck = willEat ? snake : snake.slice(0, -1);
     const selfCollision = bodyToCheck.some(
       s => s.x === newHead.x && s.y === newHead.y
@@ -169,14 +120,12 @@ export function createGame(canvas, callbacks) {
       return;
     }
 
-    // Двигаем змейку
     snake.unshift(newHead);
 
     if (willEat) {
       score++;
       callbacks.onScore(score);
 
-      // Победа: змейка заполнила всё поле
       if (snake.length === GRID * GRID) {
         win = true;
         end('win');
@@ -192,10 +141,6 @@ export function createGame(canvas, callbacks) {
   }
 
 
-  // ==========================================================
-  // [BLOCK: end]
-  // Завершение партии. Причина передаётся в колбэк.
-  // ==========================================================
   function end(reason) {
     if (!active && reason !== 'limit') return;
 
@@ -218,11 +163,6 @@ export function createGame(canvas, callbacks) {
   }
 
 
-  // ==========================================================
-  // [BLOCK: generate-food]
-  // Размещение еды в случайной свободной клетке.
-  // Оптимизировано: собирает все свободные клетки, потом выбирает.
-  // ==========================================================
   function generateFood() {
     const occupied = new Set(snake.map(c => `${c.x},${c.y}`));
     const free = [];
@@ -233,24 +173,17 @@ export function createGame(canvas, callbacks) {
       }
     }
 
-    if (free.length === 0) return; // поле заполнено — победа обработана выше
+    if (free.length === 0) return;
 
     food = free[Math.floor(Math.random() * free.length)];
   }
 
 
-  // ==========================================================
-  // [BLOCK: render]
-  // Отрисовка всего кадра: фон, сетка, еда, змейка, оверлей game over
-  // ==========================================================
   function render() {
-    // Чистим и красим фон
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = '#0e1a1b';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Сетка — учитываем cellW и cellH отдельно,
-    // чтобы линии совпадали с границами клеток на прямоугольнике
     for (let i = 0; i <= GRID; i++) {
       ctx.beginPath();
       ctx.moveTo(i * cellW, 0);
@@ -265,9 +198,6 @@ export function createGame(canvas, callbacks) {
       ctx.stroke();
     }
 
-    // Еда — суши с пульсацией.
-    // Размер берём минимальный из двух сторон клетки —
-    // чтобы фигура осталась пропорциональной на прямоугольнике.
     if (food && snake.length > 0) {
       const foodSize = Math.min(cellW, cellH);
       const cx = food.x * cellW + cellW / 2;
@@ -281,21 +211,14 @@ export function createGame(canvas, callbacks) {
       });
     }
 
-    // Змейка — передаём оба размера клетки
     drawSnake(ctx, snake, cellW, cellH);
 
-    // Оверлей game over (только если партия закончилась, но не лимит)
     if (!active && over && !limitHit && snake.length > 0) {
       drawGameOver(ctx, canvas, win);
     }
   }
 
 
-  // ==========================================================
-  // [BLOCK: game-over-overlay]
-  // Надписи на канвасе при проигрыше/победе.
-  // UI-оверлеи (start hint, limit) — в ui.js.
-  // ==========================================================
   function drawGameOver(ctx, canvas, isWin) {
     ctx.save();
 
@@ -325,18 +248,13 @@ export function createGame(canvas, callbacks) {
   }
 
 
-  // ==========================================================
-  // [BLOCK: preview]
-  // Отображение превью — змейка и еда в начальных позициях,
-  // без запуска игры. Используется на стартовом экране.
-  // ==========================================================
   function showPreview() {
     snake = [
-      { x: 10, y: 10 },
-      { x: 9,  y: 10 },
-      { x: 8,  y: 10 },
+      { x: 7, y: 7 },
+      { x: 6, y: 7 },
+      { x: 5, y: 7 },
     ];
-    food = { x: 13, y: 10 };
+    food = { x: 9, y: 7 };
 
     active = false;
     over = false;
@@ -350,14 +268,10 @@ export function createGame(canvas, callbacks) {
   }
 
 
-  // ==========================================================
-  // [BLOCK: public-api]
-  // Что торчит наружу для main.js и controls/*
-  // ==========================================================
   return {
     init,
     render,
-    resize,          // ← новое: вызывается из main.js при ресайзе
+    resize,
     showPreview,
 
     setDirection: dir => { nextDir = dir; },
@@ -369,12 +283,10 @@ export function createGame(canvas, callbacks) {
     getScore:   () => score,
     getSnake:   () => snake,
 
-    // Вызывается UI-таймером раз в секунду
     tickSessionTick: () => {
       if (active && started && !limitHit) tickSession();
     },
 
-    // Принудительное завершение сессии (при скрытии вкладки)
     flushSessionNow: () => {
       if (active) endSession();
     },
