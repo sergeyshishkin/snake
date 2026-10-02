@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>🍣 寿司スネーク • SUSHI SNAKE '89</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="game-wrapper">
+    <div class="header">
+      <div class="title-jp">🍣 寿司スネーク</div>
+      <div class="stats-row">
+        <div class="score-box">SCORE <span id="scoreDisplay">0</span></div>
+        <div class="timer-box" id="timerBox">⏱ <span id="timeLeft">--:--</span></div>
+      </div>
+    </div>
+
+    <div class="canvas-container" id="canvasContainer">
+      <canvas id="gameCanvas" width="600" height="600"></canvas>
+      <div id="startHint" class="touch-hint">
+        ▶ タップでスタート<br>
+        <small>TAP TO START</small>
+      </div>
+    </div>
+
+    <div class="info-panel">
+      <div class="controls">
+        <span>⬆️ ⬇️ ⬅️ ➡️</span>
+        <span>スワイプ / SWIPE</span>
+      </div>
+      <button id="resetButton" class="btn-reset">リセット</button>
+    </div>
+    <div class="footer-note">平成元年 • SUSHI SNAKE '89</div>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
