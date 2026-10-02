@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0b0c1e">
   <title>🍣 寿司スネーク • SUSHI SNAKE '89</title>
 
   <!-- Yandex.Metrika counter -->
@@ -21,14 +22,17 @@
         webvisor: true
       });
   </script>
-  <noscript>
-    <div><img src="https://mc.yandex.ru/watch/113332587" style="position:absolute; left:-9999px;" alt="" /></div>
-  </noscript>
+  <noscript><div><img src="https://mc.yandex.ru/watch/113332587" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
   <!-- /Yandex.Metrika counter -->
 
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+  <div class="rotate-overlay" id="rotateOverlay">
+    <div class="rotate-icon">📱</div>
+    <div class="rotate-text">縦画面でプレイ<br><small>Please rotate your device</small></div>
+  </div>
+
   <div class="game-wrapper">
     <div class="header">
       <div class="title-jp">🍣 寿司スネーク</div>
@@ -46,14 +50,26 @@
       </div>
     </div>
 
-    <div class="info-panel">
-      <div class="controls">
-        <span>⬆️ ⬇️ ⬅️ ➡️</span>
-        <span>スワイプ / SWIPE</span>
+    <div class="bottom-row">
+      <div class="dpad" id="dpad">
+        <button class="dpad-btn dpad-up"    data-dir="UP"    aria-label="Up">▲</button>
+        <button class="dpad-btn dpad-left"  data-dir="LEFT"  aria-label="Left">◀</button>
+        <div class="dpad-center"></div>
+        <button class="dpad-btn dpad-right" data-dir="RIGHT" aria-label="Right">▶</button>
+        <button class="dpad-btn dpad-down"  data-dir="DOWN"  aria-label="Down">▼</button>
       </div>
-      <button id="resetButton" class="btn-reset">リセット</button>
+
+      <!-- Кнопка рестарта, скрыта по умолчанию -->
+      <button id="resetButton" class="btn-reset hidden">リセット<br><small>RESTART</small></button>
     </div>
-    <div class="footer-note">平成元年 • SUSHI SNAKE '89</div>
+  </div>
+
+  <div class="cookie-banner" id="cookieBanner" role="dialog" aria-live="polite">
+    <div class="cookie-text">
+      当サイトは Яндекс.Метрика を使用してアクセス解析を行います。<br>
+      <small>This site uses Yandex.Metrika for analytics. By continuing, you agree to cookies.</small>
+    </div>
+    <button class="cookie-accept" id="cookieAccept">同意 / ACCEPT</button>
   </div>
 
   <script type="module" src="js/main.js"></script>

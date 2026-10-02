@@ -8,7 +8,7 @@ export const CONFIG = {
   DAILY_PLAY_LIMIT_MINUTES: 10,
 
   // Размер игрового поля (клеток)
-  GRID_SIZE: 20,
+  GRID_SIZE: 15,
 
   // Скорость змейки (мс между тиками; меньше = быстрее)
   TICK_INTERVAL_MS: 150,
