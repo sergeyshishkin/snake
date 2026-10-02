@@ -50,17 +50,24 @@
       </div>
     </div>
 
+    <!-- Нижняя панель: UP/DOWN слева — RESTART по центру — LEFT/RIGHT справа -->
     <div class="bottom-row">
-      <div class="dpad" id="dpad">
-        <button class="dpad-btn dpad-up"    data-dir="UP"    aria-label="Up">▲</button>
-        <button class="dpad-btn dpad-left"  data-dir="LEFT"  aria-label="Left">◀</button>
-        <div class="dpad-center"></div>
-        <button class="dpad-btn dpad-right" data-dir="RIGHT" aria-label="Right">▶</button>
-        <button class="dpad-btn dpad-down"  data-dir="DOWN"  aria-label="Down">▼</button>
+      <div class="dir-group dir-vertical" id="dirVertical">
+        <button class="dpad-btn" data-dir="UP"   aria-label="Up">▲</button>
+        <button class="dpad-btn" data-dir="DOWN" aria-label="Down">▼</button>
       </div>
 
-      <!-- Кнопка рестарта, скрыта по умолчанию -->
-      <button id="resetButton" class="btn-reset hidden">リセット<br><small>RESTART</small></button>
+      <div class="restart-slot">
+        <button id="resetButton" class="btn-reset hidden">
+          リセット
+          <small>RESTART</small>
+        </button>
+      </div>
+
+      <div class="dir-group dir-horizontal" id="dirHorizontal">
+        <button class="dpad-btn" data-dir="LEFT"  aria-label="Left">◀</button>
+        <button class="dpad-btn" data-dir="RIGHT" aria-label="Right">▶</button>
+      </div>
     </div>
   </div>
 

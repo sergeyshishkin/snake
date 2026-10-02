@@ -30,4 +30,4 @@ export const DIRS = {
 
 // Отладочный флаг: полностью отключает лимит
 // ⚠️ Поставьте false перед публикацией!
-export const DEBUG_DISABLE_LIMIT = false;
+export const DEBUG_DISABLE_LIMIT = true;

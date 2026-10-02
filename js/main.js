@@ -8,9 +8,6 @@ const resetButton = document.getElementById('resetButton');
 
 initPlayer();
 
-// ============================================================
-// СКРЫТИЕ / ПОКАЗ КНОПКИ РЕСТАРТА
-// ============================================================
 function showReset() { resetButton.classList.remove('hidden'); }
 function hideReset() { resetButton.classList.add('hidden'); }
 
@@ -21,11 +18,9 @@ const game = createGame(canvas, {
     hideReset();
   },
   onGameOver: () => {
-    // Кнопка появляется только после проигрыша
     showReset();
   },
   onLimit: () => {
-    // При достижении лимита играть нельзя — кнопку не показываем
     hideReset();
     ui.showLimit();
   },
@@ -69,17 +64,15 @@ if (localStorage.getItem(COOKIE_KEY) === '1') {
 }
 
 // ============================================================
-// D-PAD
+// КНОПКИ НАПРАВЛЕНИЯ — все .dpad-btn в обеих группах
 // ============================================================
-const dpad = document.getElementById('dpad');
-const dpadButtons = dpad.querySelectorAll('.dpad-btn');
+const dpadButtons = document.querySelectorAll('.dpad-btn');
 
 function handleDpad(dir) {
   if (!gameUnlocked) return;
 
   if (!game.isStarted() || game.isOver()) {
     if (game.isLimitHit()) { ui.showLimit(); return; }
-    // Крестовина тоже умеет стартовать игру
     game.init();
     return;
   }
@@ -104,7 +97,6 @@ dpadButtons.forEach(btn => {
   btn.addEventListener('pointercancel', () => btn.classList.remove('pressed'));
   btn.addEventListener('pointerleave', () => btn.classList.remove('pressed'));
 
-  // Фолбэк для старых браузеров
   if (!window.PointerEvent) {
     btn.addEventListener('touchstart', e => {
       e.preventDefault();
@@ -144,7 +136,7 @@ window.addEventListener('keydown', e => {
 });
 
 // ============================================================
-// TAP ПО КАНВАСУ (старт / рестарт)
+// TAP ПО КАНВАСУ
 // ============================================================
 canvas.addEventListener('click', e => {
   e.preventDefault();
@@ -153,7 +145,6 @@ canvas.addEventListener('click', e => {
   if (!game.isStarted() || game.isOver()) game.init();
 });
 
-// Свайпы по канвасу — альтернатива крестовине
 let tx = 0, ty = 0;
 canvas.addEventListener('touchstart', e => {
   e.preventDefault();
@@ -198,10 +189,9 @@ document.addEventListener('visibilitychange', () => {
 });
 
 canvas.addEventListener('contextmenu', e => e.preventDefault());
-dpad.addEventListener('contextmenu', e => e.preventDefault());
 
 // ============================================================
-// ПЕРИОДИЧЕСКАЯ ПРОВЕРКА СМЕНЫ ДНЯ
+// ПРОВЕРКА СМЕНЫ ДНЯ
 // ============================================================
 setInterval(() => {
   if (gameUnlocked && !game.isActive() && !game.isStarted() && isLimitReached()) {
