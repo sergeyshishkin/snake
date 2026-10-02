@@ -5,7 +5,7 @@
 
 export const CONFIG = {
   // Дневной лимит игры на одного игрока (в минутах)
-  DAILY_PLAY_LIMIT_MINUTES: 5,
+  DAILY_PLAY_LIMIT_MINUTES: 10,
 
   // Размер игрового поля (клеток)
   GRID_SIZE: 20,
