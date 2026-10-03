@@ -1,5 +1,8 @@
 /* ============================================================
    [FILE: core/css/overlays.css]
+   Назначение: структура оверлеев. Позиционирование, размеры,
+   flex, анимации масштаба. Без цветов, теней, скруглений,
+   шрифтов — они в game/css/theme.css.
    ============================================================ */
 
 
@@ -17,26 +20,11 @@
 
   padding: clamp(14px, 3vw, 28px) clamp(18px, 5vw, 42px);
 
-  background-color: rgba(10, 10, 20, 0.85);
-  color: rgba(255, 235, 180, 0.95);
-
-  border: 3px solid var(--color-orange);
-  border-radius: clamp(14px, 3vw, 24px);
-
   font-size: clamp(16px, 4vw, 26px);
   font-weight: 900;
   line-height: 1.4;
   letter-spacing: 2px;
   text-align: center;
-
-  text-shadow:
-    0 0 20px var(--color-orange-glow),
-    0 0 40px #ff4500,
-    3px 3px 0 #000;
-
-  box-shadow:
-    0 0 40px var(--color-orange-glow),
-    inset 0 0 30px rgba(255, 140, 0, 0.31);
 
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
@@ -52,7 +40,6 @@
   margin-top: 10px;
   font-size: 0.55em;
   letter-spacing: 3px;
-  color: var(--color-text-warm);
   opacity: 0.9;
 }
 
@@ -75,11 +62,6 @@ body[data-hint="start"] .hint-start { display: block; }
 body[data-hint="limit"] .hint-limit { display: block; }
 
 body[data-hint="limit"] .touch-hint {
-  border-color: var(--color-red);
-  color: #ffb0b0;
-  box-shadow:
-    0 0 40px var(--color-red),
-    inset 0 0 30px rgba(212, 36, 44, 0.31);
   animation: pulse-glow-danger 1.8s ease-in-out infinite;
 }
 
@@ -87,31 +69,21 @@ body[data-hint="limit"] .touch-hint .big {
   display: block;
   margin-bottom: 8px;
   font-size: 1.2em;
-  color: #ff4d4d;
-  text-shadow:
-    0 0 20px #ff0000,
-    0 0 40px #ff4500,
-    3px 3px 0 #000;
 }
 
 
 /* ============================================================
    [BLOCK: animations]
+   Только масштаб и прозрачность. Свечения — в theme.css.
    ============================================================ */
 @keyframes pulse-glow {
   0%, 100% {
     opacity: 0.95;
     transform: translate(-50%, -50%) scale(1);
-    box-shadow:
-      0 0 40px var(--color-orange-glow),
-      inset 0 0 30px rgba(255, 140, 0, 0.31);
   }
   50% {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1.05);
-    box-shadow:
-      0 0 60px #ffa500,
-      inset 0 0 40px rgba(255, 140, 0, 0.5);
   }
 }
 
@@ -119,16 +91,10 @@ body[data-hint="limit"] .touch-hint .big {
   0%, 100% {
     opacity: 0.95;
     transform: translate(-50%, -50%) scale(1);
-    box-shadow:
-      0 0 40px var(--color-red),
-      inset 0 0 30px rgba(212, 36, 44, 0.31);
   }
   50% {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1.05);
-    box-shadow:
-      0 0 60px #ff2a2a,
-      inset 0 0 40px rgba(212, 36, 44, 0.5);
   }
 }
 
@@ -148,8 +114,6 @@ body[data-hint="limit"] .touch-hint .big {
 
   padding: 24px;
 
-  background-color: var(--color-bg-deep);
-  color: var(--color-text-warm);
   text-align: center;
 }
 
@@ -170,9 +134,6 @@ body[data-hint="limit"] .touch-hint .big {
   font-weight: 900;
   letter-spacing: 3px;
   line-height: 1.5;
-  text-shadow:
-    0 0 20px var(--color-orange-glow),
-    3px 3px 0 #000;
 }
 
 .rotate-text small {
@@ -202,8 +163,6 @@ body[data-hint="limit"] .touch-hint .big {
 /* ============================================================
    [BLOCK: intro-modal]
    Единая модалка: правила игры + cookie-уведомление + кнопка OK.
-   Показывается один раз при первом заходе. Согласие сохраняется
-   в localStorage. Пока не закрыта — игра заблокирована.
    ============================================================ */
 .intro-modal {
   position: fixed;
@@ -216,7 +175,6 @@ body[data-hint="limit"] .touch-hint .big {
 
   padding: 16px;
 
-  background-color: rgba(5, 5, 15, 0.85);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
 
@@ -247,23 +205,6 @@ body[data-hint="limit"] .touch-hint .big {
 
   padding: clamp(20px, 5vw, 32px);
 
-  background-color: #1a1a2e;
-  background-image: linear-gradient(
-    135deg,
-    var(--color-bg-wrapper-1) 0%,
-    var(--color-bg-wrapper-2) 100%
-  );
-
-  border: 3px solid var(--color-orange);
-  border-radius: 20px;
-
-  box-shadow:
-    0 0 40px var(--color-orange-glow),
-    0 0 80px rgba(255, 140, 0, 0.3),
-    inset 0 0 30px rgba(255, 200, 100, 0.15);
-
-  color: var(--color-text-main);
-  font-family: var(--font-mono);
   text-align: center;
 
   overflow-y: auto;
@@ -279,24 +220,16 @@ body[data-hint="limit"] .touch-hint .big {
   letter-spacing: 2px;
 
   margin-bottom: 16px;
-
-  color: var(--color-text-warm);
-  text-shadow:
-    0 0 20px var(--color-orange-glow),
-    2px 2px 0 #000;
 }
 
 
 /* ============================================================
    [BLOCK: intro-rules]
-   Тексты правил. Правятся под конкретную игру в index.html.
    ============================================================ */
 .intro-rules {
   font-size: clamp(13px, 3.4vw, 15px);
   line-height: 1.6;
   text-align: left;
-
-  color: var(--color-text-dim);
 }
 
 .intro-rules ul {
@@ -316,34 +249,25 @@ body[data-hint="limit"] .touch-hint .big {
   position: absolute;
   left: 0;
   top: 0;
-
-  color: var(--color-orange);
   font-size: 0.9em;
 }
 
 
 /* ============================================================
    [BLOCK: intro-cookie]
-   Юридический текст про cookies и Метрику.
    ============================================================ */
 .intro-cookie {
   margin-top: 20px;
   padding-top: 16px;
 
-  border-top: 1px solid rgba(192, 168, 106, 0.3);
-
   font-size: clamp(10px, 2.6vw, 12px);
   line-height: 1.5;
   text-align: left;
-
-  color: var(--color-text-dim);
-  opacity: 0.85;
 }
 
 
 /* ============================================================
    [BLOCK: intro-accept]
-   Кнопка OK. Единственный способ закрыть модалку.
    ============================================================ */
 .intro-accept {
   align-self: center;
@@ -351,13 +275,7 @@ body[data-hint="limit"] .touch-hint .big {
   margin-top: 20px;
   padding: 12px 36px;
 
-  border: 2px solid var(--color-green-bright);
-  border-radius: var(--radius-pill);
-
-  background-color: var(--color-green);
-  color: #0f1a0a;
-
-  font-family: var(--font-mono);
+  font-family: inherit;
   font-size: clamp(14px, 3.6vw, 17px);
   font-weight: 900;
   letter-spacing: 2px;
@@ -367,10 +285,6 @@ body[data-hint="limit"] .touch-hint .big {
   cursor: pointer;
   touch-action: manipulation;
 
-  box-shadow:
-    0 5px 0 var(--color-green-deep),
-    0 7px 16px black;
-
   transition:
     background var(--t-fast),
     box-shadow var(--t-fast),
@@ -378,11 +292,7 @@ body[data-hint="limit"] .touch-hint .big {
 }
 
 .intro-accept:active {
-  background-color: #a8d95e;
   transform: translateY(4px);
-  box-shadow:
-    0 1px 0 var(--color-green-deep),
-    0 3px 8px black;
 }
 
 
@@ -393,7 +303,6 @@ body[data-hint="limit"] .touch-hint .big {
   .intro-content {
     max-height: 88vh;
     padding: 18px 16px;
-    border-radius: 16px;
   }
 
   .intro-accept {

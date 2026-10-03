@@ -1,14 +1,24 @@
 /* ============================================================
    [FILE: game/css/theme.css]
+   Вся стилистика игры: цвета, градиенты, тени, свечения,
+   скругления, шрифты. Структура приходит из core/css/*.
    ============================================================ */
 
+
+/* ============================================================
+   [BLOCK: tokens]
+   Единые значения темы. Меняешь здесь — меняется во всей игре.
+   ============================================================ */
 :root {
+
+  /* ---------- Цвета фона и каркаса ---------- */
   --color-bg-deep:        #000000;
   --color-bg-wrapper-1:   #0a0a0a;
   --color-bg-wrapper-2:   #050505;
   --color-bg-panel:       #0a0a0a;
   --color-bg-field:       #0f0f0f;
 
+  /* ---------- Акценты ---------- */
   --color-gold:           #666666;
   --color-gold-bright:    #d0d0d0;
   --color-gold-deep:      #1a1a1a;
@@ -20,8 +30,338 @@
   --color-green-bright:   #d0d0d0;
   --color-green-deep:     #1a1a1a;
 
+  /* ---------- Текст ---------- */
   --color-text-main:      #d0d0d0;
   --color-text-dim:       #888888;
   --color-text-warm:      #e0e0e0;
   --color-text-accent:    #ffffff;
+
+  /* ---------- Скругления ---------- */
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   14px;
+  --radius-pill: 40px;
+
+  /* ---------- Шрифт ---------- */
+  --font-mono: 'Courier New', Courier, monospace;
+}
+
+
+/* ============================================================
+   [BLOCK: html-body]
+   Фон и шрифт всей страницы.
+   ============================================================ */
+body {
+  background-color: var(--color-bg-deep);
+  font-family: var(--font-mono);
+  color: var(--color-text-main);
+}
+
+
+/* ============================================================
+   [BLOCK: focus]
+   ============================================================ */
+:focus-visible {
+  outline-color: var(--color-orange);
+}
+
+
+/* ============================================================
+   [BLOCK: game-wrapper]
+   Фон игрового каркаса.
+   ============================================================ */
+.game-wrapper {
+  background-image: linear-gradient(
+    135deg,
+    var(--color-bg-wrapper-1) 0%,
+    var(--color-bg-wrapper-2) 100%
+  );
+}
+
+
+/* ============================================================
+   [BLOCK: header]
+   ============================================================ */
+.header {
+  color: var(--color-text-main);
+}
+
+
+/* ============================================================
+   [BLOCK: stat-box]
+   ============================================================ */
+.stat-box {
+  border-radius: var(--radius-pill);
+  background-color: var(--color-bg-panel);
+  border: none;
+  box-shadow: none;
+  text-shadow: none;
+}
+
+.stat-best {
+  color: var(--color-text-dim);
+}
+
+.stat-score {
+  color: var(--color-text-accent);
+}
+
+
+/* ============================================================
+   [BLOCK: canvas]
+   ============================================================ */
+canvas {
+  background-color: var(--color-bg-field);
+  border-radius: var(--radius-md);
+
+  box-shadow:
+    0 0 8px var(--color-orange),
+    0 0 20px rgba(170, 170, 170, 0.4),
+    0 0 40px rgba(120, 120, 120, 0.2),
+    inset 0 0 12px rgba(170, 170, 170, 0.1);
+}
+
+
+/* ============================================================
+   [BLOCK: dpad-btn]
+   ============================================================ */
+.dpad-btn {
+  border: 2px solid var(--color-gold);
+  border-radius: var(--radius-sm);
+
+  background: linear-gradient(180deg, #2a2a2a 0%, #0a0a0a 100%);
+  color: var(--color-gold-bright);
+
+  text-shadow: 0 0 6px var(--color-orange-glow);
+
+  box-shadow:
+    inset 0 2px 4px rgba(255, 255, 255, 0.1),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.6);
+}
+
+.dpad-btn:active,
+.dpad-btn.pressed {
+  background: linear-gradient(180deg, #0a0a0a 0%, #000000 100%);
+  color: #ffffff;
+  box-shadow:
+    inset 0 3px 8px rgba(0, 0, 0, 0.9),
+    0 0 12px var(--color-orange-glow);
+}
+
+
+/* ============================================================
+   [BLOCK: timer-box]
+   ============================================================ */
+.timer-box {
+  border: 3px solid var(--color-green);
+  border-radius: var(--radius-lg);
+
+  background-color: var(--color-bg-panel);
+  color: var(--color-green-bright);
+
+  text-shadow: 0 0 12px var(--color-green);
+
+  box-shadow:
+    inset 0 0 20px #000,
+    0 4px 0 var(--color-green-deep);
+
+  transition:
+    border-color var(--t-base),
+    color var(--t-base),
+    box-shadow var(--t-base);
+}
+
+.timer-box.warning {
+  border-color: var(--color-gold);
+  color: var(--color-gold-bright);
+  text-shadow: 0 0 12px var(--color-gold);
+  box-shadow:
+    inset 0 0 20px #000,
+    0 4px 0 var(--color-gold-deep);
+}
+
+.timer-box.danger {
+  border-color: var(--color-red);
+  color: var(--color-text-accent);
+  text-shadow: 0 0 16px var(--color-red);
+  box-shadow:
+    inset 0 0 20px #000,
+    0 4px 0 var(--color-red-deep);
+}
+
+
+/* ============================================================
+   [BLOCK: btn-reset]
+   ============================================================ */
+.btn-reset {
+  border: 3px solid var(--color-orange);
+  border-radius: var(--radius-lg);
+
+  background-color: var(--color-red);
+  color: var(--color-text-warm);
+
+  box-shadow:
+    inset 0 -6px 12px rgba(0, 0, 0, 0.4),
+    0 4px 0 var(--color-red-deep);
+
+  transition:
+    background var(--t-fast),
+    box-shadow var(--t-fast),
+    transform var(--t-fast);
+}
+
+.btn-reset:active {
+  background-color: #888888;
+  box-shadow:
+    inset 0 -3px 8px rgba(0, 0, 0, 0.5),
+    0 1px 0 var(--color-red-deep);
+}
+
+
+/* ============================================================
+   [BLOCK: touch-hint]
+   ============================================================ */
+.touch-hint {
+  background-color: rgba(10, 10, 10, 0.9);
+  color: var(--color-text-warm);
+
+  border: 3px solid var(--color-orange);
+  border-radius: var(--radius-lg);
+
+  text-shadow:
+    0 0 20px var(--color-orange-glow),
+    3px 3px 0 #000;
+
+  box-shadow:
+    0 0 40px var(--color-orange-glow),
+    inset 0 0 30px rgba(170, 170, 170, 0.2);
+}
+
+.touch-hint small {
+  color: var(--color-text-warm);
+}
+
+body[data-hint="limit"] .touch-hint {
+  border-color: var(--color-red);
+  color: var(--color-text-accent);
+  box-shadow:
+    0 0 40px var(--color-red),
+    inset 0 0 30px rgba(120, 120, 120, 0.3);
+}
+
+body[data-hint="limit"] .touch-hint .big {
+  color: var(--color-text-accent);
+  text-shadow:
+    0 0 20px var(--color-red),
+    3px 3px 0 #000;
+}
+
+
+/* ============================================================
+   [BLOCK: rotate-overlay]
+   ============================================================ */
+.rotate-overlay {
+  background-color: var(--color-bg-deep);
+  color: var(--color-text-warm);
+}
+
+.rotate-text {
+  text-shadow:
+    0 0 20px var(--color-orange-glow),
+    3px 3px 0 #000;
+}
+
+
+/* ============================================================
+   [BLOCK: intro-modal]
+   ============================================================ */
+.intro-modal {
+  background-color: rgba(0, 0, 0, 0.85);
+}
+
+
+/* ============================================================
+   [BLOCK: intro-content]
+   ============================================================ */
+.intro-content {
+  background-image: linear-gradient(
+    135deg,
+    var(--color-bg-wrapper-1) 0%,
+    var(--color-bg-wrapper-2) 100%
+  );
+
+  border: 3px solid var(--color-orange);
+  border-radius: var(--radius-lg);
+
+  box-shadow:
+    0 0 40px var(--color-orange-glow),
+    0 0 80px rgba(120, 120, 120, 0.3),
+    inset 0 0 30px rgba(200, 200, 200, 0.08);
+
+  color: var(--color-text-main);
+}
+
+
+/* ============================================================
+   [BLOCK: intro-title]
+   ============================================================ */
+.intro-title {
+  color: var(--color-text-warm);
+  text-shadow:
+    0 0 20px var(--color-orange-glow),
+    2px 2px 0 #000;
+}
+
+
+/* ============================================================
+   [BLOCK: intro-rules]
+   ============================================================ */
+.intro-rules {
+  color: var(--color-text-dim);
+}
+
+.intro-rules li::before {
+  color: var(--color-orange);
+}
+
+
+/* ============================================================
+   [BLOCK: intro-cookie]
+   ============================================================ */
+.intro-cookie {
+  border-top: 1px solid rgba(120, 120, 120, 0.3);
+  color: var(--color-text-dim);
+}
+
+
+/* ============================================================
+   [BLOCK: intro-accept]
+   ============================================================ */
+.intro-accept {
+  border: 2px solid var(--color-green-bright);
+  border-radius: var(--radius-pill);
+
+  background-color: var(--color-green);
+  color: #0a0a0a;
+
+  box-shadow:
+    0 5px 0 var(--color-green-deep),
+    0 7px 16px black;
+}
+
+.intro-accept:active {
+  background-color: var(--color-green-bright);
+  box-shadow:
+    0 1px 0 var(--color-green-deep),
+    0 3px 8px black;
+}
+
+
+/* ============================================================
+   [BLOCK: mobile]
+   ============================================================ */
+@media (max-width: 520px) {
+  .intro-content {
+    border-radius: var(--radius-md);
+  }
 }

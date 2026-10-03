@@ -1,5 +1,8 @@
 /* ============================================================
    [FILE: core/css/base.css]
+   Назначение: reset, структурные переменные, html/body, утилиты.
+   Без стилистики — цвета, шрифты, тени, радиусы задаются игрой
+   в game/css/theme.css.
    ============================================================ */
 
 
@@ -17,61 +20,27 @@
 
 
 /* ============================================================
-   [BLOCK: design-tokens]
-   Значения по умолчанию. Игра может переопределить их
-   в своём game/css/theme.css.
+   [BLOCK: structural-tokens]
+   Только то, что описывает структуру и тайминги.
+   Никаких цветов, шрифтов, скруглений — они в theme.css.
    ============================================================ */
 :root {
 
-  --dpad-size: clamp(140px, 36vw, 190px);
-
-  /* ---------- Цвета фона и каркаса ---------- */
-  --color-bg-deep:        #0b0c1e;
-  --color-bg-wrapper-1:   #16213e;
-  --color-bg-wrapper-2:   #0f0f1f;
-  --color-bg-panel:       #0f0f1f;
-  --color-bg-field:       #0e1a1b;
-
-  /* ---------- Акценты ---------- */
-  --color-gold:           #c0a86a;
-  --color-gold-bright:    #ffd58c;
-  --color-gold-deep:      #3a2e1b;
-  --color-orange:         #ffb347;
-  --color-orange-glow:    #ff8c00;
-  --color-red:            #d4242c;
-  --color-red-deep:       #5e1e1e;
-  --color-green:          #7aa84a;
-  --color-green-bright:   #b8e986;
-  --color-green-deep:     #3a5a1e;
-
-  /* ---------- Текст ---------- */
-  --color-text-main:      #f5e6c6;
-  --color-text-dim:       #c9b382;
-  --color-text-warm:      #ffe9b0;
-  --color-text-accent:    #ffe484;
-
-  /* ---------- Отступы ---------- */
+  /* ---------- Отступы между блоками ---------- */
   --gap-xs:   clamp(3px, 0.8vw, 5px);
   --gap-sm:   clamp(4px, 1.2vw, 8px);
   --gap-md:   clamp(6px, 1.8vw, 12px);
   --gap-lg:   clamp(10px, 2.5vw, 18px);
 
+  /* ---------- Внутренние отступы панелей ---------- */
   --pad-panel-y: clamp(5px, 1.4vw, 9px);
   --pad-panel-x: clamp(8px, 2vw, 14px);
 
-  /* ---------- Скругления ---------- */
-  --radius-sm: 8px;
-  --radius-md: 14px;
-  --radius-lg: 22px;
-  --radius-pill: 40px;
-
-  /* ---------- Размеры компонентов ---------- */
+  /* ---------- Размеры ключевых блоков ---------- */
   --wrapper-pad:  clamp(6px, 1.5vw, 12px);
   --header-h:     clamp(36px, 9vw, 52px);
   --bottom-h:     clamp(130px, 34vw, 180px);
-
-  /* ---------- Шрифт ---------- */
-  --font-mono: 'Courier New', Courier, monospace;
+  --dpad-size:    clamp(140px, 36vw, 190px);
 
   /* ---------- Тайминги анимаций ---------- */
   --t-fast:   0.07s;
@@ -82,6 +51,8 @@
 
 /* ============================================================
    [BLOCK: html-body]
+   Структура и запрет скролла. Без фонового цвета и шрифта —
+   их задаёт игра.
    ============================================================ */
 html,
 body {
@@ -93,9 +64,6 @@ body {
 }
 
 body {
-  background-color: var(--color-bg-deep);
-  font-family: var(--font-mono);
-  color: var(--color-text-main);
   margin: 0;
   padding: 0;
   touch-action: none;
@@ -126,9 +94,10 @@ body {
 
 /* ============================================================
    [BLOCK: focus]
+   Структура фокуса. Цвет — в theme.css через :focus-visible.
    ============================================================ */
 :focus-visible {
-  outline: 2px solid var(--color-orange);
+  outline: 2px solid;
   outline-offset: 3px;
 }
 
