@@ -82,12 +82,15 @@
 /* ============================================================
    [BLOCK: canvas-container]
    ============================================================ */
+
 .canvas-container {
   flex: 0 0 auto;
 
-  width: min(100%, 360px);
+  width:  min(100%, 360px);
   height: min(100%, 360px);
-  margin: auto;
+
+  margin: var(--gap-sm) auto auto auto;
+  /*     ↑ top          ↑ right  ↑ bottom  ↑ left */
 
   touch-action: none;
 }
