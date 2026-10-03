@@ -7,7 +7,7 @@ export const config = {
   GRID_SIZE: 15,
 
   // Скорость игры
-  TICK_INTERVAL_MS: 120,
+  TICK_INTERVAL_MS: 150,
 
   // Режим цикла: 'interval' | 'raf' | 'manual'
   LOOP_MODE: 'interval',

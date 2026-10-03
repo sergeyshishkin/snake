@@ -16,6 +16,7 @@
   width: 100%;
   height: var(--bottom-h);
   margin-top: var(--gap-sm);
+  margin-bottom: clamp(12px, 3vw, 20px);
 
   gap: var(--gap-sm);
 }
