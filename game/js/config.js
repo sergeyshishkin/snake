@@ -4,7 +4,7 @@
 
 export const config = {
   // Игровое поле
-  GRID_SIZE: 14,
+  GRID_SIZE: 15,
 
   // Скорость игры
   TICK_INTERVAL_MS: 120,
