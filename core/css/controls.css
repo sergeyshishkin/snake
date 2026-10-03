@@ -30,8 +30,11 @@
   grid-template-rows:    repeat(3, 1fr);
   gap: 4px;
 
-  width: 100%;
-  height: 100%;
+  width:  var(--dpad-size);
+  height: var(--dpad-size);
+
+  align-self: center;
+  justify-self: center;
 
   touch-action: none;
   user-select: none;
