@@ -2,6 +2,7 @@
    [FILE: game/css/theme.css]
    Вся стилистика игры: цвета, градиенты, тени, свечения,
    скругления, шрифты. Структура приходит из core/css/*.
+   Тема: светлая, лёгкая, серо-жемчужная — «японский карп кои».
    ============================================================ */
 
 
@@ -11,30 +12,42 @@
    ============================================================ */
 :root {
 
-  /* ---------- Цвета фона и каркаса ---------- */
-  --color-bg-deep:        #000000;
-  --color-bg-wrapper-1:   #0a0a0a;
-  --color-bg-wrapper-2:   #050505;
-  --color-bg-panel:       #0a0a0a;
-  --color-bg-field:       #0f0f0f;
+    /* ---------- Цвета игрового рендера ---------- */
+  --color-grid:            #1a1a1a;
+  --color-snake:           #d0d0d0;
+  --color-snake-head:      #ffffff;
+  --color-food:            #888888;
+  --color-gameover-bg:     rgba(0, 0, 0, 0.7);
+  --color-gameover-text:   #ffffff;
+  --color-gameover-hint:   #888888;
 
-  /* ---------- Акценты ---------- */
-  --color-gold:           #666666;
-  --color-gold-bright:    #d0d0d0;
-  --color-gold-deep:      #1a1a1a;
-  --color-orange:         #aaaaaa;
-  --color-orange-glow:    #888888;
-  --color-red:            #666666;
-  --color-red-deep:       #1a1a1a;
-  --color-green:          #888888;
-  --color-green-bright:   #d0d0d0;
-  --color-green-deep:     #1a1a1a;
+  /* ---------- Цвета фона и каркаса ---------- */
+  --color-bg-deep:        #eceae6;   /* тёплый светло-серый, как вода в пруду */
+  --color-bg-wrapper-1:   #f6f4f0;   /* почти белый жемчужный */
+  --color-bg-wrapper-2:   #e8e5df;   /* мягкий пепельный */
+  --color-bg-panel:       #fbfaf8;   /* светлая панель */
+  --color-bg-field:       #f4f2ee;   /* поле — светлая водная гладь */
+
+  /* ---------- Акценты (без золота — только кои-палитра) ---------- */
+  --color-gold:           #9aa0a6;   /* нейтральный серый вместо золота */
+  --color-gold-bright:    #c9ced4;   /* светлый серебристо-серый */
+  --color-gold-deep:      #6b7076;   /* глубокий графит */
+
+  --color-orange:         #e8a17a;   /* кораллово-персиковый — плавник кои */
+  --color-orange-glow:    #f3c6a8;   /* мягкое тёплое сияние */
+
+  --color-red:            #d97b7b;   /* приглушённый алый — пятно на кои */
+  --color-red-deep:       #a85a5a;   /* тёмный кармин */
+
+  --color-green:          #9bb39a;   /* пыльно-зелёный — лист лотоса */
+  --color-green-bright:   #c2d4bf;   /* светлый побег */
+  --color-green-deep:     #6d856c;   /* тёмная вода под листом */
 
   /* ---------- Текст ---------- */
-  --color-text-main:      #d0d0d0;
-  --color-text-dim:       #888888;
-  --color-text-warm:      #e0e0e0;
-  --color-text-accent:    #ffffff;
+  --color-text-main:      #3f4245;   /* графитовый, как тушь */
+  --color-text-dim:       #8a8d90;   /* приглушённый серый */
+  --color-text-warm:      #5a5450;   /* тёплый серо-коричневый */
+  --color-text-accent:    #2a2c2e;   /* почти чёрный для акцентов */
 
   /* ---------- Скругления ---------- */
   --radius-sm:   4px;
@@ -116,9 +129,9 @@ canvas {
 
   box-shadow:
     0 0 8px var(--color-orange),
-    0 0 20px rgba(170, 170, 170, 0.4),
-    0 0 40px rgba(120, 120, 120, 0.2),
-    inset 0 0 12px rgba(170, 170, 170, 0.1);
+    0 0 20px rgba(232, 161, 122, 0.35),
+    0 0 40px rgba(154, 160, 166, 0.18),
+    inset 0 0 12px rgba(154, 160, 166, 0.12);
 }
 
 
@@ -129,22 +142,23 @@ canvas {
   border: 2px solid var(--color-gold);
   border-radius: var(--radius-sm);
 
-  background: linear-gradient(180deg, #2a2a2a 0%, #0a0a0a 100%);
-  color: var(--color-gold-bright);
+  background: linear-gradient(180deg, #fbfaf8 0%, #e5e3df 100%);
+  color: var(--color-gold-deep);
 
-  text-shadow: 0 0 6px var(--color-orange-glow);
+  text-shadow: 0 1px 0 #ffffff;
 
   box-shadow:
-    inset 0 2px 4px rgba(255, 255, 255, 0.1),
-    inset 0 -3px 6px rgba(0, 0, 0, 0.6);
+    inset 0 2px 4px rgba(255, 255, 255, 0.9),
+    inset 0 -3px 6px rgba(154, 160, 166, 0.25),
+    0 2px 4px rgba(120, 125, 130, 0.15);
 }
 
 .dpad-btn:active,
 .dpad-btn.pressed {
-  background: linear-gradient(180deg, #0a0a0a 0%, #000000 100%);
-  color: #ffffff;
+  background: linear-gradient(180deg, #dcdad6 0%, #c8c6c2 100%);
+  color: var(--color-text-accent);
   box-shadow:
-    inset 0 3px 8px rgba(0, 0, 0, 0.9),
+    inset 0 3px 8px rgba(107, 112, 118, 0.35),
     0 0 12px var(--color-orange-glow);
 }
 
@@ -157,12 +171,12 @@ canvas {
   border-radius: var(--radius-lg);
 
   background-color: var(--color-bg-panel);
-  color: var(--color-green-bright);
+  color: var(--color-green-deep);
 
-  text-shadow: 0 0 12px var(--color-green);
+  text-shadow: 0 0 8px rgba(155, 179, 154, 0.5);
 
   box-shadow:
-    inset 0 0 20px #000,
+    inset 0 0 20px rgba(155, 179, 154, 0.15),
     0 4px 0 var(--color-green-deep);
 
   transition:
@@ -172,20 +186,20 @@ canvas {
 }
 
 .timer-box.warning {
-  border-color: var(--color-gold);
-  color: var(--color-gold-bright);
-  text-shadow: 0 0 12px var(--color-gold);
+  border-color: var(--color-orange);
+  color: var(--color-orange);
+  text-shadow: 0 0 10px rgba(232, 161, 122, 0.6);
   box-shadow:
-    inset 0 0 20px #000,
-    0 4px 0 var(--color-gold-deep);
+    inset 0 0 20px rgba(232, 161, 122, 0.15),
+    0 4px 0 #b87a55;
 }
 
 .timer-box.danger {
   border-color: var(--color-red);
-  color: var(--color-text-accent);
-  text-shadow: 0 0 16px var(--color-red);
+  color: var(--color-red-deep);
+  text-shadow: 0 0 12px rgba(217, 123, 123, 0.6);
   box-shadow:
-    inset 0 0 20px #000,
+    inset 0 0 20px rgba(217, 123, 123, 0.18),
     0 4px 0 var(--color-red-deep);
 }
 
@@ -198,10 +212,10 @@ canvas {
   border-radius: var(--radius-lg);
 
   background-color: var(--color-red);
-  color: var(--color-text-warm);
+  color: #ffffff;
 
   box-shadow:
-    inset 0 -6px 12px rgba(0, 0, 0, 0.4),
+    inset 0 -6px 12px rgba(168, 90, 90, 0.35),
     0 4px 0 var(--color-red-deep);
 
   transition:
@@ -211,9 +225,9 @@ canvas {
 }
 
 .btn-reset:active {
-  background-color: #888888;
+  background-color: var(--color-red-deep);
   box-shadow:
-    inset 0 -3px 8px rgba(0, 0, 0, 0.5),
+    inset 0 -3px 8px rgba(120, 60, 60, 0.45),
     0 1px 0 var(--color-red-deep);
 }
 
@@ -222,38 +236,34 @@ canvas {
    [BLOCK: touch-hint]
    ============================================================ */
 .touch-hint {
-  background-color: rgba(10, 10, 10, 0.9);
+  background-color: rgba(251, 250, 248, 0.95);
   color: var(--color-text-warm);
 
   border: 3px solid var(--color-orange);
   border-radius: var(--radius-lg);
 
-  text-shadow:
-    0 0 20px var(--color-orange-glow),
-    3px 3px 0 #000;
+  text-shadow: 0 1px 0 #ffffff;
 
   box-shadow:
-    0 0 40px var(--color-orange-glow),
-    inset 0 0 30px rgba(170, 170, 170, 0.2);
+    0 0 40px rgba(232, 161, 122, 0.45),
+    inset 0 0 30px rgba(232, 161, 122, 0.12);
 }
 
 .touch-hint small {
-  color: var(--color-text-warm);
+  color: var(--color-text-dim);
 }
 
 body[data-hint="limit"] .touch-hint {
   border-color: var(--color-red);
-  color: var(--color-text-accent);
+  color: var(--color-red-deep);
   box-shadow:
-    0 0 40px var(--color-red),
-    inset 0 0 30px rgba(120, 120, 120, 0.3);
+    0 0 40px rgba(217, 123, 123, 0.5),
+    inset 0 0 30px rgba(217, 123, 123, 0.15);
 }
 
 body[data-hint="limit"] .touch-hint .big {
-  color: var(--color-text-accent);
-  text-shadow:
-    0 0 20px var(--color-red),
-    3px 3px 0 #000;
+  color: var(--color-red-deep);
+  text-shadow: 0 1px 0 #ffffff;
 }
 
 
@@ -266,9 +276,7 @@ body[data-hint="limit"] .touch-hint .big {
 }
 
 .rotate-text {
-  text-shadow:
-    0 0 20px var(--color-orange-glow),
-    3px 3px 0 #000;
+  text-shadow: 0 1px 0 #ffffff;
 }
 
 
@@ -276,7 +284,7 @@ body[data-hint="limit"] .touch-hint .big {
    [BLOCK: intro-modal]
    ============================================================ */
 .intro-modal {
-  background-color: rgba(0, 0, 0, 0.85);
+  background-color: rgba(232, 229, 223, 0.85);
 }
 
 
@@ -294,9 +302,9 @@ body[data-hint="limit"] .touch-hint .big {
   border-radius: var(--radius-lg);
 
   box-shadow:
-    0 0 40px var(--color-orange-glow),
-    0 0 80px rgba(120, 120, 120, 0.3),
-    inset 0 0 30px rgba(200, 200, 200, 0.08);
+    0 0 40px rgba(232, 161, 122, 0.35),
+    0 0 80px rgba(154, 160, 166, 0.2),
+    inset 0 0 30px rgba(255, 255, 255, 0.6);
 
   color: var(--color-text-main);
 }
@@ -307,9 +315,7 @@ body[data-hint="limit"] .touch-hint .big {
    ============================================================ */
 .intro-title {
   color: var(--color-text-warm);
-  text-shadow:
-    0 0 20px var(--color-orange-glow),
-    2px 2px 0 #000;
+  text-shadow: 0 1px 0 #ffffff;
 }
 
 
@@ -329,7 +335,7 @@ body[data-hint="limit"] .touch-hint .big {
    [BLOCK: intro-cookie]
    ============================================================ */
 .intro-cookie {
-  border-top: 1px solid rgba(120, 120, 120, 0.3);
+  border-top: 1px solid rgba(154, 160, 166, 0.3);
   color: var(--color-text-dim);
 }
 
@@ -338,22 +344,22 @@ body[data-hint="limit"] .touch-hint .big {
    [BLOCK: intro-accept]
    ============================================================ */
 .intro-accept {
-  border: 2px solid var(--color-green-bright);
+  border: 2px solid var(--color-green-deep);
   border-radius: var(--radius-pill);
 
   background-color: var(--color-green);
-  color: #0a0a0a;
+  color: #ffffff;
 
   box-shadow:
     0 5px 0 var(--color-green-deep),
-    0 7px 16px black;
+    0 7px 16px rgba(109, 133, 108, 0.3);
 }
 
 .intro-accept:active {
-  background-color: var(--color-green-bright);
+  background-color: var(--color-green-deep);
   box-shadow:
     0 1px 0 var(--color-green-deep),
-    0 3px 8px black;
+    0 3px 8px rgba(109, 133, 108, 0.35);
 }
 
 
