@@ -1,5 +1,5 @@
 // ============================================================
-// [FILE: dom.js]
+// [FILE: core/js/dom.js]
 // ============================================================
 
 export const $ = {
@@ -15,8 +15,8 @@ export const $ = {
 
   startHint:   document.getElementById('startHint'),
 
-  cookieBanner: document.getElementById('cookieBanner'),
-  cookieAccept: document.getElementById('cookieAccept'),
+  introModal:  document.getElementById('introModal'),
+  introAccept: document.getElementById('introAccept'),
 
   dpad:        document.getElementById('dpad'),
   bottomRight: document.getElementById('bottomRight'),

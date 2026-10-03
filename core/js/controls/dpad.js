@@ -1,5 +1,5 @@
 // ============================================================
-// [FILE: controls/dpad.js]
+// [FILE: core/js/controls/dpad.js]
 // ============================================================
 
 export function createDpad(root, callbacks) {

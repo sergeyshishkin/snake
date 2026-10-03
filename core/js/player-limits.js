@@ -1,10 +1,10 @@
 // ============================================================
-// [FILE: player-limits.js]
+// [FILE: core/js/player-limits.js]
 // ============================================================
 
-import { CONFIG, DEBUG_DISABLE_LIMIT } from './config.js';
+import { config, DEBUG_DISABLE_LIMIT } from '../../game/js/config.js';
 
-const DAILY_LIMIT_MS = CONFIG.DAILY_PLAY_LIMIT_MINUTES * 60 * 1000;
+const DAILY_LIMIT_MS = config.DAILY_PLAY_LIMIT_MINUTES * 60 * 1000;
 
 let player = null;
 let sessionStart = null;
@@ -30,7 +30,7 @@ function todayKey() {
 function save() {
   if (!player) return;
   try {
-    localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(player));
+    localStorage.setItem(config.STORAGE_KEY, JSON.stringify(player));
   } catch (e) {}
 }
 
@@ -51,7 +51,7 @@ export function initPlayer() {
   let p = null;
 
   try {
-    const raw = localStorage.getItem(CONFIG.STORAGE_KEY);
+    const raw = localStorage.getItem(config.STORAGE_KEY);
     if (raw) p = JSON.parse(raw);
   } catch (e) {}
 
@@ -154,7 +154,7 @@ export function tickSession() {
 export function flushSession() {
   if (sessionStart && player) {
     const elapsed = Date.now() - sessionStart;
-    if (elapsed > 0 && elapsed < CONFIG.SESSION_FLUSH_TIMEOUT_MS) {
+    if (elapsed > 0 && elapsed < config.SESSION_FLUSH_TIMEOUT_MS) {
       player.usedMs += elapsed;
       player.totalPlayMs += elapsed;
     }

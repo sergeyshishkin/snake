@@ -1,5 +1,5 @@
 /* ============================================================
-   [FILE: layout.css]
+   [FILE: core/css/layout.css]
    ============================================================ */
 
 
@@ -71,7 +71,7 @@
 }
 
 .stat-best {
-  color: #d4af7a;
+  color: var(--color-text-dim);
 }
 
 .stat-score {
@@ -96,6 +96,8 @@
 
 /* ============================================================
    [BLOCK: canvas]
+   Фон, сетка, свечение — общие. Конкретный игровой рендер
+   рисуется поверх в JS.
    ============================================================ */
 canvas {
   display: block;
@@ -103,10 +105,6 @@ canvas {
   height: 100%;
 
   background-color: var(--color-bg-field);
-  background-image:
-    linear-gradient(rgba(180, 140, 70, 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(180, 140, 70, 0.1) 1px, transparent 1px);
-  background-size: 5% 5%;
 
   image-rendering: pixelated;
   touch-action: none;
@@ -115,7 +113,7 @@ canvas {
   border-radius: 12px;
 
   box-shadow:
-    0 0 8px #ffb347,
+    0 0 8px var(--color-orange),
     0 0 20px rgba(255, 179, 71, 0.5),
     0 0 40px rgba(255, 140, 0, 0.25),
     inset 0 0 12px rgba(255, 179, 71, 0.15);

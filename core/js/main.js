@@ -1,5 +1,6 @@
 // ============================================================
-// [FILE: main.js]
+// [FILE: core/js/main.js]
+// Точка входа. Собирает core + game.
 // ============================================================
 
 import {
@@ -11,12 +12,18 @@ import {
 } from './player-limits.js';
 import { state, updateState, resetGameState } from './state.js';
 import { $ } from './dom.js';
-import { createGame }       from './game.js';
 import { createUI }         from './ui.js';
-import { createCookieGate } from './cookie.js';
+import { createLoop }       from './loop.js';
+import { createResize }     from './resize.js';
+import { createLifecycle }  from './lifecycle.js';
+import { createIntro }      from './intro.js';
 import { createDpad }       from './controls/dpad.js';
 import { createKeyboard }   from './controls/keyboard.js';
 import { createSwipe }      from './controls/swipe.js';
+
+import { config }         from '../../game/js/config.js';
+import { createRules }    from '../../game/js/rules.js';
+import { createRenderer } from '../../game/js/render.js';
 
 
 initPlayer();
@@ -24,68 +31,53 @@ initPlayer();
 state.bestScore = getBestScore();
 
 const ui = createUI();
-const game = createGame($.canvas, {
-  onScore: score => updateState({ score }, ui),
+const rules = createRules();
+const renderer = createRenderer($.canvas);
 
-  onStart: () => updateState({
-    hintVisible: false,
-    panelMode: 'timer',
-  }, ui),
+const game = createLoop({
+  rules,
+  renderer,
+  config,
+  callbacks: {
+    onScore: score => updateState({ score }, ui),
 
-  onGameOver: ({ win, score }) => {
-    const isNewRecord = updateBestScore(score);
-    updateState({
-      gameActive: false,
-      gameOver: true,
-      win,
-      panelMode: 'reset',
-      ...(isNewRecord ? { bestScore: score } : {}),
-    }, ui);
+    onStart: () => updateState({
+      gameStarted: true,
+      gameActive: true,
+      gameOver: false,
+      hintVisible: false,
+      panelMode: 'timer',
+    }, ui),
+
+    onGameOver: ({ win, score }) => {
+      const isNewRecord = updateBestScore(score);
+      updateState({
+        gameActive: false,
+        gameStarted: true,
+        gameOver: true,
+        win,
+        panelMode: 'reset',
+        ...(isNewRecord ? { bestScore: score } : {}),
+      }, ui);
+    },
+
+    onLimit: () => updateState({
+      limitReached: true,
+      hintVisible: true,
+      hintKind: 'limit',
+      panelMode: 'timer',
+    }, ui),
   },
-
-  onLimit: () => updateState({
-    limitReached: true,
-    hintVisible: true,
-    hintKind: 'limit',
-    panelMode: 'timer',
-  }, ui),
 });
 
 
-let resizeRaf = null;
-
-function syncCanvasSize() {
-  const container = $.canvas.parentElement;
-  if (!container) return;
-
-  const rect = container.getBoundingClientRect();
-  const w = Math.round(rect.width);
-  const h = Math.round(rect.height);
-
-  if (w <= 0 || h <= 0) return;
-
-  if ($.canvas.width !== w || $.canvas.height !== h) {
-    $.canvas.width  = w;
-    $.canvas.height = h;
-    game.resize(w, h);
+createResize({
+  canvas: $.canvas,
+  onResize: (w, h) => {
+    renderer.resize(w, h, config.GRID_SIZE);
     game.render();
-  }
-}
-
-function scheduleResize() {
-  if (resizeRaf) return;
-  resizeRaf = requestAnimationFrame(() => {
-    resizeRaf = null;
-    syncCanvasSize();
-  });
-}
-
-const resizeObserver = new ResizeObserver(scheduleResize);
-resizeObserver.observe($.canvas.parentElement);
-
-syncCanvasSize();
-requestAnimationFrame(syncCanvasSize);
-setTimeout(syncCanvasSize, 100);
+  },
+});
 
 
 function handleDirection(dir) {
@@ -201,31 +193,25 @@ function unlockGame() {
     }, ui);
   }
 
-  ui.startTimer(() => game.tickSessionTick());
+  ui.startTimer(() => game.tickSession());
   ui.updateTimer();
 }
 
 
-const cookieGate = createCookieGate({
+const intro = createIntro({
   onAccept: unlockGame,
 });
 
-cookieGate.init();
+intro.init();
 
 
-window.addEventListener('beforeunload', () => {
-  if (state.gameActive) flushSession();
-});
-
-window.addEventListener('pagehide', () => {
-  if (state.gameActive) flushSession();
-});
-
-document.addEventListener('visibilitychange', () => {
-  if (document.hidden && state.gameActive) {
-    game.flushSessionNow();
+createLifecycle({
+  isActive: () => state.gameActive,
+  onFlush: flushSession,
+  onHide: () => {
+    game.flushSession();
     game.render();
-  }
+  },
 });
 
 
@@ -256,7 +242,7 @@ $.canvas.addEventListener('contextmenu', e => e.preventDefault());
 
   const params = new URLSearchParams(location.search);
   if (params.get('resetLimit') === '1') {
-    try { localStorage.removeItem('sushi_snake_player_v1'); } catch (e) {}
+    try { localStorage.removeItem(config.STORAGE_KEY); } catch (e) {}
 
     params.delete('resetLimit');
     const newUrl = location.pathname + (params.toString() ? '?' + params : '');

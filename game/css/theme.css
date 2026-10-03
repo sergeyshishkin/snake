@@ -1,0 +1,27 @@
+/* ============================================================
+   [FILE: game/css/theme.css]
+   ============================================================ */
+
+:root {
+  --color-bg-deep:        #000000;
+  --color-bg-wrapper-1:   #0a0a0a;
+  --color-bg-wrapper-2:   #050505;
+  --color-bg-panel:       #0a0a0a;
+  --color-bg-field:       #0f0f0f;
+
+  --color-gold:           #666666;
+  --color-gold-bright:    #d0d0d0;
+  --color-gold-deep:      #1a1a1a;
+  --color-orange:         #aaaaaa;
+  --color-orange-glow:    #888888;
+  --color-red:            #666666;
+  --color-red-deep:       #1a1a1a;
+  --color-green:          #888888;
+  --color-green-bright:   #d0d0d0;
+  --color-green-deep:     #1a1a1a;
+
+  --color-text-main:      #d0d0d0;
+  --color-text-dim:       #888888;
+  --color-text-warm:      #e0e0e0;
+  --color-text-accent:    #ffffff;
+}

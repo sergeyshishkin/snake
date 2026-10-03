@@ -1,5 +1,5 @@
 // ============================================================
-// [FILE: ui.js]
+// [FILE: core/js/ui.js]
 // ============================================================
 
 import { state } from './state.js';
@@ -12,31 +12,17 @@ export function createUI() {
   let timerInterval = null;
 
 
-  // ==========================================================
-  // [BLOCK: render]
-  // Единственное место, где обновляется UI.
-  // Всё, что можно — переключается через data-* на body.
-  // В JS остаются только числа score / bestScore.
-  // ==========================================================
   function render() {
-
-    // Числа
     $.score.textContent     = ' ' + state.score;
     $.bestScore.textContent = ' ' + state.bestScore;
 
-    // Правая панель: timer или restart
     document.body.dataset.panel = state.panelMode;
 
-    // Подсказка: start / limit / none
     document.body.dataset.hint =
       state.hintVisible ? state.hintKind : 'none';
   }
 
 
-  // ==========================================================
-  // [BLOCK: timer]
-  // Таймер обновляется отдельно — не часть основного state.
-  // ==========================================================
   function updateTimer() {
     const ms = getRemainingMs();
     const totalSec = Math.ceil(ms / 1000);

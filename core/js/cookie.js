@@ -1,8 +1,10 @@
 // ============================================================
-// [FILE: cookie.js]
+// [FILE: core/js/cookie.js]
 // ============================================================
 
-const COOKIE_ACCEPT_KEY = 'sushi_snake_cookie_accepted_v1';
+import { config } from '../game/js/config.js';
+
+const COOKIE_ACCEPT_KEY = config.STORAGE_KEY + '_cookie_accepted';
 const HIDE_ANIMATION_MS = 350;
 
 

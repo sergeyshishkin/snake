@@ -1,211 +1,133 @@
-# Граф зависимостей проекта
+# Структура проекта
 
-Документ описывает структуру модулей, слои абстракции и поток данных
-между файлами. Помогает понять, что от чего зависит и куда лезть,
-когда нужно что-то изменить.
+Проект разделён на две папки: **core/** — универсальный каркас, **game/** — специфика конкретной игры.
 
+Правило простое: **core/ не трогается** при создании новой игры. Меняется только game/.
 
-## Слои абстракции
 
-Проект разделён на четыре слоя. Файлы нижних слоёв не знают о файлах
-верхних. Это упрощает отладку: если что-то сломалось в игровой логике,
-вы смотрите только на `game.js` и его зависимости, а не на весь проект.
+## Дерево файлов
 
+- `index.html` — разметка, подключает core и game
+- `docs.md` — этот файл
+- `core/` — универсальный каркас
+  - `core/css/base.css`
+  - `core/css/layout.css`
+  - `core/css/controls.css`
+  - `core/css/overlays.css`
+  - `core/js/main.js`
+  - `core/js/state.js`
+  - `core/js/dom.js`
+  - `core/js/ui.js`
+  - `core/js/loop.js`
+  - `core/js/resize.js`
+  - `core/js/lifecycle.js`
+  - `core/js/player-limits.js`
+  - `core/js/intro.js`
+  - `core/js/controls/dpad.js`
+  - `core/js/controls/keyboard.js`
+  - `core/js/controls/swipe.js`
+- `game/` — специфика игры (заменяется)
+  - `game/css/theme.css`
+  - `game/js/config.js`
+  - `game/js/rules.js`
+  - `game/js/render.js`
+  - `game/js/assets.js`
 
-### Слой 0 — данные
 
-Файлы, которые ничего не импортируют. Только константы, объекты, ссылки.
-Их можно читать без контекста остального проекта.
+## index.html
 
-- `config.js` — все настройки (лимит, скорость, размер поля).
-- `state.js` — единый объект состояния приложения.
-- `dom.js` — ссылки на DOM-элементы.
-- `assets/sushi.js` — данные еды (Path2D-слои).
+Разметка страницы. Подключает CSS из core/ и game/, загружает core/js/main.js. Содержит шапку со счётом и рекордом, canvas с оверлеями, крестовину, timer, кнопку рестарта, модалку intro (правила + cookie). Тексты и заголовок специфичны для игры и правятся здесь.
 
 
-### Слой 1 — службы
+## core/ — универсальный каркас
 
-Каждый модуль делает одну вещь. Не знают друг о друге и о `game.js`.
+Работает для любой игры. Не знает о правилах, отрисовке, ассетах конкретной игры. Игра передаёт ему rules, render, config через main.js.
 
-- `player-limits.js` — зависит от `config.js`. Анонимный ID, дневной лимит,
-  best score.
-- `renderers/snake.js` — ни от чего не зависит. Рисует змейку.
-- `renderers/food.js` — зависит от `assets/sushi.js`. Рисует еду.
-- `cookie.js` — ни от чего не зависит. Управляет cookie-баннером.
-- `controls/dpad.js` — ни от чего не зависит. Обрабатывает кнопки ▲▼◀▶.
-- `controls/keyboard.js` — ни от чего не зависит. Обрабатывает клавиатуру.
-- `controls/swipe.js` — ни от чего не зависит. Обрабатывает свайпы.
 
+### core/css/
 
-### Слой 2 — движок
+- **base.css** — Reset, CSS-переменные (--color-*, --gap-*), body, утилиты .hidden / .visually-hidden, prefers-reduced-motion.
+- **layout.css** — Каркас страницы: .game-wrapper, .header, .stat-box, .canvas-container, canvas.
+- **controls.css** — Нижняя панель: .bottom-row, крестовина .dpad, .dpad-btn, .timer-box, .btn-reset.
+- **overlays.css** — Стартовая и лимитная подсказки, анимации пульсации, rotate-overlay, intro-модалка.
 
-Здесь появляется логика. Два модуля не знают друг о друге напрямую.
 
-- `game.js` — зависит от `config.js`, `player-limits.js`,
-  `renderers/snake.js`, `renderers/food.js`. Игровая логика: змейка,
-  еда, тики, коллизии.
-- `ui.js` — зависит от `state.js`, `dom.js`, `player-limits.js`.
-  Единственная функция `render()` читает `state` и обновляет DOM.
+### core/js/
 
+- **main.js** — Точка входа. Создаёт UI, loop, renderer. Связывает все модули. Обрабатывает input.
+- **state.js** — Единый объект состояния приложения. Единственное место, где меняются данные UI.
+- **dom.js** — Ссылки на DOM-элементы. Проверяет их наличие при загрузке.
+- **ui.js** — Единственная функция render(). Читает state, обновляет DOM, переключает body[data-*].
+- **loop.js** — Игровой цикл. Вызывает rules.tick() и renderer.render(), следит за лимитом.
+- **resize.js** — ResizeObserver для canvas. Синхронизирует внутренние размеры с CSS.
+- **lifecycle.js** — Обработчики beforeunload, pagehide, visibilitychange. Сохраняет сессию.
+- **player-limits.js** — Анонимный ID игрока, дневной лимит, best score. Хранение в localStorage.
+- **intro.js** — Модалка при первом заходе. Правила + cookie-уведомление.
 
-### Слой 3 — сборка
 
-Единственное место, где слои пересекаются.
+### core/js/controls/
 
-- `main.js` — импортирует всё вышеперечисленное. Создаёт объекты,
-  передаёт колбэки, вызывает `updateState({...}, ui)`.
+- **dpad.js** — Кнопки направления ▲▼◀▶. Pointer Events с fallback на Touch/Mouse.
+- **keyboard.js** — Стрелки, Space, Enter, R.
+- **swipe.js** — Свайпы по canvas. Тап = действие, свайп = направление.
 
 
-## Таблица зависимостей
+## game/ — специфика игры
 
-| Файл | Импортирует из | Кто его импортирует |
-|---|---|---|
-| `config.js` | — | `game.js`, `player-limits.js` |
-| `state.js` | — | `ui.js`, `main.js` |
-| `dom.js` | — | `ui.js`, `main.js` |
-| `assets/sushi.js` | — | `renderers/food.js` |
-| `player-limits.js` | `config.js` | `ui.js`, `game.js`, `main.js` |
-| `renderers/snake.js` | — | `game.js` |
-| `renderers/food.js` | `assets/sushi.js` | `game.js` |
-| `game.js` | `config.js`, `player-limits.js`, `renderers/*` | `main.js` |
-| `ui.js` | `state.js`, `dom.js`, `player-limits.js` | `main.js` |
-| `cookie.js` | — | `main.js` |
-| `controls/dpad.js` | — | `main.js` |
-| `controls/keyboard.js` | — | `main.js` |
-| `controls/swipe.js` | — | `main.js` |
-| `main.js` | всё вышеперечисленное | — (точка входа) |
+Здесь всё, что делает каркас конкретной игрой: змейкой, 2048, тетрисом. При создании новой игры эта папка переписывается целиком.
 
 
-## Правила, которые действуют
+### game/css/
 
-### Никто, кроме `ui.js`, не трогает DOM
+- **theme.css** — Палитра игры. Переопределяет CSS-переменные из base.css.
 
-`game.js`, `controls/*`, `player-limits.js` не знают о существовании DOM.
-Они возвращают данные через колбэки, а `main.js` передаёт их в `state`.
 
-### Никто, кроме `main.js`, не меняет `state`
+### game/js/
 
-`state` экспортируется как объект, но менять его поля напрямую из модулей
-нельзя. Только через `updateState({...}, ui)` в `main.js`. Это гарантирует,
-что после каждого изменения вызывается `render()`.
+- **config.js** — Настройки: GRID_SIZE, TICK_INTERVAL_MS, DAILY_PLAY_LIMIT_MINUTES, STORAGE_KEY, DEBUG_DISABLE_LIMIT. Предоставляет ядру объект config.
+- **rules.js** — Игровая логика: reset(), tick(), setDirection(), getState(), showPreview(). Предоставляет ядру фабрику createRules().
+- **render.js** — Отрисовка на canvas: render(state), resize(w, h, grid). Предоставляет ядру фабрику createRenderer(canvas).
+- **assets.js** — Данные графики: Path2D, цвета, координаты. Может отсутствовать, если игра рисует процедурно.
 
-### DOM-ссылки — только из `dom.js`
 
-`getElementById` встречается только в `dom.js`. Если ID элемента
-в `index.html` изменился — правится одна строка в `dom.js`.
+## Контракт между core и game
 
-### Обратные вызовы — только через колбэки
+Ядро ожидает от игры три вещи.
 
-`game.js` не знает о `ui.js`. Он вызывает `callbacks.onScore(score)`,
-а `main.js` решает, что с этим делать.
+**1. config** — объект с полями: GRID_SIZE (размер игрового поля), TICK_INTERVAL_MS (скорость игры), DAILY_PLAY_LIMIT_MINUTES (дневной лимит), STORAGE_KEY (уникальный ключ localStorage).
 
+**2. rules** — объект с методами: reset() (начать новую партию), tick() (один шаг игры, возвращает { event: 'gameover' | 'eat' | null, ... }), setDirection(dir) (сменить направление), getState() (текущее состояние для рендера), showPreview() (состояние для стартового экрана).
 
-## Поток данных: четыре примера
-
-
-### Пример 1. Игрок нажал кнопку ▲
-
-1. `controls/dpad.js` ловит `pointerdown`, вызывает `onDirection('UP')`.
-2. `main.js → handleDirection('UP')` проверяет состояние, вызывает
-   `game.setDirection('UP')`.
-3. `game.js` сохраняет `nextDir = 'UP'`. На следующем тике змейка
-   повернёт вверх.
-
-DOM не трогается, `state` не меняется, `render()` не вызывается.
-Кнопка визуально «нажата» через CSS `:active`.
-
-
-### Пример 2. Змейка съела суши
-
-1. `game.js → tick()` обнаружил `willEat`, вызывает `callbacks.onScore(5)`.
-2. `main.js` вызывает `updateState({ score: 5 }, ui)`.
-3. `updateState` копирует поля в `state` и вызывает `ui.render()`.
-4. `ui.render()` читает `state.score = 5`, пишет в `$.score.textContent = 5`.
-
-Одно место (`updateState`) меняет состояние. Одно место (`ui.render`)
-обновляет DOM.
-
-
-### Пример 3. Игрок проиграл
-
-1. `game.js → end('wall')` вызывает `callbacks.onGameOver({ win: false, score: 12 })`.
-2. `main.js` вызывает `updateBestScore(12)` из `player-limits.js`.
-3. Если рекорд побит — `updateState({ ...bestScore: 12 }, ui)`.
-4. `updateState` также устанавливает `gameOver: true`, `panelMode: 'reset'`.
-5. `ui.render()` видит `panelMode === 'reset'`, скрывает timer, показывает
-   restart, обновляет bestScore в шапке.
-
-Никаких `ui.showReset()` или `ui.setBestScore(12)` снаружи — всё делает
-`render()` по состоянию.
-
-
-### Пример 4. Игрок закрыл вкладку
-
-1. Срабатывает `window.beforeunload`.
-2. `main.js` проверяет `state.gameActive`.
-3. Если игра активна — вызывает `flushSession()` из `player-limits.js`.
-4. `localStorage` обновлён, время сессии сохранено.
-
-UI не трогается — вкладка закрывается.
-
-
-## Сравнение «до» и «после»
-
-### До рефакторинга
-
-`main.js` вызывал семь императивных методов UI:
-
-- `ui.setScore(n)`
-- `ui.setBestScore(n)`
-- `ui.showTimer()`
-- `ui.showReset()`
-- `ui.showStart()`
-- `ui.showLimit()`
-- `ui.hideHint()`
-
-Забыли один вызов — UI «залип» в неправильном состоянии. Опечатка
-в имени метода (например, `hideReset` вместо `showTimer`) — ошибка
-в рантайме при первом же срабатывании.
-
-Плюс `main.js` сам искал DOM: `document.getElementById('resetButton')`
-в нескольких местах.
-
-
-### После рефакторинга
-
-`main.js` вызывает один метод:
-
-- `updateState({...}, ui)` — копирует поля в `state` и вызывает `render()`.
-
-`ui.render()` — единая функция, которая читает `state` и приводит DOM
-в соответствие. Забыть что-то обновить невозможно, потому что это одно
-место. Опечатка в имени поля `state` — ошибка на этапе чтения кода,
-не в рантайме.
-
-`main.js` не ищет DOM — берёт ссылки из `dom.js`.
-
-
-## Что это даёт на практике
-
-| Задача | Что делать |
-|---|---|
-| Добавить поле в UI (например, «уровень») | `state.js` → `level: 1`. `dom.js` → `levelSpan`. `ui.js` → строка в `render()`. `main.js` → `updateState({ level: n }, ui)`. Всё. |
-| Переименовать ID элемента в HTML | Правится одна строка в `dom.js`. Остальные файлы не трогаются. |
-| Забыли обновить UI после события | Невозможно — `updateState` всегда вызывает `render()`. |
-| Понять, почему UI в странном виде | Открыть `state.js`, посмотреть значения. Открыть `render()` — увидеть логику. |
-| Найти DOM-элемент по ID | Только в `dom.js`. Не нужно искать по всему проекту. |
-
-
-## Проверка графа
-
-После запуска проекта откройте DevTools → Console:
-
-```javascript
-const s = await import('./js/state.js');
-console.log('state keys:', Object.keys(s.state));
-
-const d = await import('./js/dom.js');
-console.log('dom keys:', Object.keys(d.$));
-
-const u = await import('./js/ui.js');
-console.log('ui exports:', Object.keys(u));
+**3. renderer** — объект с методами: render(state) (нарисовать кадр), resize(w, h, grid) (обновить размеры).
+
+Всё остальное ядро делает само: лимит, cookie, intro, клавиатура, рекорд, жизненный цикл.
+
+
+## Создание новой игры
+
+1. Кнопка **Use this template** на GitHub.
+2. Правите game/js/config.js — меняете STORAGE_KEY, GRID_SIZE, скорость.
+3. Переписываете game/js/rules.js — логика игры.
+4. Переписываете game/js/render.js — отрисовка.
+5. Меняете game/css/theme.css — палитра.
+6. Правите тексты в index.html.
+7. git push.
+
+core/ не трогается. Если что-то сломалось — ищите в game/.
+
+
+## Что менять, если...
+
+- Дневной лимит (минуты) — game/js/config.js
+- Скорость игры — game/js/config.js
+- Размер игрового поля — game/js/config.js
+- Ключ localStorage — game/js/config.js
+- Отключить лимит для отладки — game/js/config.js → DEBUG_DISABLE_LIMIT = true
+- Правила игры — game/js/rules.js
+- Отрисовка — game/js/render.js
+- Палитра — game/css/theme.css
+- Тексты подсказок — index.html
+- Тексты intro-модалки — index.html
+- Цели Метрики — index.html
+- Стили UI-модуля — core/css/controls.css
+- Общий layout — core/css/layout.css
