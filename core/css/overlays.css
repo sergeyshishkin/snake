@@ -1,8 +1,8 @@
 /* ============================================================
    [FILE: core/css/overlays.css]
    Назначение: структура оверлеев. Позиционирование, размеры,
-   flex, анимации масштаба. Без цветов, теней, скруглений,
-   шрифтов — они в game/css/theme.css.
+   flex, анимации. Без цветов, теней, шрифтов, скруглений —
+   они в game/css/theme.css.
    ============================================================ */
 
 
@@ -21,12 +21,6 @@
 
   padding: clamp(14px, 3vw, 28px) clamp(18px, 5vw, 42px);
 
-  font-size: clamp(16px, 4vw, 26px);
-  font-weight: 900;
-  line-height: 1.4;
-  letter-spacing: 2px;
-  text-align: center;
-
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
 
@@ -39,9 +33,6 @@
 .touch-hint small {
   display: block;
   margin-top: 10px;
-  font-size: 0.55em;
-  letter-spacing: 3px;
-  opacity: 0.9;
 }
 
 
@@ -69,13 +60,12 @@ body[data-hint="limit"] .touch-hint {
 body[data-hint="limit"] .touch-hint .big {
   display: block;
   margin-bottom: 8px;
-  font-size: 1.2em;
 }
 
 
 /* ============================================================
    [BLOCK: animations]
-   transform управляется только анимацией. Центрирование — 
+   transform управляется только анимацией. Центрирование —
    через margin: auto + inset: 0. translate отсутствует.
    ============================================================ */
 @keyframes pulse-glow {
@@ -103,7 +93,6 @@ body[data-hint="limit"] .touch-hint .big {
 
 /* ============================================================
    [BLOCK: intro-modal]
-   Единая модалка: правила игры + cookie-уведомление + кнопка OK.
    ============================================================ */
 .intro-modal {
   position: fixed;
@@ -156,10 +145,6 @@ body[data-hint="limit"] .touch-hint .big {
    [BLOCK: intro-title]
    ============================================================ */
 .intro-title {
-  font-size: clamp(20px, 5vw, 28px);
-  font-weight: 900;
-  letter-spacing: 2px;
-
   margin-bottom: 16px;
 }
 
@@ -168,7 +153,6 @@ body[data-hint="limit"] .touch-hint .big {
    [BLOCK: intro-rules]
    ============================================================ */
 .intro-rules {
-  font-size: clamp(13px, 3.4vw, 15px);
   line-height: 1.6;
   text-align: left;
 }
@@ -190,7 +174,6 @@ body[data-hint="limit"] .touch-hint .big {
   position: absolute;
   left: 0;
   top: 0;
-  font-size: 0.9em;
 }
 
 
@@ -201,7 +184,6 @@ body[data-hint="limit"] .touch-hint .big {
   margin-top: 20px;
   padding-top: 16px;
 
-  font-size: clamp(10px, 2.6vw, 12px);
   line-height: 1.5;
   text-align: left;
 }
@@ -217,10 +199,6 @@ body[data-hint="limit"] .touch-hint .big {
   padding: 12px 36px;
 
   font-family: inherit;
-  font-size: clamp(14px, 3.6vw, 17px);
-  font-weight: 900;
-  letter-spacing: 2px;
-  text-transform: uppercase;
   white-space: nowrap;
 
   cursor: pointer;

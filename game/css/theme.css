@@ -206,6 +206,12 @@ canvas {
 
   border: 3px solid var(--color-orange);
   border-radius: var(--radius-lg);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: clamp(16px, 4vw, 26px);
+  font-weight: 900;
+  line-height: 1.4;
+  letter-spacing: 2px;
+  text-align: center;
 
   text-shadow: 0 1px 0 #ffffff;
 
@@ -215,6 +221,9 @@ canvas {
 }
 
 .touch-hint small {
+  font-size: 0.55em;
+  letter-spacing: 3px;
+  opacity: 0.9;
   color: var(--color-text-dim);
 }
 
@@ -227,10 +236,10 @@ body[data-hint="limit"] .touch-hint {
 }
 
 body[data-hint="limit"] .touch-hint .big {
+  font-size: 1.2em;
   color: var(--color-red-deep);
   text-shadow: 0 1px 0 #ffffff;
 }
-
 
 /* ============================================================
    [BLOCK: rotate-overlay]
@@ -279,6 +288,9 @@ body[data-hint="limit"] .touch-hint .big {
    [BLOCK: intro-title]
    ============================================================ */
 .intro-title {
+  font-size: clamp(20px, 5vw, 28px);
+  font-weight: 900;
+  letter-spacing: 2px;
   color: var(--color-text-warm);
   text-shadow: 0 1px 0 #ffffff;
 }
@@ -288,10 +300,12 @@ body[data-hint="limit"] .touch-hint .big {
    [BLOCK: intro-rules]
    ============================================================ */
 .intro-rules {
+  font-size: clamp(13px, 3.4vw, 15px);
   color: var(--color-text-dim);
 }
 
 .intro-rules li::before {
+  font-size: 0.9em;
   color: var(--color-orange);
 }
 
@@ -300,7 +314,7 @@ body[data-hint="limit"] .touch-hint .big {
    [BLOCK: intro-cookie]
    ============================================================ */
 .intro-cookie {
-  border-top: 1px solid rgba(154, 160, 166, 0.3);
+  font-size: clamp(10px, 2.6vw, 12px);
   color: var(--color-text-dim);
 }
 
@@ -309,22 +323,10 @@ body[data-hint="limit"] .touch-hint .big {
    [BLOCK: intro-accept]
    ============================================================ */
 .intro-accept {
-  border: 2px solid var(--color-green-deep);
-  border-radius: var(--radius-pill);
-
-  background-color: var(--color-green);
-  color: #ffffff;
-
-  box-shadow:
-    0 5px 0 var(--color-green-deep),
-    0 7px 16px rgba(109, 133, 108, 0.3);
-}
-
-.intro-accept:active {
-  background-color: var(--color-green-deep);
-  box-shadow:
-    0 1px 0 var(--color-green-deep),
-    0 3px 8px rgba(109, 133, 108, 0.35);
+  font-size: clamp(14px, 3.6vw, 17px);
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
 }
 
 
