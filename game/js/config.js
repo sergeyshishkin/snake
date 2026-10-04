@@ -22,4 +22,5 @@ export const config = {
   SESSION_FLUSH_TIMEOUT_MS: 60000,
 };
 
+// Set false for production
 export const DEBUG_DISABLE_LIMIT = true;

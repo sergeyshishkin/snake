@@ -80,29 +80,14 @@ createResize({
 function handleDirection(dir) {
   if (!state.gameUnlocked) return;
   if (state.limitReached) return;
+  if (!state.gameStarted || state.gameOver) return;
 
-  if (!state.gameStarted || state.gameOver) {
-    if (state.gameActive) flushSession();
-    resetGameState();
-    ui.render();
-    game.init();
-    return;
-  }
   game.setDirection(dir);
 }
 
 function handleAction() {
-  if (!state.gameUnlocked) return;
-  if (state.limitReached) {
-    updateState({ hintVisible: true, hintKind: 'limit' }, ui);
-    return;
-  }
-  if (!state.gameStarted || state.gameOver) {
-    if (state.gameActive) flushSession();
-    resetGameState();
-    ui.render();
-    game.init();
-  }
+  // Space / Enter / R больше не запускают игру.
+  // Сюда можно добавить другие действия в будущем.
 }
 
 function handleTap() {
