@@ -41,6 +41,7 @@
   --header-h: clamp(36px, 9vw, 52px);
   --bottom-h: clamp(130px, 34vw, 180px);
   --dpad-size: clamp(120px, 32vw, 170px);
+  --safe-pad: clamp(10px, 3vw, 16px);
 
   /* ---------- Тайминги анимаций ---------- */
   --t-fast:   0.07s;

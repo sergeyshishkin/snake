@@ -17,10 +17,13 @@
   grid-template-rows: var(--bottom-h);
 
   width: 100%;
-  max-width: 100%;         /* ← вместо 360px, чтобы не вылезать */
   height: var(--bottom-h);
 
+  padding: 0 var(--safe-pad);
+
   gap: var(--gap-sm);
+
+  box-sizing: border-box;
 }
 
 

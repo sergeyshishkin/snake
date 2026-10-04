@@ -151,7 +151,7 @@ canvas {
    ============================================================ */
 .stat-row {
   color: var(--color-text-dim);
-  font-size: 1.2em;
+  font-size: 1em;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -162,7 +162,7 @@ canvas {
 .stat-value {
   color: var(--color-text-accent);
   font-weight: 900;
-  font-size: 1.3em;
+  font-size: 1.2em;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 

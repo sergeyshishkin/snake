@@ -38,8 +38,11 @@
   align-items: center;
 
   width: 100%;
-  max-width: 100%;       /* ← вместо 360px */
   min-height: var(--header-h);
+
+  padding: 0 var(--safe-pad);
+
+  box-sizing: border-box;
 }
 
 /* ============================================================
