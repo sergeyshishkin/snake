@@ -24,13 +24,13 @@ export function createRenderer(canvas) {
     };
 
     return {
-      grid:      read('--color-grid',       '#1a1a1a'),
-      snake:     read('--color-snake',      '#d0d0d0'),
-      snakeHead: read('--color-snake-head', '#ffffff'),
-      food:      read('--color-food',       '#888888'),
+      grid:      read('--color-grid',       '#b9b9b9'),
+      snake:     read('--color-snake',      '#949494'),
+      snakeHead: read('--color-snake-head', '#d14a4a'),
+      food:      read('--color-food',       '#33c4b8'),
       overlay:   read('--color-gameover-bg',     'rgba(0, 0, 0, 0.7)'),
       overText:  read('--color-gameover-text',   '#f3c6a8'),
-      overHint:  read('--color-gameover-hint',   '#ffffff'),
+      overHint:  read('--color-gameover-hint',   '#d34141'),
     };
   }
 
