@@ -46,7 +46,6 @@ const game = createLoop({
       gameActive: true,
       gameOver: false,
       hintVisible: false,
-      panelMode: 'timer',
     }, ui),
 
     onGameOver: ({ win, score }) => {
@@ -56,7 +55,6 @@ const game = createLoop({
         gameStarted: true,
         gameOver: true,
         win,
-        panelMode: 'reset',
         ...(isNewRecord ? { bestScore: score } : {}),
       }, ui);
     },
@@ -65,7 +63,6 @@ const game = createLoop({
       limitReached: true,
       hintVisible: true,
       hintKind: 'limit',
-      panelMode: 'timer',
     }, ui),
   },
 });
@@ -143,19 +140,6 @@ const swipe = createSwipe($.canvas, {
 });
 
 
-$.resetButton.addEventListener('click', e => {
-  e.stopPropagation();
-  if (!state.gameUnlocked) return;
-  if (state.limitReached) {
-    updateState({ hintVisible: true, hintKind: 'limit' }, ui);
-    return;
-  }
-  if (state.gameActive) flushSession();
-  resetGameState();
-  ui.render();
-  game.init();
-});
-
 
 $.canvas.addEventListener('click', e => {
   e.preventDefault();
@@ -189,7 +173,6 @@ function unlockGame() {
       gameStarted: false,
       gameActive: false,
       gameOver: false,
-      panelMode: 'timer',
     }, ui);
   }
 

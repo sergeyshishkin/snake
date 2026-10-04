@@ -13,7 +13,6 @@ export const state = {
 
   hintVisible: true,
   hintKind: 'start',
-  panelMode: 'timer',
 
   gameUnlocked: false,
   cookiesAccepted: false,
@@ -35,6 +34,5 @@ export function resetGameState() {
   state.gameOver = false;
   state.win = false;
   state.limitReached = false;
-  state.panelMode = 'timer';
   state.hintVisible = false;
 }

@@ -30,8 +30,8 @@
   --color-red:            #d97b7b;   /* приглушённый алый — пятно на кои */
   --color-red-deep:       #a85a5a;   /* тёмный кармин */
 
-  --color-green:          #9bb39a;   /* пыльно-зелёный — лист лотоса */
-  --color-green-bright:   #c2d4bf;   /* светлый побег */
+  --color-green:          #73b871;   /* пыльно-зелёный — лист лотоса */
+  --color-green-bright:   #69b15c;   /* светлый побег */
   --color-green-deep:     #6d856c;   /* тёмная вода под листом */
 
   /* ---------- Текст ---------- */
@@ -147,72 +147,35 @@ canvas {
 
 
 /* ============================================================
-   [BLOCK: timer-box]
+   [BLOCK: stat-row]
    ============================================================ */
-.timer-box {
-  border: 3px solid var(--color-green);
-  border-radius: var(--radius-lg);
-
-  background-color: var(--color-bg-panel);
-  color: var(--color-green-deep);
-
-  text-shadow: 0 0 8px rgba(155, 179, 154, 0.5);
-
-  box-shadow:
-    inset 0 0 20px rgba(155, 179, 154, 0.15),
-    0 4px 0 var(--color-green-deep);
-
-  transition:
-    border-color var(--t-base),
-    color var(--t-base),
-    box-shadow var(--t-base);
+.stat-row {
+  color: var(--color-text-dim);
 }
 
-.timer-box.warning {
-  border-color: var(--color-orange);
-  color: var(--color-orange);
-  text-shadow: 0 0 10px rgba(232, 161, 122, 0.6);
-  box-shadow:
-    inset 0 0 20px rgba(232, 161, 122, 0.15),
-    0 4px 0 #b87a55;
-}
-
-.timer-box.danger {
-  border-color: var(--color-red);
-  color: var(--color-red-deep);
-  text-shadow: 0 0 12px rgba(217, 123, 123, 0.6);
-  box-shadow:
-    inset 0 0 20px rgba(217, 123, 123, 0.18),
-    0 4px 0 var(--color-red-deep);
+.stat-row span {
+  color: var(--color-text-accent);
 }
 
 
 /* ============================================================
-   [BLOCK: btn-reset]
+   [BLOCK: timer-box]
    ============================================================ */
-.btn-reset {
-  border: 3px solid var(--color-orange);
-  border-radius: var(--radius-lg);
-
-  background-color: var(--color-red);
-  color: #ffffff;
-
-  box-shadow:
-    inset 0 -6px 12px rgba(168, 90, 90, 0.35),
-    0 4px 0 var(--color-red-deep);
-
-  transition:
-    background var(--t-fast),
-    box-shadow var(--t-fast),
-    transform var(--t-fast);
+.timer-box {
+  color: var(--color-green-bright);
+  text-shadow: 0 0 1px var(--color-green);
 }
 
-.btn-reset:active {
-  background-color: var(--color-red-deep);
-  box-shadow:
-    inset 0 -3px 8px rgba(120, 60, 60, 0.45),
-    0 1px 0 var(--color-red-deep);
+.timer-box.warning {
+  color: var(--color-gold-bright);
+  text-shadow: 0 0 1px var(--color-gold);
 }
+
+.timer-box.danger {
+  color: var(--color-text-accent);
+  text-shadow: 0 0 1px var(--color-red);
+}
+
 
 
 /* ============================================================
