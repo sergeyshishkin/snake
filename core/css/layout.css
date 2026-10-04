@@ -92,6 +92,6 @@ canvas {
   height: 100%;
 
   image-rendering: pixelated;
-  touch-action: none;
+  touch-action: manipulation;
   cursor: pointer;
 }
