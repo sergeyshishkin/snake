@@ -26,8 +26,6 @@
    ============================================================ */
 :root {
 
-  --dpad-size: clamp(180px, 46vw, 240px);
-
   /* ---------- Отступы между блоками ---------- */
   --gap-xs:   clamp(3px, 0.8vw, 5px);
   --gap-sm:   50px;
@@ -39,10 +37,10 @@
   --pad-panel-x: clamp(8px, 2vw, 14px);
 
   /* ---------- Размеры ключевых блоков ---------- */
-  --wrapper-pad:  clamp(6px, 1.5vw, 12px);
-  --header-h: 40px;
-  --bottom-h: 150px;
-  --dpad-size:    clamp(160px, 40vw, 210px);
+  --wrapper-pad:  clamp(4px, 1vw, 10px);
+  --header-h: clamp(36px, 9vw, 52px);
+  --bottom-h: clamp(130px, 34vw, 180px);
+  --dpad-size: clamp(120px, 32vw, 170px);
 
   /* ---------- Тайминги анимаций ---------- */
   --t-fast:   0.07s;

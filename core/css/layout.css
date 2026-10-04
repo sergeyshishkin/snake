@@ -38,10 +38,8 @@
   align-items: center;
 
   width: 100%;
-  max-width: 360px;              /* ← как панель */
+  max-width: 100%;       /* ← вместо 360px */
   min-height: var(--header-h);
-
-  /* margin-bottom убран */
 }
 
 /* ============================================================
@@ -57,13 +55,15 @@
   max-width: 100%;
   max-height: 100%;
 
+  padding: 0 8px;         /* ← защита от края */
+
   overflow: hidden;
 }
 
 .header-logo {
   display: block;
 
-  max-width: 100%;
+  max-width: 100%;        /* не шире контейнера */
   max-height: var(--header-h);
 
   width: auto;

@@ -17,9 +17,8 @@
   grid-template-rows: var(--bottom-h);
 
   width: 100%;
+  max-width: 100%;         /* ← вместо 360px, чтобы не вылезать */
   height: var(--bottom-h);
-  max-width: 360px;             /* ← чтобы не растягивалась на больших экранах */
-  margin: 0;
 
   gap: var(--gap-sm);
 }
