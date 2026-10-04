@@ -6,9 +6,6 @@ export const config = {
   // Игровое поле
   GRID_SIZE: 14,
 
-  // Скорость игры
-  TICK_INTERVAL_MS: 150,
-
   // Режим цикла: 'interval' | 'raf' | 'manual'
   LOOP_MODE: 'interval',
 
@@ -20,6 +17,10 @@ export const config = {
 
   // Защита от «зависшей» вкладки
   SESSION_FLUSH_TIMEOUT_MS: 60000,
+
+  TICK_INTERVAL_MS: 170,          // стартовый интервал
+  TICK_MIN_MS: 80,                // минимальный (максимальная скорость)
+  TICK_STEP_MS: 3,                // на сколько уменьшать за каждое очко
 };
 
 // Set false for production

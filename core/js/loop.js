@@ -20,6 +20,27 @@ export function createLoop({ rules, renderer, config, callbacks }) {
   let over = false;
   let limitHit = false;
 
+  let currentInterval = config.TICK_INTERVAL_MS;
+
+
+  // ==========================================================
+  // [BLOCK: speed]
+  // Пересчёт интервала и перезапуск setInterval.
+  // ==========================================================
+  function getInterval(score) {
+    const raw = config.TICK_INTERVAL_MS - score * config.TICK_STEP_MS;
+    return Math.max(config.TICK_MIN_MS, raw);
+  }
+
+  function restartInterval(score) {
+    if (interval) {
+      clearInterval(interval);
+      interval = null;
+    }
+    currentInterval = getInterval(score);
+    interval = setInterval(tick, currentInterval);
+  }
+
 
   function init() {
     if (interval) {
@@ -45,7 +66,7 @@ export function createLoop({ rules, renderer, config, callbacks }) {
     renderer.render(rules.getState());
 
     startSession();
-    interval = setInterval(tick, config.TICK_INTERVAL_MS);
+    restartInterval(0);
   }
 
 
@@ -67,6 +88,7 @@ export function createLoop({ rules, renderer, config, callbacks }) {
 
     if (result.event === 'eat') {
       callbacks.onScore(result.score);
+      restartInterval(result.score);
     }
 
     renderer.render(rules.getState());
