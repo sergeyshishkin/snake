@@ -36,7 +36,7 @@
 
   /* ---------- Текст ---------- */
   --color-text-main:      #262729;   /* графитовый, как тушь */
-  --color-text-dim:       #8a8d90;   /* приглушённый серый */
+  --color-text-dim:       #b9450fb7;   /* приглушённый серый */
   --color-text-warm:      #5a5450;   /* тёплый серо-коричневый */
   --color-text-accent:    #2a2c2e;   /* почти чёрный для акцентов */
 
@@ -151,7 +151,8 @@ canvas {
    ============================================================ */
 .stat-row {
   color: var(--color-text-dim);
-  font-family: 'Roboto';
+  font-size: 1.2em;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .stat-label {
@@ -161,6 +162,8 @@ canvas {
 .stat-value {
   color: var(--color-text-accent);
   font-weight: 900;
+  font-size: 1.3em;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .stat-icon {
@@ -174,16 +177,22 @@ canvas {
 .timer-box {
   color: var(--color-green-bright);
   text-shadow: 0 0 1px var(--color-green);
+  font-size: 1.6em;
+  font-weight: 900;
 }
 
 .timer-box.warning {
   color: var(--color-gold-bright);
   text-shadow: 0 0 1px var(--color-gold);
+  font-size: 1.7em;
+  font-weight: 900;
 }
 
 .timer-box.danger {
   color: var(--color-text-accent);
   text-shadow: 0 0 1px var(--color-red);
+  font-size: 1.8em;
+  font-weight: 900;
 }
 
 
