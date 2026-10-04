@@ -105,17 +105,35 @@ export function createRenderer(canvas) {
     ctx.fillStyle = COLORS.overlay;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    ctx.font = 'bold 40px monospace';
+    const title = isWin ? 'НЕВЕРОЯТНАЯ ПОБЕДА!' : 'ХОРОШАЯ ПОПЫТКА';
+    const hint  = 'нажмите чтобы продолжить';
+
+    const maxWidth = canvas.width * 0.85;
+
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillStyle = COLORS.overText;
-    ctx.fillText(isWin ? 'НЕВЕРОЯТНАЯ ПОБЕДА!' : 'ХОРОШАЯ ПОПЫТКА',
-                 canvas.width / 2, canvas.height / 2);
 
-    ctx.font = '18px monospace';
+    // ---------- Заголовок: подбираем размер под ширину ----------
+    let titleSize = 40;
+    do {
+      ctx.font = `bold ${titleSize}px monospace`;
+      if (ctx.measureText(title).width <= maxWidth) break;
+      titleSize -= 2;
+    } while (titleSize > 12);
+
+    ctx.fillStyle = COLORS.overText;
+    ctx.fillText(title, canvas.width / 2, canvas.height / 2);
+
+    // ---------- Подсказка: подбираем размер под ширину ----------
+    let hintSize = 18;
+    do {
+      ctx.font = `${hintSize}px monospace`;
+      if (ctx.measureText(hint).width <= maxWidth) break;
+      hintSize -= 1;
+    } while (hintSize > 10);
+
     ctx.fillStyle = COLORS.overHint;
-    ctx.fillText('нажмите чтобы продолжить',
-                 canvas.width / 2, canvas.height / 2 + 50);
+    ctx.fillText(hint, canvas.width / 2, canvas.height / 2 + 50);
 
     ctx.restore();
   }
