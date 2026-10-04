@@ -114,20 +114,27 @@
   align-items: center;
   justify-content: space-between;
 
-  gap: 8px;
+  gap: 6px;
 
   width: 100%;
   padding: var(--pad-panel-y) var(--pad-panel-x);
 
-  font-size: clamp(12px, 3.4vw, 16px);
+  font-size: clamp(10px, 2.8vw, 14px);
   font-weight: bold;
   line-height: 1.2;
   letter-spacing: 1px;
   white-space: nowrap;
+
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .stat-label {
   text-align: left;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .stat-value {
