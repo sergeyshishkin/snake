@@ -27,7 +27,8 @@ export function createUI() {
     const min = Math.floor(totalSec / 60);
     const sec = totalSec % 60;
 
-    $.timeLeft.textContent = `${min}:${String(sec).padStart(2, '0')}`;
+    $.timeLeft.textContent =
+      `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
 
     $.timerBox.classList.remove('warning', 'danger');
     if (ms <= 30000) {
