@@ -35,7 +35,7 @@
   --color-green-deep:     #6d856c;   /* тёмная вода под листом */
 
   /* ---------- Текст ---------- */
-  --color-text-main:      #3f4245;   /* графитовый, как тушь */
+  --color-text-main:      #262729;   /* графитовый, как тушь */
   --color-text-dim:       #8a8d90;   /* приглушённый серый */
   --color-text-warm:      #5a5450;   /* тёплый серо-коричневый */
   --color-text-accent:    #2a2c2e;   /* почти чёрный для акцентов */
@@ -47,7 +47,7 @@
   --radius-pill: 40px;
 
   /* ---------- Шрифт ---------- */
-  --font-mono: 'Courier New', Courier, monospace;
+  --font-mono: 'Inter', Inter;
 }
 
 
