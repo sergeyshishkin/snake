@@ -12,15 +12,6 @@
    ============================================================ */
 :root {
 
-    /* ---------- Цвета игрового рендера ---------- */
-  --color-grid:            #1a1a1a;
-  --color-snake:           #d0d0d0;
-  --color-snake-head:      #ffffff;
-  --color-food:            #888888;
-  --color-gameover-bg:     rgba(0, 0, 0, 0.7);
-  --color-gameover-text:   #ffffff;
-  --color-gameover-hint:   #888888;
-
   /* ---------- Цвета фона и каркаса ---------- */
   --color-bg-deep:        #eceae6;   /* тёплый светло-серый, как вода в пруду */
   --color-bg-wrapper-1:   #f6f4f0;   /* почти белый жемчужный */
@@ -99,26 +90,18 @@ body {
   color: var(--color-text-main);
 }
 
-
 /* ============================================================
-   [BLOCK: stat-box]
+   [BLOCK: header-brand]
    ============================================================ */
-.stat-box {
-  border-radius: var(--radius-pill);
-  background-color: var(--color-bg-panel);
-  border: none;
-  box-shadow: none;
-  text-shadow: none;
-}
-
-.stat-best {
-  color: var(--color-text-dim);
-}
-
-.stat-score {
+.header-brand {
+  font-size: clamp(16px, 4vw, 22px);
+  font-weight: 900;
+  letter-spacing: 4px;
   color: var(--color-text-accent);
+  text-shadow:
+    0 0 1px var(--color-orange-glow),
+    1px 1px 0 #000;
 }
-
 
 /* ============================================================
    [BLOCK: canvas]

@@ -13,13 +13,13 @@ export function createUI() {
 
 
   function render() {
-    $.score.textContent     = ' ' + state.score;
-    $.bestScore.textContent = ' ' + state.bestScore;
-
     document.body.dataset.panel = state.panelMode;
 
     document.body.dataset.hint =
       state.hintVisible ? state.hintKind : 'none';
+
+    // score и bestScore остаются в state, но не отображаются.
+    // Позже можно добавить сюда обновление других DOM-элементов.
   }
 
 

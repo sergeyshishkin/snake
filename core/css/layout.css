@@ -32,7 +32,7 @@
   flex: 0 0 auto;
 
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 
   width: 100%;
@@ -40,24 +40,33 @@
   margin-bottom: var(--gap-sm);
 }
 
-
 /* ============================================================
-   [BLOCK: stat-box]
+   [BLOCK: header-brand]
+   Контейнер для логотипа или названия. Содержимое задаётся
+   в index.html конкретной игры.
    ============================================================ */
-.stat-box {
-  display: inline-flex;
+.header-brand {
+  display: flex;
   align-items: center;
   justify-content: center;
 
-  padding: var(--pad-panel-y) var(--pad-panel-x);
+  max-width: 100%;
+  max-height: 100%;
 
-  font-size: clamp(12px, 3.4vw, 18px);
-  font-weight: bold;
-  line-height: 1.2;
-  letter-spacing: 1px;
-  white-space: nowrap;
+  overflow: hidden;
 }
 
+.header-logo {
+  display: block;
+
+  max-width: 100%;
+  max-height: var(--header-h);
+
+  width: auto;
+  height: auto;
+
+  object-fit: contain;
+}
 
 /* ============================================================
    [BLOCK: canvas-container]

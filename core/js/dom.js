@@ -6,9 +6,6 @@ export const $ = {
   canvas:      document.getElementById('gameCanvas'),
   container:   document.getElementById('canvasContainer'),
 
-  bestScore:   document.getElementById('bestScore'),
-  score:       document.getElementById('scoreDisplay'),
-
   timerBox:    document.getElementById('timerBox'),
   timeLeft:    document.getElementById('timeLeft'),
   resetButton: document.getElementById('resetButton'),
