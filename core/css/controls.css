@@ -18,8 +18,8 @@
 
   width: 100%;
   height: var(--bottom-h);
-  margin-top: auto;
-  margin-bottom: clamp(15px, 4vw, 25px);
+  max-width: 360px;             /* ← чтобы не растягивалась на больших экранах */
+  margin: 0;
 
   gap: var(--gap-sm);
 }
