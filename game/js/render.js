@@ -29,8 +29,8 @@ export function createRenderer(canvas) {
       snakeHead: read('--color-snake-head', '#ffffff'),
       food:      read('--color-food',       '#888888'),
       overlay:   read('--color-gameover-bg',     'rgba(0, 0, 0, 0.7)'),
-      overText:  read('--color-gameover-text',   '#ffffff'),
-      overHint:  read('--color-gameover-hint',   '#888888'),
+      overText:  read('--color-gameover-text',   '#f3c6a8'),
+      overHint:  read('--color-gameover-hint',   '#ffffff'),
     };
   }
 
@@ -109,12 +109,12 @@ export function createRenderer(canvas) {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillStyle = COLORS.overText;
-    ctx.fillText(isWin ? 'WIN' : 'GAME OVER',
+    ctx.fillText(isWin ? 'НЕВЕРОЯТНАЯ ПОБЕДА!' : 'ХОРОШАЯ ПОПЫТКА',
                  canvas.width / 2, canvas.height / 2);
 
     ctx.font = '18px monospace';
     ctx.fillStyle = COLORS.overHint;
-    ctx.fillText('tap to restart',
+    ctx.fillText('нажмите чтобы продолжить',
                  canvas.width / 2, canvas.height / 2 + 50);
 
     ctx.restore();
