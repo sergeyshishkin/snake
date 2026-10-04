@@ -17,12 +17,12 @@ export function createIntro({ onAccept }) {
   const acceptKey = config.STORAGE_KEY + ACCEPT_KEY_SUFFIX;
 
   let alreadyAccepted = false;
-  /*try {
+  try {
     alreadyAccepted = localStorage.getItem(acceptKey) === '1';
   } catch (e) {
     alreadyAccepted = false;
   }
-*/
+
 
   function hideModal() {
     modal.classList.add('hidden');

@@ -27,6 +27,7 @@
   --color-orange:         #e8a17a;   
   --color-orange-glow:    #f3c6a8;   
 
+  --color-warning: #d87a0f; 
   --color-red:            #d97b7b;   
   --color-red-deep:       #a85a5a;   
 
@@ -182,16 +183,16 @@ canvas {
 }
 
 .timer-box.warning {
-  color: var(--color-gold-bright);
-  text-shadow: 0 0 1px var(--color-gold);
+  color: var(--color-warning);
+  text-shadow: 0 0 1px var(--color-orange-glow);
   font-size: 1.7em;
   font-weight: 900;
 }
 
 .timer-box.danger {
-  color: var(--color-text-accent);
-  text-shadow: 0 0 1px var(--color-red);
-  font-size: 1.8em;
+  color: var(--color-red);
+  text-shadow: 0 0 1px var(--color-red-deep);
+  font-size: 1.9em;
   font-weight: 900;
 }
 

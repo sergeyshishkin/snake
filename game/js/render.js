@@ -30,7 +30,7 @@ export function createRenderer(canvas) {
       food:      read('--color-food',       '#33c4b8'),
       overlay:   read('--color-gameover-bg',     'rgba(0, 0, 0, 0.7)'),
       overText:  read('--color-gameover-text',   '#f3c6a8'),
-      overHint:  read('--color-gameover-hint',   '#d34141'),
+      overHint:  read('--color-gameover-hint',   '#ffffff'),
     };
   }
 
