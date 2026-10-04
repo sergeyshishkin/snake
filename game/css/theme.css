@@ -13,32 +13,32 @@
 :root {
 
   /* ---------- Цвета фона и каркаса ---------- */
-  --color-bg-deep:        #eceae6;   /* тёплый светло-серый, как вода в пруду */
-  --color-bg-wrapper-1:   #f6f4f0;   /* почти белый жемчужный */
-  --color-bg-wrapper-2:   #e8e5df;   /* мягкий пепельный */
-  --color-bg-panel:       #fbfaf8;   /* светлая панель */
-  --color-bg-field:       #f4f2ee;   /* поле — светлая водная гладь */
+  --color-bg-deep:        #eceae6;   
+  --color-bg-wrapper-1:   #f6f4f0;   
+  --color-bg-wrapper-2:   #e8e5df;   
+  --color-bg-panel:       #fbfaf8;   
+  --color-bg-field:       #f4f2ee;   
 
-  /* ---------- Акценты (без золота — только кои-палитра) ---------- */
-  --color-gold:           #9aa0a6;   /* нейтральный серый вместо золота */
-  --color-gold-bright:    #c9ced4;   /* светлый серебристо-серый */
-  --color-gold-deep:      #6b7076;   /* глубокий графит */
+  /* ---------- Акценты ---------- */
+  --color-gold:           #9aa0a6;   
+  --color-gold-bright:    #c9ced4;   
+  --color-gold-deep:      #6b7076;   
 
-  --color-orange:         #e8a17a;   /* кораллово-персиковый — плавник кои */
-  --color-orange-glow:    #f3c6a8;   /* мягкое тёплое сияние */
+  --color-orange:         #e8a17a;   
+  --color-orange-glow:    #f3c6a8;   
 
-  --color-red:            #d97b7b;   /* приглушённый алый — пятно на кои */
-  --color-red-deep:       #a85a5a;   /* тёмный кармин */
+  --color-red:            #d97b7b;   
+  --color-red-deep:       #a85a5a;   
 
-  --color-green:          #73b871;   /* пыльно-зелёный — лист лотоса */
-  --color-green-bright:   #69b15c;   /* светлый побег */
-  --color-green-deep:     #6d856c;   /* тёмная вода под листом */
+  --color-green:          #73b871;   
+  --color-green-bright:   #69b15c;   
+  --color-green-deep:     #6d856c;   
 
   /* ---------- Текст ---------- */
-  --color-text-main:      #262729;   /* графитовый, как тушь */
-  --color-text-dim:       #b9450fb7;   /* приглушённый серый */
-  --color-text-warm:      #5a5450;   /* тёплый серо-коричневый */
-  --color-text-accent:    #2a2c2e;   /* почти чёрный для акцентов */
+  --color-text-main:      #262729;   
+  --color-text-dim:       #b9450fb7;   
+  --color-text-warm:      #5a5450;   
+  --color-text-accent:    #2a2c2e;   
 
   /* ---------- Скругления ---------- */
   --radius-sm:   4px;
@@ -47,7 +47,7 @@
   --radius-pill: 40px;
 
   /* ---------- Шрифт ---------- */
-  --font-mono: 'Inter', Inter;
+  --font-mono: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 
@@ -152,7 +152,7 @@ canvas {
 .stat-row {
   color: var(--color-text-dim);
   font-size: 1em;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: var(--font-mono);
 }
 
 .stat-label {
@@ -163,7 +163,7 @@ canvas {
   color: var(--color-text-accent);
   font-weight: 900;
   font-size: 1.2em;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: var(--font-mono);
 }
 
 .stat-icon {
@@ -206,7 +206,7 @@ canvas {
 
   border: 3px solid var(--color-orange);
   border-radius: var(--radius-lg);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: var(--font-mono);
   font-size: clamp(16px, 4vw, 26px);
   font-weight: 900;
   line-height: 1.4;
@@ -289,6 +289,7 @@ body[data-hint="limit"] .touch-hint .big {
    ============================================================ */
 .intro-title {
   font-size: clamp(20px, 5vw, 28px);
+  font-family: var(--font-mono);
   font-weight: 900;
   letter-spacing: 2px;
   color: var(--color-text-warm);
@@ -302,9 +303,11 @@ body[data-hint="limit"] .touch-hint .big {
 .intro-rules {
   font-size: clamp(13px, 3.4vw, 15px);
   color: var(--color-text-dim);
+  font-family: var(--font-mono);
 }
 
 .intro-rules li::before {
+  font-family: var(--font-mono);
   font-size: 0.9em;
   color: var(--color-orange);
 }
@@ -314,7 +317,8 @@ body[data-hint="limit"] .touch-hint .big {
    [BLOCK: intro-cookie]
    ============================================================ */
 .intro-cookie {
-  font-size: clamp(10px, 2.6vw, 12px);
+  font-family: var(--font-mono);
+  font-size: clamp(12px, 2.8vw, 14px);
   color: var(--color-text-dim);
 }
 
@@ -323,10 +327,29 @@ body[data-hint="limit"] .touch-hint .big {
    [BLOCK: intro-accept]
    ============================================================ */
 .intro-accept {
+  font-family: var(--font-mono);
   font-size: clamp(14px, 3.6vw, 17px);
   font-weight: 900;
   letter-spacing: 2px;
+  color: var(--color-orange-glow);
   text-transform: uppercase;
+
+  border: 3px solid var(--color-orange);
+  border-radius: var(--radius-pill);
+
+  background-color: #d4242c;
+
+  box-shadow:
+    0 4px 0 #5e0e0e,
+    0 6px 12px rgba(0, 0, 0, 0.5);
+}
+
+.intro-accept:active {
+  background-color: #ff3d3d;
+  box-shadow:
+    0 1px 0 #5e0e0e,
+    0 3px 8px rgba(0, 0, 0, 0.4);
+  transform: translateY(3px);
 }
 
 
