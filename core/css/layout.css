@@ -16,14 +16,18 @@
 
   display: flex;
   flex-direction: column;
-  justify-content: center;      /* ← группа по центру */
+  justify-content: center;
   align-items: center;
 
-  padding: var(--wrapper-pad);
-  gap: var(--gap-sm);           /* ← единый отступ между блоками */
+  padding-top:    max(var(--wrapper-pad), env(safe-area-inset-top));
+  padding-right:  max(var(--wrapper-pad), env(safe-area-inset-right));
+  padding-bottom: max(var(--wrapper-pad), env(safe-area-inset-bottom));
+  padding-left:   max(var(--wrapper-pad), env(safe-area-inset-left));
+
+  gap: var(--gap-sm);
 
   overflow: hidden;
-  touch-action: none;
+  touch-action: manipulation;
 }
 
 

@@ -28,7 +28,7 @@
 
   /* ---------- Отступы между блоками ---------- */
   --gap-xs:   clamp(3px, 0.8vw, 5px);
-  --gap-sm:   50px;
+  --gap-sm: clamp(4px, 1.2vw, 8px);
   --gap-md:   clamp(6px, 1.8vw, 12px);
   --gap-lg:   clamp(10px, 2.5vw, 18px);
 
@@ -58,7 +58,7 @@
 html,
 body {
   width: 100%;
-  height: 100%;
+  height: 100dvh;
   overflow: hidden;
   overscroll-behavior: none;
   position: fixed;
