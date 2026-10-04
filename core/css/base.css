@@ -30,7 +30,7 @@
 
   /* ---------- Отступы между блоками ---------- */
   --gap-xs:   clamp(3px, 0.8vw, 5px);
-  --gap-sm:   10px;
+  --gap-sm:   50px;
   --gap-md:   clamp(6px, 1.8vw, 12px);
   --gap-lg:   clamp(10px, 2.5vw, 18px);
 
