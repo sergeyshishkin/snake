@@ -45,8 +45,7 @@
   min-height: var(--header-h);
 
   padding: 0 var(--safe-pad);
-
-  box-sizing: border-box;
+  margin-bottom: 0;   /* ← отступ даёт gap в game-wrapper */
 }
 
 /* ============================================================
@@ -88,8 +87,7 @@
   width:  min(100%, 360px);
   height: min(100%, 360px);
 
-  margin: 0 auto;
-
+  margin-bottom: var(--gap-md);
   touch-action: manipulation;
 }
 

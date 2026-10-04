@@ -20,10 +20,9 @@
   height: var(--bottom-h);
 
   padding: 0 var(--safe-pad);
+  margin-top: 0;   /* ← отступ даёт gap в game-wrapper */
 
   gap: var(--gap-sm);
-
-  box-sizing: border-box;
 }
 
 
