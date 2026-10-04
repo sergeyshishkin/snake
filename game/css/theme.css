@@ -151,10 +151,20 @@ canvas {
    ============================================================ */
 .stat-row {
   color: var(--color-text-dim);
+  font-family: 'Roboto';
 }
 
-.stat-row span {
+.stat-label {
+  color: var(--color-text-dim);
+}
+
+.stat-value {
   color: var(--color-text-accent);
+  font-weight: 900;
+}
+
+.stat-icon {
+  filter: drop-shadow(0 0 4px var(--color-orange-glow));
 }
 
 

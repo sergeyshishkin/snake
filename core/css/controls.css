@@ -107,13 +107,15 @@
 
 /* ============================================================
    [BLOCK: stat-row]
-   Строки BEST и SCORE в правой панели.
+   Строка в правой колонке нижней панели.
+   Метка слева, значение справа.
    ============================================================ */
 .stat-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
 
+  width: 100%;
   padding: var(--pad-panel-y) var(--pad-panel-x);
 
   font-size: clamp(12px, 3.4vw, 16px);
@@ -123,8 +125,21 @@
   white-space: nowrap;
 }
 
-.stat-row span {
-  font-weight: 900;
+.stat-label {
+  text-align: left;
+}
+
+.stat-value {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.stat-icon {
+  display: block;
+  width: 1.2em;
+  height: 1.2em;
+  object-fit: contain;
 }
 
 /* ============================================================

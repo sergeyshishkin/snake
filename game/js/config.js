@@ -4,7 +4,7 @@
 
 export const config = {
   // Игровое поле
-  GRID_SIZE: 15,
+  GRID_SIZE: 14,
 
   // Скорость игры
   TICK_INTERVAL_MS: 150,
@@ -13,7 +13,7 @@ export const config = {
   LOOP_MODE: 'interval',
 
   // Лимит на игрока
-  DAILY_PLAY_LIMIT_MINUTES: 5,
+  DAILY_PLAY_LIMIT_MINUTES: 3,
 
   // Ключ хранения игрока (уникальный для каждой игры!)
   STORAGE_KEY: 'mono_snake',
