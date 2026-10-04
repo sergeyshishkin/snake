@@ -117,3 +117,24 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+/* ============================================================
+   [BLOCK: force-portrait]
+   На мобильных в ландшафте разворачиваем весь body на 90°.
+   Игра всегда выглядит вертикальной.
+   ============================================================ */
+@media (orientation: landscape) and (max-height: 500px) {
+  html {
+    width: 100vh;
+    height: 100vw;
+    overflow: hidden;
+  }
+
+  body {
+    width: 100vh;
+    height: 100vw;
+    transform: rotate(90deg) translateY(-100%);
+    transform-origin: top left;
+    overflow: hidden;
+  }
+}

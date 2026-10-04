@@ -100,67 +100,6 @@ body[data-hint="limit"] .touch-hint .big {
 
 
 /* ============================================================
-   [BLOCK: rotate-overlay]
-   ============================================================ */
-.rotate-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  padding: 24px;
-
-  text-align: center;
-}
-
-.rotate-icon {
-  margin-bottom: 20px;
-  font-size: 72px;
-  line-height: 1;
-  animation: rotate-hint 2s ease-in-out infinite;
-}
-
-@keyframes rotate-hint {
-  0%, 100% { transform: rotate(0deg); }
-  50%      { transform: rotate(90deg); }
-}
-
-.rotate-text {
-  font-size: 24px;
-  font-weight: 900;
-  letter-spacing: 3px;
-  line-height: 1.5;
-}
-
-.rotate-text small {
-  display: block;
-  margin-top: 10px;
-  font-size: 12px;
-  letter-spacing: 4px;
-  opacity: 0.8;
-}
-
-
-@media (max-width: 900px) and (orientation: landscape) {
-  .rotate-overlay {
-    display: flex;
-  }
-
-  .game-wrapper {
-    display: none;
-  }
-
-  .cookie-banner {
-    display: none !important;
-  }
-}
-
-
-/* ============================================================
    [BLOCK: intro-modal]
    Единая модалка: правила игры + cookie-уведомление + кнопка OK.
    ============================================================ */
