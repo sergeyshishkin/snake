@@ -11,12 +11,13 @@
    ============================================================ */
 .touch-hint {
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  inset: 0;
 
   width: max-content;
+  height: max-content;
   max-width: 90%;
+
+  margin: auto;
 
   padding: clamp(14px, 3vw, 28px) clamp(18px, 5vw, 42px);
 
@@ -74,27 +75,28 @@ body[data-hint="limit"] .touch-hint .big {
 
 /* ============================================================
    [BLOCK: animations]
-   Только масштаб и прозрачность. Свечения — в theme.css.
+   transform управляется только анимацией. Центрирование — 
+   через margin: auto + inset: 0. translate отсутствует.
    ============================================================ */
 @keyframes pulse-glow {
   0%, 100% {
     opacity: 0.95;
-    transform: translate(-50%, -50%) scale(1);
+    transform: scale(1);
   }
   50% {
     opacity: 1;
-    transform: translate(-50%, -50%) scale(1.05);
+    transform: scale(1.05);
   }
 }
 
 @keyframes pulse-glow-danger {
   0%, 100% {
     opacity: 0.95;
-    transform: translate(-50%, -50%) scale(1);
+    transform: scale(1);
   }
   50% {
     opacity: 1;
-    transform: translate(-50%, -50%) scale(1.05);
+    transform: scale(1.05);
   }
 }
 
