@@ -113,7 +113,7 @@ export function createRules() {
 
 
   function getState() {
-    return { snake, food, score, over, win };
+    return { snake, food, score, over, win, dir: currentDir };
   }
 
 

@@ -21,6 +21,13 @@ export function createRenderer(canvas) {
   let foodImageReady = false;
   foodImage.onload = () => { foodImageReady = true; };
 
+    // --- Голова ---
+  const headImage = new Image();
+  headImage.src = 'game/assets/head.png';
+  let headImageReady = false;
+  headImage.onload = () => { headImageReady = true; };
+
+  
   let COLORS = readColors();
 
 
@@ -34,7 +41,7 @@ export function createRenderer(canvas) {
 
     return {
       grid:      read('--color-grid',       '#b9b9b9'),
-      snake:     read('--color-snake',      '#949494'),
+      snake:     read('--color-snake',      '#d14a4a'),
       snakeHead: read('--color-snake-head', '#d14a4a'),
       food:      read('--color-food',       '#33c4b8'),
       overlay:   read('--color-gameover-bg',     'rgba(0, 0, 0, 0.7)'),
@@ -93,25 +100,61 @@ export function createRenderer(canvas) {
       ctx.restore();
     }
 
-    // --- Змейка ---
+// --- Змейка ---
     for (let i = 0; i < snake.length; i++) {
       const seg = snake[i];
-      const pad = Math.min(cellW, cellH) * 0.08;
 
-      ctx.fillStyle = (i === 0) ? COLORS.snakeHead : COLORS.snake;
-
-      ctx.fillRect(
-        seg.x * cellW + pad,
-        seg.y * cellH + pad,
-        cellW - pad * 2,
-        cellH - pad * 2
-      );
+      if (i === 0 && headImageReady) {
+        drawHeadImage(ctx, seg.x, seg.y, cellW, cellH, state.dir);
+      } else {
+        drawBody(ctx, seg.x, seg.y, cellW, cellH);
+      }
     }
 
     // --- Game Over ---
     if (over && snake.length > 0) {
       drawGameOver(ctx, canvas, win);
     }
+  }
+
+  function drawHeadImage(ctx, gx, gy, cw, ch, dir) {
+    const size = Math.min(cw, ch) * 1.7;
+    const cx = gx * cw + cw / 2;
+    const cy = gy * ch + ch / 2;
+
+    ctx.save();
+    ctx.translate(cx, cy);
+
+    switch (dir) {
+      case 'LEFT':
+        // без изменений
+        break;
+      case 'RIGHT':
+        ctx.scale(-1, 1);           // отражение по горизонтали
+        break;
+      case 'UP':
+        ctx.rotate(Math.PI / 2);
+        break;
+      case 'DOWN':
+        ctx.rotate(-Math.PI / 2);
+        break;
+    }
+
+    ctx.drawImage(headImage, -size / 2, -size / 2, size, size);
+    ctx.restore();
+  }
+
+
+  function drawBody(ctx, gx, gy, cw, ch) {
+    const pad = Math.min(cw, ch) * 0.08;
+
+    ctx.fillStyle = COLORS.snake;
+    ctx.fillRect(
+      gx * cw + pad,
+      gy * ch + pad,
+      cw - pad * 2,
+      ch - pad * 2
+    );
   }
 
   function drawGameOver(ctx, canvas, isWin) {
