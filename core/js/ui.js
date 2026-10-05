@@ -4,7 +4,7 @@
 
 import { state } from './state.js';
 import { $ } from './dom.js';
-import { getRemainingMs } from './player-limits.js';
+import { getBestScore, getRemainingMs } from './player-limits.js';
 
 
 export function createUI() {
@@ -15,6 +15,10 @@ export function createUI() {
   function render() {
     $.score.textContent     = ' ' + state.score;
     $.bestScore.textContent = ' ' + state.bestScore;
+
+    if ($.limitBestScore) {
+      $.limitBestScore.textContent = getBestScore();
+    }
 
     document.body.dataset.hint =
       state.hintVisible ? state.hintKind : 'none';

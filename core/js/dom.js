@@ -19,6 +19,9 @@ export const $ = {
 
   dpad:        document.getElementById('dpad'),
   bottomRight: document.getElementById('bottomRight'),
+
+  limitBestScore: document.getElementById('limitBestScore'),
+
 };
 
 

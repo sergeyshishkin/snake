@@ -10,7 +10,7 @@ export const config = {
   LOOP_MODE: 'interval',
 
   // Лимит на игрока
-  DAILY_PLAY_LIMIT_MINUTES: 1.5,
+  DAILY_PLAY_LIMIT_MINUTES: 0,
 
   // Ключ хранения игрока (уникальный для каждой игры!)
   STORAGE_KEY: 'mono_snake',
@@ -24,4 +24,4 @@ export const config = {
 };
 
 // Set false for production
-export const DEBUG_DISABLE_LIMIT = true;
+export const DEBUG_DISABLE_LIMIT = false;
