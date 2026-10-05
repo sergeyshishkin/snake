@@ -121,29 +121,44 @@ canvas {
 
 /* ============================================================
    [BLOCK: dpad-btn]
+   Азиатский стиль: слоновая кость, тёмно-красный акцент,
+   деревянные тени, тонкая золотая обводка.
    ============================================================ */
 .dpad-btn {
-  border: 2px solid var(--color-gold);
-  border-radius: var(--radius-sm);
+  border: 2px solid #8b6f3a;
+  border-radius: 6px;
 
-  background: linear-gradient(180deg, #fbfaf8 0%, #e5e3df 100%);
-  color: var(--color-gold-deep);
+  background:
+    linear-gradient(180deg, #f5ecd7 0%, #e8dcc0 55%, #d9c9a4 100%);
 
-  text-shadow: 0 1px 0 #ffffff;
+  color: #5c1a1a;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.85);
 
   box-shadow:
-    inset 0 2px 4px rgba(255, 255, 255, 0.9),
-    inset 0 -3px 6px rgba(154, 160, 166, 0.25),
-    0 2px 4px rgba(120, 125, 130, 0.15);
+    /* внешняя тень — как будто кнопка стоит на дереве */
+    0 3px 0 #7a5c2e,
+    0 4px 6px rgba(60, 40, 20, 0.35),
+    /* внутренние тени — придают объём */
+    inset 0 2px 3px rgba(255, 255, 255, 0.75),
+    inset 0 -2px 4px rgba(120, 90, 50, 0.25),
+    /* тонкая золотая линия внутри */
+    inset 0 0 0 1px rgba(200, 168, 106, 0.5);
 }
 
 .dpad-btn:active,
 .dpad-btn.pressed {
-  background: linear-gradient(180deg, #dcdad6 0%, #c8c6c2 100%);
-  color: var(--color-text-accent);
+  background:
+    linear-gradient(180deg, #e8dcc0 0%, #d9c9a4 100%);
+
+  color: #8b1a1a;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+
   box-shadow:
-    inset 0 3px 8px rgba(107, 112, 118, 0.35),
-    0 0 12px var(--color-orange-glow);
+    0 1px 0 #7a5c2e,
+    0 2px 3px rgba(60, 40, 20, 0.3),
+    inset 0 2px 4px rgba(120, 90, 50, 0.35),
+    inset 0 0 0 1px rgba(200, 168, 106, 0.7),
+    0 0 14px rgba(200, 60, 40, 0.45);
 }
 
 
