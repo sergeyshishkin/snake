@@ -50,7 +50,9 @@ state.bestScore = getBestScore();
 
 const ui = createUI();
 const rules = createRules();
-const renderer = createRenderer($.canvas);
+const renderer = createRenderer($.canvas, {
+  onImageReady: () => game.render(),
+});
 
 const game = createLoop({
   rules,

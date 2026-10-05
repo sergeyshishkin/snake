@@ -5,9 +5,10 @@
 import { config } from './config.js';
 
 
-export function createRenderer(canvas) {
+export function createRenderer(canvas, callbacks = {}) {
 
   const ctx = canvas.getContext('2d');
+  const onImageReady = callbacks.onImageReady ?? (() => {});
 
   let cellW = canvas.width  / config.GRID_SIZE;
   let cellH = canvas.height / config.GRID_SIZE;
@@ -19,17 +20,17 @@ export function createRenderer(canvas) {
   const foodImage = new Image();
   foodImage.src = 'game/assets/ramen.svg';
   let foodImageReady = false;
-  foodImage.onload = () => { foodImageReady = true; };
+  foodImage.onload = () => { foodImageReady = true; onImageReady(); };
 
   const headImage = new Image();
   headImage.src = 'game/assets/head.png';
   let headImageReady = false;
-  headImage.onload = () => { headImageReady = true; };
+  headImage.onload = () => { headImageReady = true; onImageReady(); };
 
   const bodyImage = new Image();
   bodyImage.src = 'game/assets/body.svg';
   let bodyImageReady = false;
-  bodyImage.onload = () => { bodyImageReady = true; };
+  bodyImage.onload = () => { bodyImageReady = true; onImageReady(); };
 
   let COLORS = readColors();
 
@@ -137,16 +138,16 @@ export function createRenderer(canvas) {
   // [BLOCK: body]
   // ==========================================================
   function drawBodyImage(ctx, cx, cy, cw, ch) {
-    const size = Math.min(cw, ch) * 1.4;
+      const size = Math.min(cw, ch) * 1.3;
 
-    ctx.drawImage(
-      bodyImage,
-      cx - size / 2,
-      cy - size / 2,
-      size,
-      size
-    );
-  }
+      ctx.drawImage(
+        bodyImage,
+        cx - size / 2,
+        cy - size / 2,
+        size,
+        size
+      );
+    }
 
 
   function drawFallbackBody(ctx, cx, cy, cw, ch) {
