@@ -14,22 +14,24 @@ export function createRenderer(canvas) {
   let gridSize = config.GRID_SIZE;
 
   // ----------------------------------------------------------
-  // Иконка еды. Загружается один раз, используется для всех клеток.
+  // Изображения: еда, голова, тело. Загружаются один раз.
   // ----------------------------------------------------------
   const foodImage = new Image();
   foodImage.src = 'game/assets/ramen.svg';
   let foodImageReady = false;
   foodImage.onload = () => { foodImageReady = true; };
 
-    // --- Голова ---
   const headImage = new Image();
   headImage.src = 'game/assets/head.png';
   let headImageReady = false;
   headImage.onload = () => { headImageReady = true; };
 
-  
-  let COLORS = readColors();
+  const bodyImage = new Image();
+  bodyImage.src = 'game/assets/body.svg';
+  let bodyImageReady = false;
+  bodyImage.onload = () => { bodyImageReady = true; };
 
+  let COLORS = readColors();
 
 
   function readColors() {
@@ -40,10 +42,10 @@ export function createRenderer(canvas) {
     };
 
     return {
-      grid:      read('--color-grid',       '#b9b9b9'),
-      snake:     read('--color-snake',      '#d14a4a'),
-      snakeHead: read('--color-snake-head', '#d14a4a'),
-      food:      read('--color-food',       '#33c4b8'),
+      grid:      read('--color-grid',            '#b9b9b9'),
+      snake:     read('--color-snake',           '#d14a4a'),
+      snakeHead: read('--color-snake-head',      '#d14a4a'),
+      food:      read('--color-food',            '#33c4b8'),
       overlay:   read('--color-gameover-bg',     'rgba(0, 0, 0, 0.7)'),
       overText:  read('--color-gameover-text',   '#f3c6a8'),
       overHint:  read('--color-gameover-hint',   '#ffffff'),
@@ -65,7 +67,10 @@ export function createRenderer(canvas) {
   }
 
 
- function render(state) {
+  // ==========================================================
+  // [BLOCK: render]
+  // ==========================================================
+  function render(state) {
     const { snake, food, over, win } = state;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -85,7 +90,7 @@ export function createRenderer(canvas) {
       ctx.stroke();
     }
 
-    // --- Еда ---
+    // --- Еда (с пульсацией) ---
     if (food && foodImageReady) {
       const time = performance.now();
       const pulse = 0.83 + 0.1 * Math.sin(time / 300);
@@ -100,14 +105,24 @@ export function createRenderer(canvas) {
       ctx.restore();
     }
 
-// --- Змейка ---
+    // --- Змейка ---
     for (let i = 0; i < snake.length; i++) {
       const seg = snake[i];
+      const cx = seg.x * cellW + cellW / 2;
+      const cy = seg.y * cellH + cellH / 2;
 
-      if (i === 0 && headImageReady) {
-        drawHeadImage(ctx, seg.x, seg.y, cellW, cellH, state.dir);
+      if (i === 0) {
+        if (headImageReady) {
+          drawHeadImage(ctx, cx, cy, cellW, cellH, state.dir);
+        } else {
+          drawFallbackHead(ctx, cx, cy, cellW, cellH);
+        }
       } else {
-        drawBody(ctx, seg.x, seg.y, cellW, cellH);
+        if (bodyImageReady) {
+          drawBodyImage(ctx, cx, cy, cellW, cellH);
+        } else {
+          drawFallbackBody(ctx, cx, cy, cellW, cellH);
+        }
       }
     }
 
@@ -117,20 +132,50 @@ export function createRenderer(canvas) {
     }
   }
 
-  function drawHeadImage(ctx, gx, gy, cw, ch, dir) {
-    const size = Math.min(cw, ch) * 1.7;
-    const cx = gx * cw + cw / 2;
-    const cy = gy * ch + ch / 2;
+
+  // ==========================================================
+  // [BLOCK: body]
+  // ==========================================================
+  function drawBodyImage(ctx, cx, cy, cw, ch) {
+    const size = Math.min(cw, ch) * 1.4;
+
+    ctx.drawImage(
+      bodyImage,
+      cx - size / 2,
+      cy - size / 2,
+      size,
+      size
+    );
+  }
+
+
+  function drawFallbackBody(ctx, cx, cy, cw, ch) {
+    const pad = Math.min(cw, ch) * 0.08;
+
+    ctx.fillStyle = COLORS.snake;
+    ctx.fillRect(
+      cx - cw / 2 + pad,
+      cy - ch / 2 + pad,
+      cw - pad * 2,
+      ch - pad * 2
+    );
+  }
+
+
+  // ==========================================================
+  // [BLOCK: head]
+  // ==========================================================
+  function drawHeadImage(ctx, cx, cy, cw, ch, dir) {
+    const size = Math.min(cw, ch) * 1.9;
 
     ctx.save();
     ctx.translate(cx, cy);
 
     switch (dir) {
       case 'LEFT':
-        // без изменений
         break;
       case 'RIGHT':
-        ctx.scale(-1, 1);           // отражение по горизонтали
+        ctx.scale(-1, 1);
         break;
       case 'UP':
         ctx.rotate(Math.PI / 2);
@@ -145,18 +190,22 @@ export function createRenderer(canvas) {
   }
 
 
-  function drawBody(ctx, gx, gy, cw, ch) {
+  function drawFallbackHead(ctx, cx, cy, cw, ch) {
     const pad = Math.min(cw, ch) * 0.08;
 
-    ctx.fillStyle = COLORS.snake;
+    ctx.fillStyle = COLORS.snakeHead;
     ctx.fillRect(
-      gx * cw + pad,
-      gy * ch + pad,
+      cx - cw / 2 + pad,
+      cy - ch / 2 + pad,
       cw - pad * 2,
       ch - pad * 2
     );
   }
 
+
+  // ==========================================================
+  // [BLOCK: game-over]
+  // ==========================================================
   function drawGameOver(ctx, canvas, isWin) {
     ctx.save();
 
@@ -171,7 +220,7 @@ export function createRenderer(canvas) {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
 
-    // ---------- Заголовок: подбираем размер под ширину ----------
+    // Заголовок: подбираем размер под ширину
     let titleSize = 40;
     do {
       ctx.font = `bold ${titleSize}px monospace`;
@@ -182,7 +231,7 @@ export function createRenderer(canvas) {
     ctx.fillStyle = COLORS.overText;
     ctx.fillText(title, canvas.width / 2, canvas.height / 2);
 
-    // ---------- Подсказка: подбираем размер под ширину ----------
+    // Подсказка: подбираем размер под ширину
     let hintSize = 18;
     do {
       ctx.font = `${hintSize}px monospace`;
