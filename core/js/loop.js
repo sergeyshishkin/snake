@@ -130,6 +130,11 @@ export function createLoop({ rules, renderer, config, callbacks }) {
       clearInterval(interval);
       interval = null;
     }
+
+    // Сброс накопленной скорости на стартовую.
+    // К моменту отрисовки game-over currentInterval уже сброшен.
+    currentInterval = config.TICK_INTERVAL_MS;
+
     endSession();
     renderer.render(rules.getState());
 
@@ -166,6 +171,7 @@ export function createLoop({ rules, renderer, config, callbacks }) {
     started = false;
     limitHit = false;
     paused = false;
+    currentInterval = config.TICK_INTERVAL_MS;
 
     callbacks.onScore(0);
     renderer.render(rules.getState());
