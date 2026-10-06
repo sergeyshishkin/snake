@@ -72,7 +72,7 @@ export function createRenderer(canvas, callbacks = {}) {
   // [BLOCK: render]
   // ==========================================================
   function render(state) {
-    const { snake, food, over, win } = state;
+    const { snake, food, over, win, paused } = state;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -130,6 +130,11 @@ export function createRenderer(canvas, callbacks = {}) {
     // --- Game Over ---
     if (over && snake.length > 0) {
       drawGameOver(ctx, canvas, win);
+    }
+
+    // --- Pause ---
+    if (paused && !over && snake.length > 0) {
+      drawPause(ctx, canvas);
     }
   }
 
@@ -242,6 +247,49 @@ export function createRenderer(canvas, callbacks = {}) {
 
     ctx.fillStyle = COLORS.overHint;
     ctx.fillText(hint, canvas.width / 2, canvas.height / 2 + 50);
+
+    ctx.restore();
+  }
+
+
+  // ==========================================================
+  // [BLOCK: pause-overlay]
+  // ==========================================================
+  function drawPause(ctx, canvas) {
+    ctx.save();
+
+    ctx.fillStyle = COLORS.overlay;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    const title = 'ПАУЗА';
+    const hint  = 'Нажмите «ПРОДОЛЖИТЬ» чтобы вернуться';
+
+    const maxWidth = canvas.width * 0.85;
+
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    // Заголовок
+    let titleSize = 40;
+    do {
+      ctx.font = `bold ${titleSize}px monospace`;
+      if (ctx.measureText(title).width <= maxWidth) break;
+      titleSize -= 2;
+    } while (titleSize > 12);
+
+    ctx.fillStyle = COLORS.overText;
+    ctx.fillText(title, canvas.width / 2, canvas.height / 2 - 20);
+
+    // Подсказка
+    let hintSize = 20;
+    do {
+      ctx.font = `${hintSize}px monospace`;
+      if (ctx.measureText(hint).width <= maxWidth) break;
+      hintSize -= 1;
+    } while (hintSize > 10);
+
+    ctx.fillStyle = COLORS.overHint;
+    ctx.fillText(hint, canvas.width / 2, canvas.height / 2 + 30);
 
     ctx.restore();
   }

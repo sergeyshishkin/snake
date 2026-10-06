@@ -78,14 +78,14 @@ export function createLoop({ rules, renderer, config, callbacks }) {
       clearInterval(interval);
       interval = null;
     }
-    renderer.render(rules.getState());
+    renderer.render({ ...rules.getState(), paused: true });
   }
-
 
   function resume() {
     if (!active || !paused) return;
     paused = false;
     interval = setInterval(tick, currentInterval);
+    renderer.render({ ...rules.getState(), paused: false });
   }
 
 
