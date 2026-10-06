@@ -138,16 +138,16 @@ export function createRenderer(canvas, callbacks = {}) {
   // [BLOCK: body]
   // ==========================================================
   function drawBodyImage(ctx, cx, cy, cw, ch) {
-      const size = Math.min(cw, ch) * 1.3;
+    const size = Math.min(cw, ch) * 1.3;
 
-      ctx.drawImage(
-        bodyImage,
-        cx - size / 2,
-        cy - size / 2,
-        size,
-        size
-      );
-    }
+    ctx.drawImage(
+      bodyImage,
+      cx - size / 2,
+      cy - size / 2,
+      size,
+      size
+    );
+  }
 
 
   function drawFallbackBody(ctx, cx, cy, cw, ch) {
@@ -214,7 +214,7 @@ export function createRenderer(canvas, callbacks = {}) {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     const title = isWin ? 'НЕВЕРОЯТНАЯ ПОБЕДА!' : 'ХОРОШАЯ ПОПЫТКА';
-    const hint  = 'нажмите чтобы продолжить';
+    const hint  = 'нажмите чтобы начать заново';
 
     const maxWidth = canvas.width * 0.85;
 

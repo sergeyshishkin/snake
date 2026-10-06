@@ -22,6 +22,9 @@ export const $ = {
 
   limitBestScore: document.getElementById('limitBestScore'),
 
+  pauseButton: document.getElementById('pauseButton'),
+
+
 };
 
 

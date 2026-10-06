@@ -119,6 +119,7 @@ function handleTap() {
   if (!state.gameStarted || state.gameOver) {
     if (state.gameActive) flushSession();
     resetGameState();
+    state.paused = false;
     ui.render();
     game.init();
   }
@@ -151,6 +152,21 @@ $.canvas.addEventListener('click', e => {
   handleTap();
 });
 
+
+$.pauseButton.addEventListener('click', (e) => {
+  e.stopPropagation();
+
+  if (!state.gameUnlocked) return;
+  if (!state.gameActive) return;
+
+  if (game.isPaused()) {
+    game.resume();
+    updateState({ paused: false }, ui);
+  } else {
+    game.pause();
+    updateState({ paused: true }, ui);
+  }
+});
 
 function unlockGame() {
   if (state.gameUnlocked) return;

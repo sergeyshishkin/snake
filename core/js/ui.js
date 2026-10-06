@@ -22,6 +22,11 @@ export function createUI() {
 
     document.body.dataset.hint =
       state.hintVisible ? state.hintKind : 'none';
+
+    if ($.pauseButton) {
+      $.pauseButton.textContent = state.paused ? 'Продолжить' : 'Пауза';
+      $.pauseButton.classList.toggle('hidden', !state.gameActive);
+    }
   }
 
 

@@ -193,25 +193,50 @@ canvas {
 .timer-box {
   color: var(--color-green-bright);
   text-shadow: 0 0 1px var(--color-green);
-  font-size: 1.6em;
+  font-size: 1.2em;
   font-weight: 900;
 }
 
 .timer-box.warning {
   color: var(--color-warning);
   text-shadow: 0 0 1px var(--color-orange-glow);
-  font-size: 1.7em;
+  font-size: 1.3em;
   font-weight: 900;
 }
 
 .timer-box.danger {
   color: var(--color-red);
   text-shadow: 0 0 1px var(--color-red-deep);
-  font-size: 1.9em;
+  font-size: 1.5em;
   font-weight: 900;
 }
 
+/* ============================================================
+   [BLOCK: pause-btn]
+   ============================================================ */
+.pause-btn {
+  border: 2px solid var(--color-gold);
+  border-radius: 8px;
 
+  background: linear-gradient(180deg, #f5ecd7 0%, #e8dcc0 100%);
+  color: #5c1a1a;
+
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.85);
+
+  box-shadow:
+    0 3px 0 #7a5c2e,
+    0 4px 6px rgba(60, 40, 20, 0.25),
+    inset 0 2px 3px rgba(255, 255, 255, 0.75),
+    inset 0 -2px 4px rgba(120, 90, 50, 0.25);
+}
+
+.pause-btn:active {
+  background: linear-gradient(180deg, #e8dcc0 0%, #d9c9a4 100%);
+  color: #8b1a1a;
+  box-shadow:
+    0 1px 0 #7a5c2e,
+    0 2px 3px rgba(60, 40, 20, 0.3);
+}
 
 /* ============================================================
    [BLOCK: touch-hint]

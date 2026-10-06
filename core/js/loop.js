@@ -21,11 +21,11 @@ export function createLoop({ rules, renderer, config, callbacks }) {
   let limitHit = false;
 
   let currentInterval = config.TICK_INTERVAL_MS;
+  let paused = false;
 
 
   // ==========================================================
   // [BLOCK: speed]
-  // Пересчёт интервала и перезапуск setInterval.
   // ==========================================================
   function getInterval(score) {
     const raw = config.TICK_INTERVAL_MS - score * config.TICK_STEP_MS;
@@ -59,6 +59,7 @@ export function createLoop({ rules, renderer, config, callbacks }) {
     active = true;
     started = true;
     limitHit = false;
+    paused = false;
 
     callbacks.onScore(0);
     callbacks.onStart();
@@ -70,8 +71,31 @@ export function createLoop({ rules, renderer, config, callbacks }) {
   }
 
 
+  function pause() {
+    if (!active || paused) return;
+    paused = true;
+    if (interval) {
+      clearInterval(interval);
+      interval = null;
+    }
+    renderer.render(rules.getState());
+  }
+
+
+  function resume() {
+    if (!active || !paused) return;
+    paused = false;
+    interval = setInterval(tick, currentInterval);
+  }
+
+
+  function isPaused() {
+    return paused;
+  }
+
+
   function tick() {
-    if (!active) return;
+    if (!active || paused) return;
 
     if (isLimitReached()) {
       end('limit');
@@ -100,6 +124,7 @@ export function createLoop({ rules, renderer, config, callbacks }) {
 
     active = false;
     over = true;
+    paused = false;
 
     if (interval) {
       clearInterval(interval);
@@ -140,6 +165,7 @@ export function createLoop({ rules, renderer, config, callbacks }) {
     over = false;
     started = false;
     limitHit = false;
+    paused = false;
 
     callbacks.onScore(0);
     renderer.render(rules.getState());
@@ -152,6 +178,9 @@ export function createLoop({ rules, renderer, config, callbacks }) {
     resize,
     showPreview,
     setDirection,
+    pause,
+    resume,
+    isPaused,
 
     isActive:   () => active,
     isStarted:  () => started,
@@ -159,7 +188,7 @@ export function createLoop({ rules, renderer, config, callbacks }) {
     isLimitHit: () => limitHit,
 
     tickSession: () => {
-      if (active && started && !limitHit) tickSession();
+      if (active && started && !limitHit && !paused) tickSession();
     },
 
     flushSession: () => {

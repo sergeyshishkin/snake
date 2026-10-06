@@ -226,4 +226,42 @@
   50%      { opacity: 0.6; }
 }
 
+/* ============================================================
+   [BLOCK: pause-btn]
+   Кнопка паузы в правой панели, под строками счёта.
+   ============================================================ */
+.pause-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
+  width: 100%;
+
+  padding: var(--pad-panel-y) var(--pad-panel-x);
+
+  border: none;
+
+  font-family: inherit;
+  font-size: clamp(12px, 3.4vw, 16px);
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  white-space: nowrap;
+
+  cursor: pointer;
+  touch-action: manipulation;
+
+  transition:
+    transform var(--t-fast),
+    background var(--t-fast),
+    box-shadow var(--t-fast),
+    color var(--t-fast);
+}
+
+.pause-btn:active {
+  transform: translateY(2px);
+}
+
+.pause-btn.hidden {
+  display: none;
+}

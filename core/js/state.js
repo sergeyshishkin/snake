@@ -16,6 +16,8 @@ export const state = {
 
   gameUnlocked: false,
   cookiesAccepted: false,
+
+  paused: false,
 };
 
 
@@ -35,4 +37,5 @@ export function resetGameState() {
   state.win = false;
   state.limitReached = false;
   state.hintVisible = false;
+  state.paused = false;
 }
