@@ -87,7 +87,8 @@
   width:  min(100%, 360px);
   height: min(100%, 360px);
 
-  margin-bottom: var(--gap-md);
+  /*margin-bottom: var(--gap-md);*/
+  
   touch-action: manipulation;
 }
 
