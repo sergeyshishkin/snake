@@ -166,9 +166,14 @@ canvas {
    [BLOCK: stat-row]
    ============================================================ */
 .stat-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
   color: var(--color-text-dim);
-  font-size: 1em;
+  font-size: 0.95em;
   font-family: var(--font-mono);
+  padding: 4px 0;
 }
 
 .stat-label {
@@ -176,13 +181,20 @@ canvas {
 }
 
 .stat-value {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+
   color: var(--color-text-accent);
   font-weight: 900;
-  font-size: 1.2em;
+  font-size: 1.15em;
   font-family: var(--font-mono);
 }
 
 .stat-icon {
+  width: 1.1em;
+  height: 1.1em;
+  object-fit: contain;
   filter: drop-shadow(0 0 4px var(--color-orange-glow));
 }
 
@@ -193,49 +205,72 @@ canvas {
 .timer-box {
   color: var(--color-green-bright);
   text-shadow: 0 0 1px var(--color-green);
-  font-size: 1.2em;
+  font-size: 1.1em;
   font-weight: 900;
+  letter-spacing: 1px;
 }
 
 .timer-box.warning {
   color: var(--color-warning);
   text-shadow: 0 0 1px var(--color-orange-glow);
-  font-size: 1.3em;
-  font-weight: 900;
+  font-size: 1.15em;
 }
 
 .timer-box.danger {
   color: var(--color-red);
   text-shadow: 0 0 1px var(--color-red-deep);
-  font-size: 1.5em;
-  font-weight: 900;
+  font-size: 1.25em;
 }
 
 /* ============================================================
    [BLOCK: pause-btn]
+   Тот же визуальный стиль, что и .dpad-btn — слоновая кость,
+   деревянные тени, тонкая золотая линия.
    ============================================================ */
 .pause-btn {
-  border: 2px solid var(--color-gold);
-  border-radius: 8px;
+  width: 100%;
+  padding: 10px 12px;
 
-  background: linear-gradient(180deg, #f5ecd7 0%, #e8dcc0 100%);
+  border: 2px solid #8b6f3a;
+  border-radius: 6px;
+
+  background:
+    linear-gradient(180deg, #f5ecd7 0%, #e8dcc0 55%, #d9c9a4 100%);
+
   color: #5c1a1a;
-
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.85);
+
+  font-family: var(--font-mono);
+  font-size: 1em;
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-align: center;
 
   box-shadow:
     0 3px 0 #7a5c2e,
-    0 4px 6px rgba(60, 40, 20, 0.25),
+    0 4px 6px rgba(60, 40, 20, 0.35),
     inset 0 2px 3px rgba(255, 255, 255, 0.75),
-    inset 0 -2px 4px rgba(120, 90, 50, 0.25);
+    inset 0 -2px 4px rgba(120, 90, 50, 0.25),
+    inset 0 0 0 1px rgba(200, 168, 106, 0.5);
+
+  cursor: pointer;
+  touch-action: manipulation;
 }
 
 .pause-btn:active {
-  background: linear-gradient(180deg, #e8dcc0 0%, #d9c9a4 100%);
+  background:
+    linear-gradient(180deg, #e8dcc0 0%, #d9c9a4 100%);
+
   color: #8b1a1a;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+
   box-shadow:
     0 1px 0 #7a5c2e,
-    0 2px 3px rgba(60, 40, 20, 0.3);
+    0 2px 3px rgba(60, 40, 20, 0.3),
+    inset 0 2px 4px rgba(120, 90, 50, 0.35),
+    inset 0 0 0 1px rgba(200, 168, 106, 0.7),
+    0 0 14px rgba(200, 60, 40, 0.45);
 }
 
 /* ============================================================
