@@ -242,7 +242,7 @@
   border: none;
 
   font-family: inherit;
-  font-size: clamp(12px, 3.4vw, 16px);
+  font-size: clamp(10px, 3vw, 14px);
   font-weight: 900;
   letter-spacing: 1px;
   text-transform: uppercase;

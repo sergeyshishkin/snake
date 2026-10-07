@@ -154,11 +154,22 @@ $.canvas.addEventListener('click', e => {
 
 
 $.pauseButton.addEventListener('click', (e) => {
+  e.preventDefault();
   e.stopPropagation();
 
   if (!state.gameUnlocked) return;
-  if (!state.gameActive) return;
+  if (state.limitReached) return;
 
+  // Игра ещё не начата или закончилась — старт новой партии
+  if (!state.gameActive || state.gameOver) {
+    if (state.gameActive) flushSession();
+    resetGameState();
+    ui.render();
+    game.init();
+    return;
+  }
+
+  // Игра идёт — переключить паузу
   if (game.isPaused()) {
     game.resume();
     updateState({ paused: false }, ui);

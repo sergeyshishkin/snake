@@ -24,8 +24,19 @@ export function createUI() {
       state.hintVisible ? state.hintKind : 'none';
 
     if ($.pauseButton) {
-      $.pauseButton.textContent = state.paused ? 'Продолжить' : 'Пауза';
-      $.pauseButton.classList.toggle('hidden', !state.gameActive);
+      let label = 'Играть';
+      let visible = state.gameUnlocked && !state.limitReached;
+
+      if (state.gameActive && !state.gameOver) {
+        // Игра идёт: Пауза или Возобновить
+        label = state.paused ? 'Продолжить' : 'Пауза';
+      } else {
+        // Игра не активна: Играть (стартовый экран или после проигрыша)
+        label = 'Играть';
+      }
+
+      $.pauseButton.textContent = label;
+      $.pauseButton.classList.toggle('hidden', !visible);
     }
   }
 
