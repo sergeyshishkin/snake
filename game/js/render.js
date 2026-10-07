@@ -219,7 +219,7 @@ export function createRenderer(canvas, callbacks = {}) {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     const title = isWin ? 'НЕВЕРОЯТНАЯ ПОБЕДА!' : 'ХОРОШАЯ ПОПЫТКА';
-    const hint  = 'нажмите Играть чтобы начать заново';
+    const hint  = 'нажмите ИГРАТЬ чтобы начать заново';
 
     const maxWidth = canvas.width * 0.85;
 
@@ -262,7 +262,7 @@ export function createRenderer(canvas, callbacks = {}) {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     const title = 'ПАУЗА';
-    const hint  = 'Нажмите «ПРОДОЛЖИТЬ» чтобы вернуться';
+    const hint  = 'Нажмите ПРОДОЛЖИТЬ чтобы вернуться';
 
     const maxWidth = canvas.width * 0.85;
 
