@@ -74,7 +74,7 @@ body[data-hint="start"] .hint-start { display: block; }
 body[data-hint="limit"] .hint-limit { display: block; }
 
 body[data-hint="limit"] .touch-hint {
-  animation: pulse-glow-danger 1.8s ease-in-out infinite;
+  animation: none;
 }
 
 
