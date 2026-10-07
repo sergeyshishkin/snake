@@ -303,18 +303,86 @@ canvas {
   color: var(--color-text-dim);
 }
 
+/* ============================================================
+   [BLOCK: hint-limit]
+   Тёплая кремовая палитра, как в intro-модалке.
+   Иерархия: заголовок → рекорд → тело.
+   ============================================================ */
 body[data-hint="limit"] .touch-hint {
-  border-color: var(--color-red);
-  color: var(--color-red-deep);
+  background-color: rgba(251, 248, 240, 0.97);
+
+  border: 3px solid var(--color-orange);
+  border-radius: var(--radius-lg);
+
+  color: var(--color-text-main);
+
   box-shadow:
-    0 0 40px rgba(217, 123, 123, 0.5),
-    inset 0 0 30px rgba(217, 123, 123, 0.15);
+    0 0 40px rgba(232, 161, 122, 0.35),
+    0 0 80px rgba(154, 160, 166, 0.2),
+    inset 0 0 30px rgba(255, 255, 255, 0.6);
 }
 
-body[data-hint="limit"] .touch-hint .big {
-  font-size: 1.2em;
-  color: var(--color-red-deep);
+
+/* ============================================================
+   [BLOCK: hint-limit-title]
+   Заголовок — крупный, как .intro-title.
+   ============================================================ */
+body[data-hint="limit"] .hint-limit-title {
+  font-family: var(--font-mono);
+  font-size: clamp(20px, 5vw, 28px);
+  font-weight: 900;
+  letter-spacing: .5px;
+
+  color: var(--color-text-warm);
   text-shadow: 0 1px 0 #ffffff;
+
+  margin-bottom: 2px;
+}
+
+
+/* ============================================================
+   [BLOCK: hint-limit-record]
+   Рекорд — как .intro-rules по размеру.
+   ============================================================ */
+body[data-hint="limit"] .hint-limit-record {
+  font-family: var(--font-mono);
+  font-size: clamp(18px, 3.4vw, 20px);
+
+  color: var(--color-text-dim);
+  letter-spacing: 0.5px;
+
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(139, 111, 58, 0.25);
+}
+
+body[data-hint="limit"] #limitBestScore {
+  font-size: 1.3em;
+  font-weight: 900;
+  color: var(--color-text-dim);
+  margin-left: 4px;
+}
+
+
+/* ============================================================
+   [BLOCK: hint-limit-body]
+   ============================================================ */
+body[data-hint="limit"] .hint-limit-body {
+  font-family: var(--font-mono);
+  font-size: clamp(14px, 2.8vw, 18px);
+  font-weight: 500;
+
+  color: var(--color-text-dim);
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+body[data-hint="limit"] .hint-limit-body p {
+  margin: 0;
+}
+
+body[data-hint="limit"] .hint-limit-body p + p {
+  margin-top: 6px;
 }
 
 /* ============================================================

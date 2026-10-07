@@ -36,11 +36,32 @@
 
 
 /* ============================================================
-   [BLOCK: hint-children]
+   [BLOCK: hint-start]
    ============================================================ */
-.hint-start,
+.hint-start {
+  display: none;
+}
+
+
+/* ============================================================
+   [BLOCK: hint-limit]
+   ============================================================ */
 .hint-limit {
   display: none;
+}
+
+.hint-limit-title,
+.hint-limit-record,
+.hint-limit-body {
+  display: block;
+}
+
+.hint-limit-body p {
+  margin: 0;
+}
+
+.hint-limit-body p + p {
+  margin-top: 6px;
 }
 
 
@@ -54,11 +75,6 @@ body[data-hint="limit"] .hint-limit { display: block; }
 
 body[data-hint="limit"] .touch-hint {
   animation: pulse-glow-danger 1.8s ease-in-out infinite;
-}
-
-body[data-hint="limit"] .touch-hint .big {
-  display: block;
-  margin-bottom: 8px;
 }
 
 
