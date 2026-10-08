@@ -95,7 +95,7 @@ export function createRenderer(canvas, callbacks = {}) {
     if (food && foodImageReady) {
       const time = performance.now();
       const pulse = 0.83 + 0.1 * Math.sin(time / 300);
-      const size = Math.min(cellW, cellH) * 0.9 * pulse;
+      const size = Math.min(cellW, cellH) * 0.91 * pulse;
       const cx = food.x * cellW + cellW / 2;
       const cy = food.y * cellH + cellH / 2;
 
