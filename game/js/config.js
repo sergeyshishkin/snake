@@ -24,4 +24,4 @@ export const config = {
 };
 
 // Set false for production
-export const DEBUG_DISABLE_LIMIT = true;
+export const DEBUG_DISABLE_LIMIT = false;
