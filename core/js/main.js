@@ -43,6 +43,58 @@ document.addEventListener('touchend', (event) => {
 }, { passive: false });
 
 
+// ============================================================
+// [BLOCK: metrika]
+// Отложенная загрузка Яндекс.Метрики.
+// Грузим при первом взаимодействии пользователя
+// или через 5 секунд после load — что сработает раньше.
+// ============================================================
+
+(function loadMetrika() {
+  let loaded = false;
+
+  function init() {
+    if (loaded) return;
+    loaded = true;
+
+    (function(m,e,t,r,i,k,a){
+      m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+      m[i].l=1*new Date();
+      for (var j = 0; j < document.scripts.length; j++) {
+        if (document.scripts[j].src === r) { return; }
+      }
+      k=e.createElement(t), a=e.getElementsByTagName(t)[0];
+      k.async = 1; k.src = r;
+      a.parentNode.insertBefore(k, a);
+    })(window, document, 'script', 'https://mc.yandex.ru/metrika/tag.js?id=113332587', 'ym');
+
+    window.ym(113332587, 'init', {
+      clickmap: true,
+      trackLinks: true,
+      accurateTrackBounce: true,
+      webvisor: true,
+    });
+  }
+
+  // Триггер 1: первое взаимодействие пользователя
+  const onInteraction = () => {
+    document.removeEventListener('pointerdown', onInteraction);
+    document.removeEventListener('keydown', onInteraction);
+    setTimeout(init, 500);
+  };
+  document.addEventListener('pointerdown', onInteraction, { once: true });
+  document.addEventListener('keydown', onInteraction, { once: true });
+
+  // Триггер 2: страховка через 5 секунд после полной загрузки
+  window.addEventListener('load', () => {
+    setTimeout(init, 5000);
+  }, { once: true });
+})();
+
+
+// ============================================================
+// [BLOCK: init]
+// ============================================================
 
 initPlayer();
 
@@ -146,7 +198,6 @@ const swipe = createSwipe($.canvas, {
 });
 
 
-
 $.canvas.addEventListener('click', e => {
   e.preventDefault();
   handleTap();
@@ -178,6 +229,7 @@ $.pauseButton.addEventListener('click', (e) => {
     updateState({ paused: true }, ui);
   }
 });
+
 
 function unlockGame() {
   if (state.gameUnlocked) return;
@@ -263,7 +315,7 @@ $.canvas.addEventListener('contextmenu', e => e.preventDefault());
     const newUrl = location.pathname + (params.toString() ? '?' + params : '');
     history.replaceState({}, '', newUrl);
 
-    console.log('%c🍣 Лимит сброшен (dev)',
+    console.log('limit dropped',
       'color:#ff6b1a;font-weight:bold;font-size:14px');
 
     location.reload();
