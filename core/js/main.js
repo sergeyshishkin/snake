@@ -42,7 +42,7 @@ document.addEventListener('touchend', (event) => {
   lastTouchEnd = now;
 }, { passive: false });
 
-
+/*
 // ============================================================
 // [BLOCK: metrika]
 // Отложенная загрузка Яндекс.Метрики.
@@ -90,7 +90,7 @@ document.addEventListener('touchend', (event) => {
     setTimeout(init, 5000);
   }, { once: true });
 })();
-
+*/
 
 // ============================================================
 // [BLOCK: init]
