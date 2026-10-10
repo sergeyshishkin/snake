@@ -23,7 +23,7 @@ export function createRenderer(canvas, callbacks = {}) {
   foodImage.onload = () => { foodImageReady = true; onImageReady(); };
 
   const headImage = new Image();
-  headImage.src = 'game/assets/head.png';
+  headImage.src = 'game/assets/head.svg';
   let headImageReady = false;
   headImage.onload = () => { headImageReady = true; onImageReady(); };
 
