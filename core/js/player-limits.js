@@ -113,23 +113,27 @@ export function updateBestScore(score) {
 }
 
 
+// ============================================================
+// [BLOCK: session]
+// Время считает ТОЛЬКО tickSession(). endSession() и flushSession()
+// только фиксируют конец сессии, чтобы избежать двойного начисления.
+// ============================================================
+
 export function startSession() {
   if (!player) return;
   sessionStart = Date.now();
+  lastTick = null;      // первый tickSession зафиксирует момент, но не прибавит
   player.totalGames++;
   save();
 }
 
+
 export function endSession() {
-  if (!sessionStart || !player) return;
-  const elapsed = Date.now() - sessionStart;
-  if (elapsed > 0) {
-    player.usedMs += elapsed;
-    player.totalPlayMs += elapsed;
-    save();
-  }
   sessionStart = null;
+  lastTick = null;
+  save();
 }
+
 
 export function tickSession() {
   if (!player || !sessionStart) {
@@ -141,6 +145,7 @@ export function tickSession() {
 
   if (lastTick !== null) {
     const delta = now - lastTick;
+    // Защита от «усыплённой» вкладки: пропускаем огромные дельты
     if (delta > 0 && delta < 10000) {
       player.usedMs += delta;
       player.totalPlayMs += delta;
@@ -151,16 +156,21 @@ export function tickSession() {
   lastTick = now;
 }
 
+
 export function flushSession() {
-  if (sessionStart && player) {
-    const elapsed = Date.now() - sessionStart;
-    if (elapsed > 0 && elapsed < config.SESSION_FLUSH_TIMEOUT_MS) {
-      player.usedMs += elapsed;
-      player.totalPlayMs += elapsed;
+  // Учитываем только время с последнего тика (до 2 сек).
+  // Всё, что больше — «зависшая» вкладка, не считаем.
+  if (sessionStart && player && lastTick) {
+    const delta = Date.now() - lastTick;
+    if (delta > 0 && delta < 2000) {
+      player.usedMs += delta;
+      player.totalPlayMs += delta;
     }
-    sessionStart = null;
-    save();
   }
+
+  sessionStart = null;
+  lastTick = null;
+  save();
 }
 
 

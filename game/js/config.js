@@ -10,7 +10,7 @@ export const config = {
   LOOP_MODE: 'interval',
 
   // Лимит на игрока
-  DAILY_PLAY_LIMIT_MINUTES: 5,
+  DAILY_PLAY_LIMIT_MINUTES: 0.3,
 
   // Ключ хранения игрока (уникальный для каждой игры!)
   STORAGE_KEY: 'ramen_dragon',

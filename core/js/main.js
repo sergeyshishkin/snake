@@ -131,11 +131,15 @@ const game = createLoop({
       }, ui);
     },
 
-    onLimit: () => updateState({
-      limitReached: true,
-      hintVisible: true,
-      hintKind: 'limit',
-    }, ui),
+    onLimit: ({ score = 0 } = {}) => {
+      const isNewRecord = score > 0 && updateBestScore(score);
+      updateState({
+        limitReached: true,
+        hintVisible: true,
+        hintKind: 'limit',
+        ...(isNewRecord ? { bestScore: score } : {}),
+      }, ui);
+    },
   },
 });
 

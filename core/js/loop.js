@@ -49,7 +49,7 @@ export function createLoop({ rules, renderer, config, callbacks }) {
     }
 
     if (isLimitReached()) {
-      callbacks.onLimit();
+      callbacks.onLimit({ score: 0 });
       return;
     }
 
@@ -140,7 +140,7 @@ export function createLoop({ rules, renderer, config, callbacks }) {
 
     if (reason === 'limit') {
       limitHit = true;
-      callbacks.onLimit();
+      callbacks.onLimit({ score: rules.getScore() });
     } else {
       callbacks.onGameOver(payload);
     }
