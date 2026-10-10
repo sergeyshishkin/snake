@@ -4,11 +4,11 @@
 
 import { config, DEBUG_DISABLE_LIMIT } from '../../game/js/config.js';
 
-const DAILY_LIMIT_MS = config.DAILY_PLAY_LIMIT_MINUTES * 60 * 1000;
+const LIMIT_MS       = config.PLAY_LIMIT_MINUTES * 60 * 1000;
+const RESET_WINDOW_MS = config.LIMIT_RESET_HOURS * 60 * 60 * 1000;
 
 let player = null;
 let sessionStart = null;
-let cachedToday = null;
 let lastTick = null;
 
 
@@ -20,13 +20,6 @@ function uuidv4() {
   });
 }
 
-function todayKey() {
-  const d = new Date();
-  return d.getFullYear() + '-' +
-         String(d.getMonth() + 1).padStart(2, '0') + '-' +
-         String(d.getDate()).padStart(2, '0');
-}
-
 function save() {
   if (!player) return;
   try {
@@ -34,15 +27,34 @@ function save() {
   } catch (e) {}
 }
 
-function refreshDay() {
-  const today = todayKey();
-  if (today !== cachedToday) {
-    cachedToday = today;
+
+// ============================================================
+// [BLOCK: reset-window]
+// Проверяет, прошло ли RESET_WINDOW_MS с момента windowStart.
+// Если да — обнуляет usedMs и ставит новое окно.
+// ============================================================
+function refreshWindow() {
+  if (!player) return false;
+
+  const now = Date.now();
+
+  // Первый заход или старые данные без windowStart
+  if (!player.windowStart) {
+    player.windowStart = now;
+    save();
+    return false;
+  }
+
+  const elapsed = now - player.windowStart;
+
+  if (elapsed >= RESET_WINDOW_MS) {
+    // Прошло больше 4 часов — новый лимит
     player.usedMs = 0;
-    player.lastDate = today;
+    player.windowStart = now;
     save();
     return true;
   }
+
   return false;
 }
 
@@ -60,35 +72,46 @@ export function initPlayer() {
       id: uuidv4(),
       createdAt: Date.now(),
       usedMs: 0,
-      lastDate: todayKey(),
+      windowStart: Date.now(),   // ← вместо lastDate
       totalGames: 0,
       totalPlayMs: 0,
       bestScore: 0,
     };
   }
 
+  // Миграция: если в старых данных есть lastDate без windowStart —
+  // конвертируем в windowStart = начало текущего дня
+  if (!p.windowStart) {
+    const d = p.lastDate ? new Date(p.lastDate) : new Date();
+    p.windowStart = d.getTime();
+  }
+
+  // Миграция: если остался lastDate — удалим его, он больше не нужен
+  if (p.lastDate) {
+    delete p.lastDate;
+  }
+
   if (typeof p.bestScore !== 'number') {
     p.bestScore = 0;
   }
 
-  const today = todayKey();
-  if (p.lastDate !== today) {
-    p.usedMs = 0;
-    p.lastDate = today;
-  }
-
   player = p;
-  cachedToday = today;
+
+  // Сброс, если прошло 4 часа
+  refreshWindow();
+
   save();
   return p;
 }
 
 
 export function getRemainingMs() {
-  if (DEBUG_DISABLE_LIMIT) return DAILY_LIMIT_MS;
-  if (!player) return DAILY_LIMIT_MS;
-  refreshDay();
-  return Math.max(0, DAILY_LIMIT_MS - player.usedMs);
+  if (DEBUG_DISABLE_LIMIT) return LIMIT_MS;
+  if (!player) return LIMIT_MS;
+
+  refreshWindow();
+
+  return Math.max(0, LIMIT_MS - player.usedMs);
 }
 
 export function isLimitReached() {
@@ -115,25 +138,21 @@ export function updateBestScore(score) {
 
 // ============================================================
 // [BLOCK: session]
-// Время считает ТОЛЬКО tickSession(). endSession() и flushSession()
-// только фиксируют конец сессии, чтобы избежать двойного начисления.
 // ============================================================
 
 export function startSession() {
   if (!player) return;
   sessionStart = Date.now();
-  lastTick = null;      // первый tickSession зафиксирует момент, но не прибавит
+  lastTick = null;
   player.totalGames++;
   save();
 }
-
 
 export function endSession() {
   sessionStart = null;
   lastTick = null;
   save();
 }
-
 
 export function tickSession() {
   if (!player || !sessionStart) {
@@ -145,7 +164,6 @@ export function tickSession() {
 
   if (lastTick !== null) {
     const delta = now - lastTick;
-    // Защита от «усыплённой» вкладки: пропускаем огромные дельты
     if (delta > 0 && delta < 10000) {
       player.usedMs += delta;
       player.totalPlayMs += delta;
@@ -156,10 +174,7 @@ export function tickSession() {
   lastTick = now;
 }
 
-
 export function flushSession() {
-  // Учитываем только время с последнего тика (до 2 сек).
-  // Всё, что больше — «зависшая» вкладка, не считаем.
   if (sessionStart && player && lastTick) {
     const delta = Date.now() - lastTick;
     if (delta > 0 && delta < 2000) {
@@ -180,7 +195,10 @@ export function getPlayerStats() {
     id: player.id,
     usedMs: player.usedMs,
     remainingMs: getRemainingMs(),
-    limitMs: DAILY_LIMIT_MS,
+    limitMs: LIMIT_MS,
+    resetInMs: player.windowStart
+      ? Math.max(0, RESET_WINDOW_MS - (Date.now() - player.windowStart))
+      : RESET_WINDOW_MS,
     totalGames: player.totalGames,
     totalPlayMs: player.totalPlayMs,
     bestScore: player.bestScore,
