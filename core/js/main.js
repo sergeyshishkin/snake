@@ -42,6 +42,17 @@ document.addEventListener('touchend', (event) => {
   lastTouchEnd = now;
 }, { passive: false });
 
+
+// ============================================================
+// [BLOCK: preloader]
+// Прелоадер снимается вручную, когда игра готова.
+// Функция скрывает его и показывает интерфейс.
+// ============================================================
+
+function hidePreloader() {
+  document.documentElement.classList.add('ready');
+}
+
 /*
 // ============================================================
 // [BLOCK: metrika]
@@ -266,12 +277,16 @@ function unlockGame() {
 
   ui.startTimer(() => game.tickSession());
   ui.updateTimer();
+
 }
 
 
 const intro = createIntro({
   onAccept: unlockGame,
 });
+
+// Снимаем прелоадер ДО intro.init() — иначе модалка под ним
+hidePreloader();
 
 intro.init();
 

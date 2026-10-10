@@ -44,11 +44,16 @@ export function createIntro({ onAccept }) {
 
   function init() {
     if (alreadyAccepted) {
+      // Согласие уже дано — модалка остаётся скрытой
+      modal.classList.add('hidden');
       modal.style.display = 'none';
       onAccept();
       return;
     }
 
+    // Согласия нет — показываем модалку
+    modal.classList.remove('hidden');
+    modal.style.display = '';
     acceptBtn.addEventListener('click', accept);
   }
 
