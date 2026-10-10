@@ -287,9 +287,6 @@ canvas {
     0 0 14px rgba(200, 60, 40, 0.45);
 }
 
-  .pause-btn:focus-visible {
-  outline: none;
-}
 
 /* ============================================================
    [BLOCK: touch-hint]
