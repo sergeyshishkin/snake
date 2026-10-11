@@ -9,7 +9,11 @@ import {
   flushSession,
   getBestScore,
   updateBestScore,
+  isReturning,
 } from './player-limits.js';
+
+import { trackGoal, getClient } from './analytics.js';
+
 import { state, updateState, resetGameState } from './state.js';
 import { $ } from './dom.js';
 import { createUI }         from './ui.js';
@@ -46,7 +50,6 @@ document.addEventListener('touchend', (event) => {
 // ============================================================
 // [BLOCK: preloader]
 // Прелоадер снимается вручную, когда игра готова.
-// Функция скрывает его и показывает интерфейс.
 // ============================================================
 
 function hidePreloader() {
@@ -104,12 +107,29 @@ function hidePreloader() {
 */
 
 // ============================================================
+// [BLOCK: session-counter]
+// Счётчик партий за текущую сессию (до перезагрузки страницы).
+// ============================================================
+
+let gamesThisSession = 0;
+
+
+// ============================================================
 // [BLOCK: init]
 // ============================================================
 
 initPlayer();
 
 state.bestScore = getBestScore();
+
+// Определяем тип игрока и отправляем game_loaded
+const isReturningPlayer = isReturning();
+const client = getClient();
+
+trackGoal('game_loaded', {
+  type: isReturningPlayer ? 'returning' : 'new',
+  client: client,
+});
 
 const ui = createUI();
 const rules = createRules();
@@ -124,15 +144,30 @@ const game = createLoop({
   callbacks: {
     onScore: score => updateState({ score }, ui),
 
-    onStart: () => updateState({
-      gameStarted: true,
-      gameActive: true,
-      gameOver: false,
-      hintVisible: false,
-    }, ui),
+    onStart: () => {
+      gamesThisSession++;
+
+      trackGoal('game_start', {
+        number: gamesThisSession,
+      });
+
+      updateState({
+        gameStarted: true,
+        gameActive: true,
+        gameOver: false,
+        hintVisible: false,
+      }, ui);
+    },
 
     onGameOver: ({ win, score }) => {
       const isNewRecord = updateBestScore(score);
+
+      trackGoal('game_over', {
+        score,
+        win: win ? 1 : 0,
+        number: gamesThisSession,
+      });
+
       updateState({
         gameActive: false,
         gameStarted: true,
@@ -144,6 +179,12 @@ const game = createLoop({
 
     onLimit: ({ score = 0 } = {}) => {
       const isNewRecord = score > 0 && updateBestScore(score);
+
+      trackGoal('daily_limit_reached', {
+        score,
+        number: gamesThisSession,
+      });
+
       updateState({
         limitReached: true,
         hintVisible: true,
@@ -277,7 +318,6 @@ function unlockGame() {
 
   ui.startTimer(() => game.tickSession());
   ui.updateTimer();
-
 }
 
 

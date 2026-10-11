@@ -204,3 +204,17 @@ export function getPlayerStats() {
     bestScore: player.bestScore,
   };
 }
+
+// ============================================================
+// [BLOCK: returning-player]
+// Проверяет, играл ли уже этот игрок.
+// ============================================================
+
+export function isReturning() {
+  try {
+    const key = config.STORAGE_KEY + '_intro_accepted';
+    return localStorage.getItem(key) === '1';
+  } catch (e) {
+    return false;
+  }
+}

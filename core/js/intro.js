@@ -3,6 +3,7 @@
 // ============================================================
 
 import { config } from '../../game/js/config.js';
+import { trackGoal } from './analytics.js';
 import { $ } from './dom.js';
 
 const ACCEPT_KEY_SUFFIX = '_intro_accepted';
@@ -41,6 +42,8 @@ export function createIntro({ onAccept }) {
     try {
       localStorage.setItem(acceptKey, '1');
     } catch (e) {}
+
+    trackGoal('cookie_accepted');
 
     hideModal();
     onAccept();
