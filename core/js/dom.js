@@ -24,6 +24,8 @@ export const $ = {
 
   pauseButton: document.getElementById('pauseButton'),
 
+  introLimitMinutes: document.getElementById('introLimitMinutes'),
+
 
 };
 

@@ -14,6 +14,11 @@ export function createIntro({ onAccept }) {
   const modal     = $.introModal;
   const acceptBtn = $.introAccept;
 
+    // Подставляем актуальный лимит из конфига
+  if ($.introLimitMinutes) {
+    $.introLimitMinutes.textContent = config.PLAY_LIMIT_MINUTES;
+  }
+
   const acceptKey = config.STORAGE_KEY + ACCEPT_KEY_SUFFIX;
 
   let alreadyAccepted = false;

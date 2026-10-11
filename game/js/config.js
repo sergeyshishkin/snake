@@ -10,7 +10,7 @@ export const config = {
   LOOP_MODE: 'interval',
 
   // Лимит на игрока
-  PLAY_LIMIT_MINUTES: 1.2,
+  PLAY_LIMIT_MINUTES: 1,
 
   // через сколько часов лимит сбросится
   LIMIT_RESET_HOURS: 4,           
